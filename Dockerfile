@@ -4,7 +4,8 @@ FROM       phusion/baseimage:0.9.10
 MAINTAINER Darin Morrison <darinmorrison+docker@gmail.com>
 
 ## set the correct environment variables
-ENV HOME /root
+ENV DEBIAN_FRONTEND noninteractive
+ENV HOME            /root
 
 ## start the init system (e.g., for sshd)
 # CMD ["/sbin/my_init"]
