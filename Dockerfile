@@ -31,7 +31,9 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F6F88286\
 RUN apt-get update\
  && apt-get install -y --no-install-recommends alex-3.1.3 cabal-install-1.20 ghc-7.8.2 happy-1.19.3
 
+## set the PATH for login shells
 RUN echo 'PATH=/opt/alex/3.1.3/bin:/opt/cabal/1.20/bin:/opt/ghc/7.8.2/bin:/opt/happy/1.19.3/bin:${PATH}' > /etc/profile.d/haskell.sh
 
+## cleanup
 RUN apt-get clean\
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
