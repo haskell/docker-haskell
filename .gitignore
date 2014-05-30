@@ -1,3 +1,5 @@
+keys/*
+
 ### https://raw.github.com/github/gitignore/2399ff1c7957fa3b4eeecefa7354bbe50776063b/Global/Emacs.gitignore
 
 # -*- mode: gitignore; -*-
@@ -98,5 +100,3 @@ tmtags
 Session.vim
 .netrwhist
 *~
-
-
