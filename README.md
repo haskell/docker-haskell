@@ -4,7 +4,7 @@
 
 ## docker Registry
 
-This container should eventually available on the docker registry at `darinmorrison/haskell`.
+`docker-haskell` is available as an image on the docker registry at [darinmorrison/haskell](https://index.docker.io/u/darinmorrison/haskell/).
 
 ## Use Cases
 
