@@ -23,6 +23,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F6F88286\
 
 ## install ubuntu trusty haskell packages
 RUN apt-get update\
+ && apt-get install -y --no-install-recommends llvm\
  && apt-get install -y --no-install-recommends alex-3.1.3 cabal-install-1.20 ghc-7.8.2 happy-1.19.3
 
 ## set the PATH for login shells
