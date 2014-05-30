@@ -16,12 +16,6 @@ ENV LANGUAGE        en_US.UTF-8
 ## support apt-cacher-ng
 # RUN echo 'Acquire::http { Proxy "http://<hostname>:3142"; };' >> /etc/apt/apt.conf.d/01proxy
 
-## support apt-get mirror method
-# RUN echo 'deb mirror://mirrors.ubuntu.com/mirrors.txt trusty           main restricted universe multiverse' >> /etc/apt/sources.list\
-#  && echo 'deb mirror://mirrors.ubuntu.com/mirrors.txt trusty-updates   main restricted universe multiverse' >> /etc/apt/sources.list\
-#  && echo 'deb mirror://mirrors.ubuntu.com/mirrors.txt trusty-backports main restricted universe multiverse' >> /etc/apt/sources.list\
-#  && echo 'deb mirror://mirrors.ubuntu.com/mirrors.txt trusty-security  main restricted universe multiverse' >> /etc/apt/sources.list
-
 ## add ppa for ubuntu trusty haskell packages
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F6F88286\
  && echo 'deb     http://ppa.launchpad.net/hvr/ghc/ubuntu trusty main' >> /etc/apt/sources.list.d/haskell.list\
