@@ -2,11 +2,7 @@
 
 `docker-haskell` is a minimal Ubuntu-based docker container.
 
-## docker Registry
-
-`docker-haskell` is available as an image on the docker registry at [darinmorrison/haskell](https://index.docker.io/u/darinmorrison/haskell/).
-
-## Use Cases
+## Overview
 
 `docker-haskell` can be used in the following ways:
 
@@ -22,6 +18,12 @@
 
     _`docker-agda`, `docker-idris`, `docker-purescript`, `docker-<your-haskell-app>` etc._
 
+## How do I use this?
+
+You can download `docker-haskell` via the docker index at [darinmorrison/haskell](https://index.docker.io/u/darinmorrison/haskell/) or build the `Dockerfile` directly. If you aren't familiar with how that works, see the docker tutorial: https://www.docker.io/gettingstarted.
+
+Another possibility is [darinmorrison/vagrant-haskell](https://github.com/darinmorrison/vagrant-haskell) which is based on this container but in some ways provides a more convenient interface.
+
 ## FAQ
 
-For the time being, see [phusion/baseimage-docker](https://github.com/phusion/baseimage-docker) for configuration details, including [how to access the container via ssh](https://github.com/phusion/baseimage-docker#login-to-the-container-via-ssh).
+For the time being, see [phusion/baseimage-docker](https://github.com/phusion/baseimage-docker) for further details, including [how to access the container via ssh](https://github.com/phusion/baseimage-docker#login-to-the-container-via-ssh).
