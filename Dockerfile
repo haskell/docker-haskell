@@ -5,9 +5,21 @@ MAINTAINER Darin Morrison <darinmorrison+docker@gmail.com>
 
 ## set the correct environment variables
 ENV DEBIAN_FRONTEND noninteractive
+
+## ensure locale is set during build
 ENV LC_ALL          en_US.UTF-8
 ENV LANG            en_US.UTF-8
 ENV LANGUAGE        en_US.UTF-8
+
+## ensure locale is set during init
+RUN echo           'en_US.UTF-8' >  '/etc/container_environment/LC_ALL'\
+ && echo           'en_US.UTF-8' >  '/etc/container_environment/LANG'\
+ && echo           'en_US.UTF-8' >  '/etc/container_environment/LANGUAGE'
+
+## ensure locale is set for new logins
+RUN echo    'LC_ALL=en_US.UTF-8' >> '/etc/default/locale'\
+ && echo      'LANG=en_US.UTF-8' >> '/etc/default/locale'\
+ && echo  'LANGUAGE=en_US.UTF-8' >> '/etc/default/locale'
 
 ## start the init system (e.g., for sshd)
 # CMD ["/sbin/my_init"]
