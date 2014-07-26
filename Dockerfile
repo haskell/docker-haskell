@@ -6,6 +6,9 @@ MAINTAINER Darin Morrison <darinmorrison+docker@gmail.com>
 ## disable prompts from apt
 ENV DEBIAN_FRONTEND noninteractive
 
+## custom apt-get install options
+ENV OPTS_APT        -y --force-yes --no-install-recommends
+
 ## ensure locale is set during build
 ENV LC_ALL          en_US.UTF-8
 ENV LANG            en_US.UTF-8
@@ -34,7 +37,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F6F88286\
 
 ## install llvm for the ghc backend
 RUN apt-get update\
- && apt-get install -y --force-yes --no-install-recommends llvm
+ && apt-get install ${OPTS_APT} llvm
 
 ## haskell package versions; can be overriden via context hacks
 ENV VERSION_ALEX   3.1.3
@@ -44,7 +47,7 @@ ENV VERSION_HAPPY  1.19.4
 
 ## install minimal set of haskell packages
 RUN apt-get update\
- && apt-get install -y --force-yes --no-install-recommends\
+ && apt-get install ${OPTS_APT}\
       alex-"${VERSION_ALEX}"\
       cabal-install-"${VERSION_CABAL}"\
       ghc-"${VERSION_GHC}"\
