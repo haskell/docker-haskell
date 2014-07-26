@@ -3,7 +3,7 @@
 FROM       phusion/baseimage:0.9.12
 MAINTAINER Darin Morrison <darinmorrison+docker@gmail.com>
 
-## set the correct environment variables
+## disable prompts from apt
 ENV DEBIAN_FRONTEND noninteractive
 
 ## ensure locale is set during build
