@@ -41,7 +41,7 @@ RUN apt-get install -y --no-install-recommends llvm
 ## haskell package versions; can be overriden via context hacks
 ENV VERSION_ALEX   3.1.3
 ENV VERSION_CABAL  1.20
-ENV VERSION_GHC    7.8.2
+ENV VERSION_GHC    7.8.3
 ENV VERSION_HAPPY  1.19.3
 
 ## install minimal set of haskell packages
