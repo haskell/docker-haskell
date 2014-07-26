@@ -32,11 +32,9 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F6F88286\
  && echo 'deb     http://ppa.launchpad.net/hvr/ghc/ubuntu trusty main' >> /etc/apt/sources.list.d/haskell.list\
  && echo 'deb-src http://ppa.launchpad.net/hvr/ghc/ubuntu trusty main' >> /etc/apt/sources.list.d/haskell.list
 
-## update the package database
-RUN apt-get update
-
 ## install llvm for the ghc backend
-RUN apt-get install -y --no-install-recommends llvm
+RUN apt-get update\
+ && apt-get install -y --force-yes --no-install-recommends llvm
 
 ## haskell package versions; can be overriden via context hacks
 ENV VERSION_ALEX   3.1.3
@@ -45,7 +43,8 @@ ENV VERSION_GHC    7.8.3
 ENV VERSION_HAPPY  1.19.4
 
 ## install minimal set of haskell packages
-RUN apt-get install -y --no-install-recommends\
+RUN apt-get update\
+ && apt-get install -y --force-yes --no-install-recommends\
       alex-"${VERSION_ALEX}"\
       cabal-install-"${VERSION_CABAL}"\
       ghc-"${VERSION_GHC}"\
