@@ -38,18 +38,24 @@ RUN apt-get update
 ## install llvm for the ghc backend
 RUN apt-get install -y --no-install-recommends llvm
 
+## haskell package versions; can be overriden via context hacks
+ENV VERSION_ALEX   3.1.3
+ENV VERSION_CABAL  1.20
+ENV VERSION_GHC    7.8.2
+ENV VERSION_HAPPY  1.19.3
+
 ## install minimal set of haskell packages
 RUN apt-get install -y --no-install-recommends\
-      alex-3.1.3\
-      cabal-install-1.20\
-      ghc-7.8.2\
-      happy-1.19.3
+      alex-"${VERSION_ALEX}"\
+      cabal-install-"${VERSION_CABAL}"\
+      ghc-"${VERSION_GHC}"\
+      happy-"${VERSION_HAPPY}"
 
 ## set the PATH for login shells
-RUN echo 'PATH=/opt/happy/1.19.3/bin:${PATH}' >> /etc/profile.d/haskell.sh\
- && echo 'PATH=/opt/ghc/7.8.2/bin:${PATH}'    >> /etc/profile.d/haskell.sh\
- && echo 'PATH=/opt/cabal/1.20/bin:${PATH}'   >> /etc/profile.d/haskell.sh\
- && echo 'PATH=/opt/alex/3.1.3/bin:${PATH}'   >> /etc/profile.d/haskell.sh
+RUN echo 'PATH=/opt/happy/${VERSION_HAPPY}/bin:${PATH}' >> /etc/profile.d/haskell.sh\
+ && echo 'PATH=/opt/ghc/${VERSION_GHC}/bin:${PATH}'     >> /etc/profile.d/haskell.sh\
+ && echo 'PATH=/opt/cabal/${VERSION_CABAL}/bin:${PATH}' >> /etc/profile.d/haskell.sh\
+ && echo 'PATH=/opt/alex/${VERSION_ALEX}/bin:${PATH}'   >> /etc/profile.d/haskell.sh
 
 ## cleanup
 RUN apt-get clean\
