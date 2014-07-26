@@ -32,10 +32,18 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F6F88286\
  && echo 'deb     http://ppa.launchpad.net/hvr/ghc/ubuntu trusty main' >> /etc/apt/sources.list.d/haskell.list\
  && echo 'deb-src http://ppa.launchpad.net/hvr/ghc/ubuntu trusty main' >> /etc/apt/sources.list.d/haskell.list
 
-## install ubuntu trusty haskell packages
-RUN apt-get update\
- && apt-get install -y --no-install-recommends llvm\
- && apt-get install -y --no-install-recommends alex-3.1.3 cabal-install-1.20 ghc-7.8.2 happy-1.19.3
+## update the package database
+RUN apt-get update
+
+## install llvm for the ghc backend
+RUN apt-get install -y --no-install-recommends llvm
+
+## install minimal set of haskell packages
+RUN apt-get install -y --no-install-recommends\
+      alex-3.1.3\
+      cabal-install-1.20\
+      ghc-7.8.2\
+      happy-1.19.3
 
 ## set the PATH for login shells
 RUN echo 'PATH=/opt/alex/3.1.3/bin:/opt/cabal/1.20/bin:/opt/ghc/7.8.2/bin:/opt/happy/1.19.3/bin:${PATH}' > /etc/profile.d/haskell.sh
