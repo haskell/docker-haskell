@@ -46,7 +46,10 @@ RUN apt-get install -y --no-install-recommends\
       happy-1.19.3
 
 ## set the PATH for login shells
-RUN echo 'PATH=/opt/alex/3.1.3/bin:/opt/cabal/1.20/bin:/opt/ghc/7.8.2/bin:/opt/happy/1.19.3/bin:${PATH}' > /etc/profile.d/haskell.sh
+RUN echo 'PATH=/opt/happy/1.19.3/bin:${PATH}' >> /etc/profile.d/haskell.sh\
+ && echo 'PATH=/opt/ghc/7.8.2/bin:${PATH}'    >> /etc/profile.d/haskell.sh\
+ && echo 'PATH=/opt/cabal/1.20/bin:${PATH}'   >> /etc/profile.d/haskell.sh\
+ && echo 'PATH=/opt/alex/3.1.3/bin:${PATH}'   >> /etc/profile.d/haskell.sh
 
 ## cleanup
 RUN apt-get clean\
