@@ -1,6 +1,6 @@
 ## Dockerfile for a haskell environment
 ## https://github.com/darinmorrison/docker-haskell
-FROM       phusion/baseimage:0.9.10
+FROM       phusion/baseimage:0.9.12
 MAINTAINER Darin Morrison <darinmorrison+docker@gmail.com>
 
 ## set the correct environment variables
