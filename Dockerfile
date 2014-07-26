@@ -5,7 +5,6 @@ MAINTAINER Darin Morrison <darinmorrison+docker@gmail.com>
 
 ## set the correct environment variables
 ENV DEBIAN_FRONTEND noninteractive
-ENV HOME            /root
 ENV LC_ALL          en_US.UTF-8
 ENV LANG            en_US.UTF-8
 ENV LANGUAGE        en_US.UTF-8
