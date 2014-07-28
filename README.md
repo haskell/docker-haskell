@@ -55,6 +55,12 @@ See the [docker installation](https://docs.docker.com/installation/) page for de
 
 Another possibility is [darinmorrison/vagrant-haskell](https://github.com/darinmorrison/vagrant-haskell) which is based on this container but in some ways provides a more convenient interface. If you are running OS X and need NFS-style shared folders (rather than using `scp` or `sftp`) this will probably be the better approach. Vagrant is unnecessary on Linux—[mount volumes](https://docs.docker.com/userguide/dockervolumes) and use [nsenter](https://github.com/jpetazzo/nsenter) instead of NFS and ssh.
 
+## Upgrading
+
+You can upgrade to the latest image with an explicit pull:
+
+    docker pull darinmorrison/haskell:latest
+
 ## Customization
 
 For the time being, see [phusion/baseimage-docker](https://github.com/phusion/baseimage-docker) for further details.
