@@ -29,6 +29,12 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F6F88286\
  && echo 'deb     http://ppa.launchpad.net/hvr/ghc/ubuntu trusty main' >> /etc/apt/sources.list.d/haskell.list\
  && echo 'deb-src http://ppa.launchpad.net/hvr/ghc/ubuntu trusty main' >> /etc/apt/sources.list.d/haskell.list
 
+## support apt-get mirror method
+# RUN sed -i '1ideb mirror://mirrors.ubuntu.com/mirrors.txt trusty-security  main restricted universe multiverse' /etc/apt/sources.list\
+#  && sed -i '1ideb mirror://mirrors.ubuntu.com/mirrors.txt trusty-backports main restricted universe multiverse' /etc/apt/sources.list\
+#  && sed -i '1ideb mirror://mirrors.ubuntu.com/mirrors.txt trusty-updates   main restricted universe multiverse' /etc/apt/sources.list\
+#  && sed -i '1ideb mirror://mirrors.ubuntu.com/mirrors.txt trusty           main restricted universe multiverse' /etc/apt/sources.list
+
 ## install ghc dependencies
 RUN apt-get update\
  && apt-get install ${OPTS_APT}\
