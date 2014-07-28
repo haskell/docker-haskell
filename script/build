@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+set -eu
+set -o pipefail
+
+## uncomment and use apt-mirror block
+cfg_mirrors() {
+  declare -r local dfile="${1}"
+  declare    local cmd_str
+
+  read -r -d '' cmd_str <<EOF
+-e s/^#[[:space:]]\{1,\}\(.*mirror:\/\/mirrors.*\)$/\1/
+EOF
+
+  sed ${cmd_str} <<< "${dfile}"
+}
+
+main() {
+  declare -r local argc="${#@}"
+  declare -r local argv="${@}"
+
+  declare -i local use_mirrors=0
+  declare    local img_tag='darinmorrison/haskell'
+
+  while getopts "mt:" opt; do
+    case "${opt}" in
+      m)
+        use_mirrors=1
+        ;;
+      t)
+        img_tag="${OPTARG}"
+        ;;
+      \?)
+        echo "invalid option: -"${OPTARG}"" >&2
+        exit 1
+        ;;
+      :)
+        echo "argument required: -"${OPTARG}"" >&2
+        exit 1
+        ;;
+    esac
+  done
+
+  declare local dfile="$(< './Dockerfile')"
+
+  ## optionally modify the build to use apt mirrors
+  if [ "${use_mirrors}" -ne 0 ]; then
+
+    dfile="$(cfg_mirrors "${dfile}")"
+  fi
+
+  docker build --tag="${img_tag}" - <<< "${dfile}"
+
+  exit 0
+}
+
+main "${@}"
