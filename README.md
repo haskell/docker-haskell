@@ -18,12 +18,43 @@
 
     _`docker-agda`, `docker-idris`, `docker-purescript`, `docker-<your-haskell-app>` etc._
 
-## How do I use this?
+## Requirements
 
-You can download `docker-haskell` via the docker index at [darinmorrison/haskell](https://index.docker.io/u/darinmorrison/haskell/) or build the `Dockerfile` directly. If you aren't familiar with how that works, see the docker tutorial: https://www.docker.io/gettingstarted.
+You will need the following:
 
-Another possibility is [darinmorrison/vagrant-haskell](https://github.com/darinmorrison/vagrant-haskell) which is based on this container but in some ways provides a more convenient interface.
+*   access to a docker host
+*   docker client installed on your workstation
 
-## FAQ
+See the [docker installation](https://docs.docker.com/installation/) page for details.
 
-For the time being, see [phusion/baseimage-docker](https://github.com/phusion/baseimage-docker) for further details, including [how to access the container via ssh](https://github.com/phusion/baseimage-docker#login-to-the-container-via-ssh).
+#### tl;dr
+
+*   Mac OS X
+
+        brew cask install virtualbox && brew install boot2docker docker
+
+      NOTE: follow the [directions](https://github.com/boot2docker/boot2docker#how-to-use) at [boot2docker/boot2docker](https://github.com/boot2docker/boot2docker)
+
+*   Ubuntu
+
+        apt-get install docker.io
+
+      NOTE: you might want to [rename docker.io to docker](http://pastebin.com/raw.php?i=hm3y4vJy)
+
+## Quickstart
+
+*   download the container, start ghci, and attach to an interactive session:
+
+        docker run -it --rm=true --name='ghci' darinmorrison/haskell ghci
+
+*   download the container, start sshd, detach and keep the container running:
+
+        docker run -dP --name='ghc-sshd' darinmorrison/haskell /sbin/my_init --enable-insecure-key
+
+      NOTE: see [here](https://github.com/phusion/baseimage-docker#login-to-the-container-or-running-a-command-inside-it-via-ssh) for details on how to log in to the container via ssh
+
+Another possibility is [darinmorrison/vagrant-haskell](https://github.com/darinmorrison/vagrant-haskell) which is based on this container but in some ways provides a more convenient interface. If you are running OS X and need NFS-style shared folders (rather than using `scp` or `sftp`) this will probably be the better approach. Vagrant is unnecessary on Linux—[mount volumes](https://docs.docker.com/userguide/dockervolumes) and use [nsenter](https://github.com/jpetazzo/nsenter) instead of NFS and ssh.
+
+## Customization
+
+For the time being, see [phusion/baseimage-docker](https://github.com/phusion/baseimage-docker) for further details.
