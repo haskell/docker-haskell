@@ -24,16 +24,21 @@ RUN echo    'LC_ALL=en_US.UTF-8' >> '/etc/default/locale'\
  && echo      'LANG=en_US.UTF-8' >> '/etc/default/locale'\
  && echo  'LANGUAGE=en_US.UTF-8' >> '/etc/default/locale'
 
-## start the init system (e.g., for sshd)
-# CMD ["/sbin/my_init"]
-
-## support apt-cacher-ng
-# RUN echo 'Acquire::http { Proxy "http://<hostname>:3142"; };' >> /etc/apt/apt.conf.d/01proxy
-
 ## add ppa for ubuntu trusty haskell packages
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F6F88286\
  && echo 'deb     http://ppa.launchpad.net/hvr/ghc/ubuntu trusty main' >> /etc/apt/sources.list.d/haskell.list\
  && echo 'deb-src http://ppa.launchpad.net/hvr/ghc/ubuntu trusty main' >> /etc/apt/sources.list.d/haskell.list
+
+## install ghc dependencies
+RUN apt-get update\
+ && apt-get install ${OPTS_APT}\
+      gcc\
+      libc6\
+      libc6-dev\
+      libgmp10\
+      libgmp-dev\
+      libncursesw5\
+      libtinfo5
 
 ## install llvm for the ghc backend
 RUN apt-get update\
@@ -42,7 +47,6 @@ RUN apt-get update\
 ## haskell package versions; can be overriden via context hacks
 ENV VERSION_ALEX   3.1.3
 ENV VERSION_CABAL  1.20
-ENV VERSION_GHC    7.8.3
 ENV VERSION_HAPPY  1.19.4
 
 ## install minimal set of haskell packages
@@ -50,15 +54,20 @@ RUN apt-get update\
  && apt-get install ${OPTS_APT}\
       alex-"${VERSION_ALEX}"\
       cabal-install-"${VERSION_CABAL}"\
-      ghc-"${VERSION_GHC}"\
       happy-"${VERSION_HAPPY}"
 
 ## set the PATH for login shells
 RUN echo 'PATH=/opt/happy/${VERSION_HAPPY}/bin:${PATH}' >> /etc/profile.d/haskell.sh\
- && echo 'PATH=/opt/ghc/${VERSION_GHC}/bin:${PATH}'     >> /etc/profile.d/haskell.sh\
  && echo 'PATH=/opt/cabal/${VERSION_CABAL}/bin:${PATH}' >> /etc/profile.d/haskell.sh\
  && echo 'PATH=/opt/alex/${VERSION_ALEX}/bin:${PATH}'   >> /etc/profile.d/haskell.sh
 
-## cleanup
-RUN apt-get clean\
- && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+## haskell package versions; can be overriden via context hacks
+ENV VERSION_GHC    7.8.3
+
+## install ghc
+RUN apt-get update\
+ && apt-get install ${OPTS_APT}\
+      ghc-"${VERSION_GHC}"
+
+## set the PATH for login shells
+RUN echo 'PATH=/opt/ghc/${VERSION_GHC}/bin:${PATH}'     >> /etc/profile.d/haskell.sh
