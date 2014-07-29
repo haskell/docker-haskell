@@ -2,6 +2,17 @@
 
 `docker-haskell` is a minimal Ubuntu-based docker container.
 
+## Contents
+
+The default configuration of `docker-haskell` provides the following:
+
+| package         | version    |
+|-----------------|------------|
+| `alex`          | `3.1.3`    |
+| `cabal-install` | `1.20.0.3` |
+| `happy`         | `1.19.4`   |
+| `ghc`           | `7.8.3`    |
+
 ## Overview
 
 `docker-haskell` can be used in the following ways:
