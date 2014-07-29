@@ -70,11 +70,18 @@ RUN apt-get update\
  && apt-get install ${OPTS_APT}\
       ghc-"${VERSION_GHC}"
 
-## set the PATH for login shells
-RUN echo 'PATH=/opt/ghc/${VERSION_GHC}/bin:${PATH}'     >> /etc/profile.d/haskell.sh\
- && echo 'PATH=/opt/happy/${VERSION_HAPPY}/bin:${PATH}' >> /etc/profile.d/haskell.sh\
- && echo 'PATH=/opt/cabal/${VERSION_CABAL}/bin:${PATH}' >> /etc/profile.d/haskell.sh\
- && echo 'PATH=/opt/alex/${VERSION_ALEX}/bin:${PATH}'   >> /etc/profile.d/haskell.sh
+## set the VERSION vars and PATH for login shells
+RUN\
+  ( exec >> /etc/profile.d/haskell.sh\
+ && echo "VERSION_ALEX=${VERSION_ALEX}"\
+ && echo "VERSION_CABAL=${VERSION_CABAL}"\
+ && echo "VERSION_HAPPY=${VERSION_HAPPY}"\
+ && echo "VERSION_GHC=${VERSION_GHC}"\
+ && echo 'PATH=/opt/ghc/${VERSION_GHC}/bin:${PATH}'\
+ && echo 'PATH=/opt/happy/${VERSION_HAPPY}/bin:${PATH}'\
+ && echo 'PATH=/opt/cabal/${VERSION_CABAL}/bin:${PATH}'\
+ && echo 'PATH=/opt/alex/${VERSION_ALEX}/bin:${PATH}'\
+  )
 
 ## run ghci by default unless a command is specified
 CMD ["bash", "-cl", "ghci"]
