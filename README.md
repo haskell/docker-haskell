@@ -1,6 +1,6 @@
 # docker-haskell: haskell in a container
 
-`docker-haskell` is a minimal Ubuntu-based docker container.
+`docker-haskell` is a docker container shipping a minimal haskell toolchain
 
 ## Contents
 
