@@ -62,11 +62,6 @@ RUN apt-get update\
       cabal-install-"${VERSION_CABAL}"\
       happy-"${VERSION_HAPPY}"
 
-## set the PATH for login shells
-RUN echo 'PATH=/opt/happy/${VERSION_HAPPY}/bin:${PATH}' >> /etc/profile.d/haskell.sh\
- && echo 'PATH=/opt/cabal/${VERSION_CABAL}/bin:${PATH}' >> /etc/profile.d/haskell.sh\
- && echo 'PATH=/opt/alex/${VERSION_ALEX}/bin:${PATH}'   >> /etc/profile.d/haskell.sh
-
 ## haskell package versions; can be overriden via context hacks
 ENV VERSION_GHC    7.8.3
 
@@ -76,4 +71,7 @@ RUN apt-get update\
       ghc-"${VERSION_GHC}"
 
 ## set the PATH for login shells
-RUN echo 'PATH=/opt/ghc/${VERSION_GHC}/bin:${PATH}'     >> /etc/profile.d/haskell.sh
+RUN echo 'PATH=/opt/ghc/${VERSION_GHC}/bin:${PATH}'     >> /etc/profile.d/haskell.sh\
+ && echo 'PATH=/opt/happy/${VERSION_HAPPY}/bin:${PATH}' >> /etc/profile.d/haskell.sh\
+ && echo 'PATH=/opt/cabal/${VERSION_CABAL}/bin:${PATH}' >> /etc/profile.d/haskell.sh\
+ && echo 'PATH=/opt/alex/${VERSION_ALEX}/bin:${PATH}'   >> /etc/profile.d/haskell.sh
