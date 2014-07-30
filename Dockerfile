@@ -81,6 +81,7 @@ RUN\
  && echo 'PATH=/opt/happy/${VERSION_HAPPY}/bin:${PATH}'\
  && echo 'PATH=/opt/cabal/${VERSION_CABAL}/bin:${PATH}'\
  && echo 'PATH=/opt/alex/${VERSION_ALEX}/bin:${PATH}'\
+ && echo 'PATH=${HOME}/.cabal/bin:${PATH}'\
   )
 
 ## run ghci by default unless a command is specified
