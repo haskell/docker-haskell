@@ -77,12 +77,15 @@ RUN\
  && echo "VERSION_CABAL=${VERSION_CABAL}"\
  && echo "VERSION_HAPPY=${VERSION_HAPPY}"\
  && echo "VERSION_GHC=${VERSION_GHC}"\
- && echo 'PATH=/opt/ghc/${VERSION_GHC}/bin:${PATH}'\
- && echo 'PATH=/opt/happy/${VERSION_HAPPY}/bin:${PATH}'\
- && echo 'PATH=/opt/cabal/${VERSION_CABAL}/bin:${PATH}'\
- && echo 'PATH=/opt/alex/${VERSION_ALEX}/bin:${PATH}'\
  && echo 'PATH=${HOME}/.cabal/bin:${PATH}'\
   )
+
+## link the binaries into /usr/local/bin
+RUN find /opt -maxdepth 3 -name bin -type d\
+  -exec sh -c\
+    'cd {} && ls .\
+      | egrep -v ^.*\-[.[:digit:]]+$\
+      | xargs -I % ln -s `pwd`/% /usr/local/bin/%' \;
 
 ## run ghci by default unless a command is specified
 CMD ["bash", "-cl", "ghci"]
