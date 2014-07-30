@@ -56,7 +56,7 @@ See the [docker installation](https://docs.docker.com/installation/) page for de
 
 *   download the container, start ghci, and attach to an interactive session:
 
-        docker run -it --rm=true --name='ghci' darinmorrison/haskell bash -lc 'ghci'
+        docker run -it --rm=true --name='ghci' darinmorrison/haskell
 
 *   download the container, start sshd, detach and keep the container running:
 

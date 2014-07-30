@@ -88,4 +88,4 @@ RUN find /opt -maxdepth 3 -name bin -type d\
       | xargs -I % ln -s `pwd`/% /usr/local/bin/%' \;
 
 ## run ghci by default unless a command is specified
-CMD ["bash", "-cl", "ghci"]
+CMD ["ghci"]
