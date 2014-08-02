@@ -97,9 +97,7 @@ See the [docker installation](https://docs.docker.com/installation/) page for de
 
 *   Ubuntu
 
-        apt-get install docker.io
-
-      NOTE: you might want to [rename docker.io to docker](http://pastebin.com/raw.php?i=hm3y4vJy)
+        curl -sSL https://get.docker.io/ubuntu/ | sudo sh
 
 <a name="upgrading_the_container"></a>
 ### Upgrading the Container
