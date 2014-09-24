@@ -1,6 +1,5 @@
 ## Dockerfile for a haskell environment
-## https://github.com/darinmorrison/docker-haskell
-FROM       debian:unstable
+FROM       debian:stable
 MAINTAINER Darin Morrison <darinmorrison+docker@gmail.com>
 
 ## disable prompts from apt
@@ -19,30 +18,37 @@ RUN echo    'LC_ALL=C.UTF-8' >> '/etc/default/locale'\
  && echo      'LANG=C.UTF-8' >> '/etc/default/locale'\
  && echo  'LANGUAGE=C.UTF-8' >> '/etc/default/locale'
 
-## add ppa for ubuntu trusty haskell packages
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F6F88286\
- && echo 'deb     http://ppa.launchpad.net/hvr/ghc/ubuntu trusty main' >> /etc/apt/sources.list.d/haskell.list\
- && echo 'deb-src http://ppa.launchpad.net/hvr/ghc/ubuntu trusty main' >> /etc/apt/sources.list.d/haskell.list
+## configure apt to use the haskell repository
+ADD http://deb.haskell.org/deb.haskell.org.gpg-key /tmp/deb.haskell.org.gpg-key
+RUN apt-key add /tmp/deb.haskell.org.gpg-key\
+ && echo 'deb     http://deb.haskell.org/stable/ ./' >> /etc/apt/sources.list.d/haskell.list\
+ && echo 'deb-src http://deb.haskell.org/stable/ ./' >> /etc/apt/sources.list.d/haskell.list
 
-## haskell package versions; can be overriden via context hacks
+## set haskell upstream package versions
 ENV VERSION_ALEX   3.1.3
-ENV VERSION_CABAL  1.20
+ENV VERSION_CABAL  1.20.0.3
 ENV VERSION_HAPPY  1.19.4
+
+## set haskell deb revisions
+ENV DEB_REV_ALEX   -1
+ENV DEB_REV_CABAL  -1
+ENV DEB_REV_HAPPY  -1
 
 ## install minimal set of haskell packages
 RUN apt-get update\
  && apt-get install ${OPTS_APT}\
-      alex-"${VERSION_ALEX}"\
-      cabal-install-"${VERSION_CABAL}"\
-      happy-"${VERSION_HAPPY}"
+      alex="${VERSION_ALEX}""${DEB_REV_ALEX}"\
+      cabal-install-1.20="${VERSION_CABAL}""${DEB_REV_CABAL}"\
+      happy="${VERSION_HAPPY}""${DEB_REV_HAPPY}"
 
-## haskell package versions; can be overriden via context hacks
+## set ghc upstream package versions and ghc deb revisions
 ENV VERSION_GHC    7.8.3
+ENV DEB_REV_GHC    -1
 
 ## install ghc
 RUN apt-get update\
  && apt-get install ${OPTS_APT}\
-      ghc-"${VERSION_GHC}"
+      ghc-7.8.3="${VERSION_GHC}""${DEB_REV_GHC}"
 
 ## link the binaries into /usr/local/bin
 RUN find /opt -maxdepth 3 -name bin -type d\
