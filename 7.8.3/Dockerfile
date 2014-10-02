@@ -1,5 +1,5 @@
 ## Dockerfile for a haskell environment
-FROM       debian:stable
+FROM       buildpack-deps:wheezy
 MAINTAINER Darin Morrison <darinmorrison+docker@gmail.com>
 
 ## disable prompts from apt
