@@ -6,7 +6,7 @@ MAINTAINER Darin Morrison <darinmorrison+docker@gmail.com>
 ENV DEBIAN_FRONTEND noninteractive
 
 ## custom apt-get install options
-ENV OPTS_APT        -y --force-yes --no-install-recommends
+ENV OPTS_APT        -y --no-install-recommends
 
 ## ensure locale is set during build
 ENV LC_ALL          C.UTF-8
