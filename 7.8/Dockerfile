@@ -50,6 +50,8 @@ RUN apt-get update\
       cabal-install-1.20="${VERSION_CABAL}""${DEB_REV_CABAL}"\
       happy="${VERSION_HAPPY}""${DEB_REV_HAPPY}"
 
+## Development Niceties
+RUN apt-get install zlib1g-dev
 
 ## link binaries into /usr/local/bin
 RUN find /opt -maxdepth 3 -name bin -type d\
