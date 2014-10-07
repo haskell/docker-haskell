@@ -29,7 +29,7 @@ RUN apt-get update\
  && apt-get install ${OPTS_APT}\
       ghc-7.8.3="${MAJOR_GHC}""${MINOR_GHC}""${DEB_REV_GHC}"
 
-## set upstream package versions for remaining haskell packages
+## set upstream package versions (major-level) for remaining haskell packages
 ENV MAJOR_ALEX      3.1
 ENV MAJOR_CABAL     1.20
 ENV MAJOR_HAPPY     1.19
