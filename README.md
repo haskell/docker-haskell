@@ -4,6 +4,10 @@
 
 ---
 
+### NOTE: [docker-library](https://github.com/darinmorrison/docker-haskell/tree/docker-library) will soon replace this branch
+
+---
+
 **Table of Contents**
 
 *   [Overview](#overview)
