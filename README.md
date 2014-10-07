@@ -6,9 +6,9 @@ This docker image ships a minimal Haskell toolchain.
 
 This image can be used in the following ways:
 
-*   **As a containerized haskell development environment**
+*   **As a containerized Haskell development environment**
 
-*   **As a container in which to build and run haskell apps locally or deploy remotely**
+*   **As a container in which to build and run Haskell apps locally or deploy remotely**
 
 *   **As a base image for other containers depending on the Haskell toolchain**
 
