@@ -51,13 +51,13 @@ RUN apt-get update\
       cabal-install-"${MAJOR_CABAL}"="${MAJOR_CABAL}""${MINOR_CABAL}""${DEB_REV_CABAL}"\
       happy="${MAJOR_HAPPY}""${MINOR_HAPPY}""${DEB_REV_HAPPY}"
 
-## install additional libs typically needed by hackage packages
-RUN apt-get update\
- && apt-get install ${OPTS_APT} zlib1g-dev
-
 ## set PATH for tools not installed to /usr/{bin,/local/bin}
 ENV PATH            /opt/cabal/$MAJOR_CABAL/bin:$PATH
 ENV PATH            /opt/ghc/$MAJOR_GHC$MINOR_GHC/bin:$PATH
+
+## install additional libs typically needed by hackage packages
+RUN apt-get update\
+ && apt-get install ${OPTS_APT} zlib1g-dev
 
 ## run ghci by default unless a command is specified
 CMD ["ghci"]
