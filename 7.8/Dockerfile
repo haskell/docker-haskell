@@ -13,11 +13,6 @@ ENV LC_ALL          C.UTF-8
 ENV LANG            C.UTF-8
 ENV LANGUAGE        C.UTF-8
 
-## ensure locale is set for new logins
-RUN echo    'LC_ALL=C.UTF-8' >> '/etc/default/locale'\
- && echo      'LANG=C.UTF-8' >> '/etc/default/locale'\
- && echo  'LANGUAGE=C.UTF-8' >> '/etc/default/locale'
-
 ## configure apt to use the haskell repository
 ADD http://deb.haskell.org/deb.haskell.org.gpg-key /tmp/deb.haskell.org.gpg-key
 RUN apt-key add /tmp/deb.haskell.org.gpg-key\
