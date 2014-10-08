@@ -2,20 +2,15 @@
 FROM       debian:wheezy
 MAINTAINER Darin Morrison <darinmorrison+docker@gmail.com>
 
-## disable prompts from apt
-ENV DEBIAN_FRONTEND noninteractive
-
 ## custom apt-get install options
 ENV OPTS_APT        -y --no-install-recommends
 
 ## ensure locale is set during build
-ENV LC_ALL          C.UTF-8
 ENV LANG            C.UTF-8
-ENV LANGUAGE        C.UTF-8
 
 ## configure apt to use the haskell repository
-ADD http://deb.haskell.org/deb.haskell.org.gpg-key /tmp/deb.haskell.org.gpg-key
-RUN apt-key add /tmp/deb.haskell.org.gpg-key\
+# gpg: key 4E3AC105: public key "deb.haskell.org repository key" imported
+RUN apt-key adv --keyserver pgp.mit.edu --recv-keys B8755D4B75DCAA2D234CC879E6B69A2A4E3AC105\
  && echo 'deb     http://deb.haskell.org/stable/ ./' >> /etc/apt/sources.list.d/haskell.list\
  && echo 'deb-src http://deb.haskell.org/stable/ ./' >> /etc/apt/sources.list.d/haskell.list
 
