@@ -84,7 +84,7 @@ BEGIN {
 ( state[ "node" ] == "package" ) && ( /^Package/ ) {
   for ( name in pkgs ) {
     if ( $2 ~ name ) {        ## when package name matches input …
-      state_next( name )      ## … transition to Version State
+      state_next( name )      ## … begin scanning for 'Version'
     }
   }
 }
@@ -92,10 +92,12 @@ BEGIN {
 #### Version State
 ## scan for next token 'Version' at start of line
 ( state[ "node" ] == "version" ) && ( /^Version/ ) {
+  ## if current version is greater than previously versions …
   if ( $2 > pkgs[ state[ "name" ] ] ) {
+    ## … use this new greatest version (i.e., find the max)
     pkgs[ state[ "name" ] ] = $2
   }
-  state_next()                ## transition to Package State
+  state_next()                ## resume scanning for 'Package'
 }
 
 ## cleanup; exit
