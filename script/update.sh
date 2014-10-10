@@ -41,19 +41,24 @@ function state_next ( name ) {
   }
 }
 
+## given X.Y.Z1[.Z2 … .Zn]-d return components specified by replacement
+function version_parse ( name, version, replacement ) {
+  return gensub( /^([^.]*)\.([^.]*)\.(.*)-(.*)$/, replacement, 1, version )
+}
+
 ## given X.Y.Z1[.Z2 … .Zn]-d return X.Y
 function version_major ( name, version ) {
-  return gensub( /^([^.]*)\.([^.]*)\..*-.*$/, "\\1.\\2", 1, version )
+  return version_parse( name, version, "\\1.\\2" )
 }
 
 ## given X.Y.Z1[.Z2 … .Zn]-d return Z1[.Z2 … .Zn]
 function version_minor ( name, version ) {
-  return gensub( /^[^.]*\.[^.]*\.(.*)-.*$/, "\\1", 1, version )
+  return version_parse( name, version, "\\3" )
 }
 
 ## given X.Y.Z1[.Z2 … .Zn]-d return d
 function version_deb_rev ( name, version ) {
-  return gensub( /^[^.]*\.[^.]*\..*-(.*)$/, "\\1", 1, version )
+  return version_parse( name, version, "\\4" )
 }
 
 ## update Dockerfile ENVs for a given package name/version pair
