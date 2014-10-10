@@ -97,7 +97,7 @@ BEGIN {
     ## … use this new greatest version (i.e., find the max)
     pkgs[ state[ "name" ] ] = $2
   }
-  state_next()                ## resume scanning for 'Package'
+  state_next( name )          ## resume scanning for 'Package'
 }
 
 ## cleanup; exit
