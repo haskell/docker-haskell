@@ -52,7 +52,7 @@ ENV PATH            /opt/ghc/$MAJOR_GHC$MINOR_GHC/bin:$PATH
 
 ## install additional libs typically needed by hackage packages
 RUN apt-get update\
- && apt-get install ${OPTS_APT} zlib1g-dev
+ && apt-get install ${OPTS_APT} zlib1g-dev libtinfo-dev
 
 ## run ghci by default unless a command is specified
 CMD ["ghci"]
