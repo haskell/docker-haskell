@@ -69,33 +69,40 @@ function version_update ( name , version ) {
     print version_deb_rev( name, version )
 }
 
+function loop () {
+  pkgs_url = "http://deb.haskell.org/stable/Packages"
+  pkgs_cmd = "curl --silent" " " pkgs_url
+  while ((pkgs_cmd | getline) > 0) {
+    #### Package State
+    ## scan for next token 'Package' at start of line
+    if (( state[ "node" ] == "package" ) && ( $0 ~ /^Package/ )) {
+      for ( name in pkgs ) {
+        if ( $2 ~ name ) {        ## when package name matches input …
+          state_next( name )      ## … begin scanning for 'Version'
+        }
+      }
+    }
+    #### Version State
+    ## scan for next token 'Version' at start of line
+    if (( state[ "node" ] == "version" ) && ( $0 ~ /^Version/ )) {
+      ## if current version is greater than previously versions …
+      if ( $2 > pkgs[ state[ "name" ] ] ) {
+        ## … use this new greatest version (i.e., find the max)
+        pkgs[ state[ "name" ] ] = $2
+      }
+      state_next( name )          ## resume scanning for 'Package'
+    }
+  }
+  exit 0
+}
+
 ## configure context; initialize state
 BEGIN {
    FS = ": "                  ## separate input  fields by ": "
   OFS = "="                   ## separate output fields by "="
   init_pkgs()
   init_state()
-}
-
-#### Package State
-## scan for next token 'Package' at start of line
-( state[ "node" ] == "package" ) && ( /^Package/ ) {
-  for ( name in pkgs ) {
-    if ( $2 ~ name ) {        ## when package name matches input …
-      state_next( name )      ## … begin scanning for 'Version'
-    }
-  }
-}
-
-#### Version State
-## scan for next token 'Version' at start of line
-( state[ "node" ] == "version" ) && ( /^Version/ ) {
-  ## if current version is greater than previously versions …
-  if ( $2 > pkgs[ state[ "name" ] ] ) {
-    ## … use this new greatest version (i.e., find the max)
-    pkgs[ state[ "name" ] ] = $2
-  }
-  state_next( name )          ## resume scanning for 'Package'
+  loop()
 }
 
 ## cleanup; exit
