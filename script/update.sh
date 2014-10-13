@@ -4,7 +4,7 @@
 ##
 ## Parse Debian Package file, extract version info, and update Dockerfile ENVs
 ##
-#### usage: update.sh pkg1="" … pkgn="" < Packages
+#### usage: ./script/update.sh
 
 #### TODO ######################################################################
 ##
@@ -18,14 +18,10 @@
 
 ## initialize the pkgs array
 function init_pkgs () {
-    ## for each arg …
-    for ( i = 1; i < ARGC; i++ ) {
-        ## … if the arg is a variable (i.e., ends in =) …
-        if ( ARGV[ i ] ~ /=$/ ) {
-            ## … create an entry in the packages array
-            pkgs[ gensub( /(.*)=$/, "\\1", 1, ARGV[ i ] ) ] = ""
-        }
-    }
+    pkgs[ "alex"  ] = ""
+    pkgs[ "cabal" ] = ""
+    pkgs[ "ghc"   ] = ""
+    pkgs[ "happy" ] = ""
 }
 
 ## initialize the state (i.e., current parser node and package name)
