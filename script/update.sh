@@ -63,8 +63,6 @@ function version_deb_rev ( name, version ) {
 
 ## update Dockerfile ENVs for a given package name/version pair
 function version_update ( name , version ) {
-    ## TODO: curl Packages
-    ## TODO: sed -i …
     print name
     print version_major( name, version )
     print version_minor( name, version )
@@ -73,10 +71,10 @@ function version_update ( name , version ) {
 
 ## configure context; initialize state
 BEGIN {
+   FS = ": "                  ## separate input  fields by ": "
+  OFS = "="                   ## separate output fields by "="
   init_pkgs()
   init_state()
-  FS  = ": "                  ## separate input  fields by ": "
-  OFS = "="                   ## separate output fields by "="
 }
 
 #### Package State
