@@ -64,7 +64,9 @@ function version_update ( name , version ) {
     sed_out = "./7.8/Dockerfile"    ## see TODO above regarding hardcoded 7.8
 
     ## initialize components array
-    split( "MAJOR MINOR DEB_REV", components, " " )
+    components[0] = "MAJOR"
+    components[1] = "MINOR"
+    components[2] = "DEB_REV"
 
     ## for each component
     for ( i in components ) {
