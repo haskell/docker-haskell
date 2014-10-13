@@ -56,36 +56,6 @@ function version_parse ( name, version, component ) {
     return gensub( /^([^.]*)\.([^.]*)\.(.*)-(.*)$/, replacement, 1, version )
 }
 
-## update Dockerfile ENVs for a given package name/version pair
-function version_update ( name , version ) {
-    ## set up sed cmd to update Dockerfile
-    sed_cmd = "sed"
-    sed_opt = "-i ''"
-    sed_out = "./7.8/Dockerfile"    ## see TODO above regarding hardcoded 7.8
-
-    ## initialize components array
-    components[0] = "MAJOR"
-    components[1] = "MINOR"
-    components[2] = "DEB_REV"
-
-    ## for each component
-    for ( i in components ) {
-        ## create a sed expression to update the ENV in the Dockerfile
-        sed_exp =\
-            "s/^\\(ENV[[:space:]]\\{1,\\}"\
-            components[i]\
-            "_"\
-            toupper(name)\
-            "[[:space:]]\\{1,\\}\\)\\(.*\\)$/\\1"\
-            version_parse( name, version, components[i] )\
-            "/"
-        ## create the shell expression
-        sed_run = sed_cmd " " sed_opt " '" sed_exp "' " sed_out
-        ## run the sed command
-        system( sed_run )
-    }
-}
-
 ################################################################################
 #### Packages Parsing (State Transition)
 ################################################################################
@@ -129,6 +99,40 @@ function state_version () {
             pkgs[ state[ "name" ] ] = $2
         }
         state_next( name )          ## resume scanning for 'Package'
+    }
+}
+
+################################################################################
+#### Dockerfile Editing
+################################################################################
+
+## update Dockerfile ENVs for a given package name/version pair
+function version_update ( name , version ) {
+    ## set up sed cmd to update Dockerfile
+    sed_cmd = "sed"
+    sed_opt = "-i ''"
+    sed_out = "./7.8/Dockerfile"    ## see TODO above regarding hardcoded 7.8
+
+    ## initialize components array
+    components[0] = "MAJOR"
+    components[1] = "MINOR"
+    components[2] = "DEB_REV"
+
+    ## for each component
+    for ( i in components ) {
+        ## create a sed expression to update the ENV in the Dockerfile
+        sed_exp =\
+            "s/^\\(ENV[[:space:]]\\{1,\\}"\
+            components[i]\
+            "_"\
+            toupper(name)\
+            "[[:space:]]\\{1,\\}\\)\\(.*\\)$/\\1"\
+            version_parse( name, version, components[i] )\
+            "/"
+        ## create the shell expression
+        sed_run = sed_cmd " " sed_opt " '" sed_exp "' " sed_out
+        ## run the sed command
+        system( sed_run )
     }
 }
 
