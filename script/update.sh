@@ -145,7 +145,7 @@ function main () {
     curl_cmd = "curl"
     curl_opt = "--silent"
     curl_url = "http://deb.haskell.org/stable/Packages"
-    curl_run = "curl" " " curl_opt " " curl_url
+    curl_run = curl_cmd " " curl_opt " " curl_url
 
     ## run curl in a pipe and parse the output
     while ((curl_run | getline) > 0) {
