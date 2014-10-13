@@ -6,8 +6,15 @@
 ##
 #### usage: update.sh pkg1="" … pkgn="" < Packages
 
+#### TODO ######################################################################
+##
+## * Needs to be generalized to handle multiple versions of GHC
+##
+####
+
 ################################################################################
 #### Initialization
+################################################################################
 
 ## initialize the pkgs array
 function init_pkgs () {
@@ -29,6 +36,7 @@ function init_state () {
 
 ################################################################################
 #### Version Parsing
+################################################################################
 
 ## given X.Y.Z1[.Z2 … .Zn]-d return requested components
 function version_parse ( name, version, component ) {
@@ -82,6 +90,7 @@ function version_update ( name , version ) {
 
 ################################################################################
 #### Packages Parsing (State Transition)
+################################################################################
 
 ## transition between parsing states
 function state_next ( name ) {
@@ -127,6 +136,7 @@ function state_version () {
 
 ################################################################################
 #### Main
+################################################################################
 
 function main () {
     ## set up curl cmd to grab Packages from the Haskell repository
@@ -150,7 +160,8 @@ function main () {
 }
 
 ################################################################################
-#### Awk
+#### AWK
+################################################################################
 
 ## configure context; initialize state
 BEGIN {
