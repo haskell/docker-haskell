@@ -13,9 +13,6 @@ RUN cd /opt/server && cabal install --only-dependencies -j4
 ADD ./server /opt/server
 RUN cd /opt/server && cabal install
 
-# Initialize JSON users file
-RUN touch /opt/server/users.json
-
 # Add installed cabal executables to PATH
 ENV PATH /root/.cabal/bin:$PATH
 
