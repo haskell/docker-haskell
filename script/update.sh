@@ -30,32 +30,54 @@ function init_state () {
 ################################################################################
 #### Version Parsing
 
-## given X.Y.Z1[.Z2 … .Zn]-d return components specified by replacement
-function version_parse ( name, version, replacement ) {
+## given X.Y.Z1[.Z2 … .Zn]-d return requested components
+function version_parse ( name, version, component ) {
+    switch ( component ) {
+        case "MAJOR":
+            ## given X.Y.Z1[.Z2 … .Zn]-d return X.Y
+            replacement = "\\1.\\2"
+            break;
+        case "MINOR":
+            ## given X.Y.Z1[.Z2 … .Zn]-d return .Z1[.Z2 … .Zn]
+            replacement = ".\\3"
+            break;
+        case "DEB_REV":
+            ## given X.Y.Z1[.Z2 … .Zn]-d return -d
+            replacement = "-\\4"
+            break;
+        default:
+            print "version_parse :: ERROR :: invalid component: ", component
+            exit 1
+    }
     return gensub( /^([^.]*)\.([^.]*)\.(.*)-(.*)$/, replacement, 1, version )
-}
-
-## given X.Y.Z1[.Z2 … .Zn]-d return X.Y
-function version_major ( name, version ) {
-    return version_parse( name, version, "\\1.\\2" )
-}
-
-## given X.Y.Z1[.Z2 … .Zn]-d return Z1[.Z2 … .Zn]
-function version_minor ( name, version ) {
-    return version_parse( name, version, "\\3" )
-}
-
-## given X.Y.Z1[.Z2 … .Zn]-d return d
-function version_deb_rev ( name, version ) {
-    return version_parse( name, version, "\\4" )
 }
 
 ## update Dockerfile ENVs for a given package name/version pair
 function version_update ( name , version ) {
-    print name
-    print version_major( name, version )
-    print version_minor( name, version )
-    print version_deb_rev( name, version )
+    ## set up sed cmd to update Dockerfile
+    sed_cmd = "sed"
+    sed_opt = "-i ''"
+    sed_out = "./7.8/Dockerfile"    ## see TODO above regarding hardcoded 7.8
+
+    ## initialize components array
+    split( "MAJOR MINOR DEB_REV", components, " " )
+
+    ## for each component
+    for ( i in components ) {
+        ## create a sed expression to update the ENV in the Dockerfile
+        sed_exp =\
+            "s/^\\(ENV[[:space:]]\\{1,\\}"\
+            components[i]\
+            "_"\
+            toupper(name)\
+            "[[:space:]]\\{1,\\}\\)\\(.*\\)$/\\1"\
+            version_parse( name, version, components[i] )\
+            "/"
+        ## create the shell expression
+        sed_run = sed_cmd " " sed_opt " '" sed_exp "' " sed_out
+        ## run the sed command
+        system( sed_run )
+    }
 }
 
 ################################################################################
@@ -108,12 +130,13 @@ function state_version () {
 
 function main () {
     ## set up curl cmd to grab Packages from the Haskell repository
-    curl_url = "http://deb.haskell.org/stable/Packages"
+    curl_cmd = "curl"
     curl_opt = "--silent"
-    curl_cmd = "curl" " " curl_opt " " curl_url
+    curl_url = "http://deb.haskell.org/stable/Packages"
+    curl_run = "curl" " " curl_opt " " curl_url
 
     ## run curl in a pipe and parse the output
-    while ((curl_cmd | getline) > 0) {
+    while ((curl_run | getline) > 0) {
         state_package()             ## try the Package parsing state
         state_version()             ## try the Version parsing state
     }
