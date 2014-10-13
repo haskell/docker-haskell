@@ -1,10 +1,13 @@
 #!/usr/bin/env awk -f
 
-#### Synopsis
+#### Synopsis ##################################################################
 ##
 ## Parse Debian Package file, extract version info, and update Dockerfile ENVs
 ##
-## usage: update.sh pkg1="" … pkgn="" < Packages
+#### usage: update.sh pkg1="" … pkgn="" < Packages
+
+################################################################################
+#### Initialization
 
 ## initialize the pkgs array
 function init_pkgs () {
@@ -24,22 +27,8 @@ function init_state () {
     state[ "name" ] = ""
 }
 
-## transition between parsing states
-function state_next ( name ) {
-    switch ( state[ "node" ] ) {
-        case "package":
-            state[ "node" ] = "version"
-            state[ "name" ] = name
-            break
-        case "version":
-            state[ "node" ] = "package"
-            state[ "name" ] = ""
-            break
-        default:
-            print "state_next :: ERROR :: invalid state[ \"node\" ]: ", state[ "node" ]
-            exit 1
-    }
-}
+################################################################################
+#### Version Parsing
 
 ## given X.Y.Z1[.Z2 … .Zn]-d return components specified by replacement
 function version_parse ( name, version, replacement ) {
@@ -69,47 +58,86 @@ function version_update ( name , version ) {
     print version_deb_rev( name, version )
 }
 
-function loop () {
-    pkgs_url = "http://deb.haskell.org/stable/Packages"
-    pkgs_cmd = "curl --silent" " " pkgs_url
-    while ((pkgs_cmd | getline) > 0) {
-        #### Package State
-        ## scan for next token 'Package' at start of line
-        if (( state[ "node" ] == "package" ) && ( $0 ~ /^Package/ )) {
-            for ( name in pkgs ) {
-                if ( $2 ~ name ) {      ## when package name matches input …
-                    state_next( name )  ## … begin scanning for 'Version'
-                }
+################################################################################
+#### Packages Parsing (State Transition)
+
+## transition between parsing states
+function state_next ( name ) {
+    switch ( state[ "node" ] ) {
+        case "package":
+            state[ "node" ] = "version"
+            state[ "name" ] = name
+            break
+        case "version":
+            state[ "node" ] = "package"
+            state[ "name" ] = ""
+            break
+        default:
+            print "state_next :: ERROR :: invalid state[ \"node\" ]: ", state[ "node" ]
+            exit 1
+    }
+}
+
+## state for parse Package fields
+function state_package () {
+    ## scan for next token 'Package' at start of line
+    if (( state[ "node" ] == "package" ) && ( $0 ~ /^Package/ )) {
+        for ( name in pkgs ) {
+            if ( $2 ~ name ) {      ## when package name matches input …
+                state_next( name )  ## … begin scanning for 'Version'
             }
-        }
-        #### Version State
-        ## scan for next token 'Version' at start of line
-        if (( state[ "node" ] == "version" ) && ( $0 ~ /^Version/ )) {
-            ## if current version is greater than previously versions …
-            if ( $2 > pkgs[ state[ "name" ] ] ) {
-                ## … use this new greatest version (i.e., find the max)
-                pkgs[ state[ "name" ] ] = $2
-            }
-            state_next( name )          ## resume scanning for 'Package'
         }
     }
-    exit 0
 }
+
+## state for parsing Version fields
+function state_version () {
+    ## scan for next token 'Version' at start of line
+    if (( state[ "node" ] == "version" ) && ( $0 ~ /^Version/ )) {
+        ## if current version is greater than previously versions …
+        if ( $2 > pkgs[ state[ "name" ] ] ) {
+            ## … use this new greatest version (i.e., find the max)
+            pkgs[ state[ "name" ] ] = $2
+        }
+        state_next( name )          ## resume scanning for 'Package'
+    }
+}
+
+################################################################################
+#### Main
+
+function main () {
+    ## set up curl cmd to grab Packages from the Haskell repository
+    curl_url = "http://deb.haskell.org/stable/Packages"
+    curl_opt = "--silent"
+    curl_cmd = "curl" " " curl_opt " " curl_url
+
+    ## run curl in a pipe and parse the output
+    while ((curl_cmd | getline) > 0) {
+        state_package()             ## try the Package parsing state
+        state_version()             ## try the Version parsing state
+    }
+
+    ## update the Dockerfile with new version info for each package
+    for ( name in pkgs ) {
+        version_update( name, pkgs[ name ] )
+    }
+
+    exit 0                          ## jump to END
+}
+
+################################################################################
+#### Awk
 
 ## configure context; initialize state
 BEGIN {
-    FS = ": "                           ## separate input  fields by ": "
-   OFS = "="                            ## separate output fields by "="
-   init_pkgs()
-   init_state()
-   loop()
+    FS = ": "                       ## separate input  fields by ": "
+   OFS = "="                        ## separate output fields by "="
+   init_pkgs()                      ## init pkgs array
+   init_state()                     ## init parsing state
+   main()                           ## start parsing
 }
 
 ## cleanup; exit
 END {
-    ## update the Dockerfile with new version info for each package
-    for ( name in pkgs ) {
-        version_update( name, pkgs[ name ] pkgs_sep )
-        print
-    }
 }
