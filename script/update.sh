@@ -274,10 +274,10 @@ function dfile_all_rewrite () {
 ################################################################################
 
 function main () {
-    init_pkg_str_arr()
-    init_img_tag_arr()              ## init tags array (e.g., 7.8, …)
-    init_pkg_ver_arr()              ## init packages array
-    init_pkg_ver_pst()              ## init parsing state
+    init_pkg_str_arr()              ## init package names array
+    init_img_tag_arr()              ## init image tags array (e.g., 7.8, …)
+    init_pkg_ver_arr()              ## init package versions array
+    init_pkg_ver_pst()              ## init package versions parsing state
     pfile_get_records()             ## download Package file; parse records
     dfile_all_rewrite()             ## rewrite Dockerfile with new vers
     exit 0                          ## jump to END
