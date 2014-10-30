@@ -1,24 +1,16 @@
-## What is Haskell?
-
 ![image](https://github.com/darinmorrison/docker-haskell/blob/docker-library/logo.png?raw=true)
 
-Haskell is an advanced purely-functional programming language. An open-source
-product of more than twenty years of cutting-edge research, it allows rapid
-development of robust, concise, correct software. With strong support for
-integration with other languages, built-in concurrency and parallelism,
-debuggers, profilers, rich libraries and an active community, Haskell makes it
-easier to produce flexible, maintainable, high-quality software.
+---
 
-The Glorious Glasgow Haskell Compilation System (GHC) is a state-of-the-art,
-open source, compiler and interactive environment for the functional language
-Haskell.  GHC includes an optimising compiler (`ghc`), an interactive
-environment (`ghci`), and a convenient script runner (`runghc`).
+[Haskell](http://www.haskell.org) is a [lazy](http://en.wikibooks.org/wiki/Haskell/Laziness), functional, statically-typed programming language with advanced type system features such as higher-rank, higher-kinded parametric [polymorphism](http://en.wikibooks.org/wiki/Haskell/Polymorphism), monadic [effects](http://en.wikibooks.org/wiki/Haskell/Understanding_monads/IO), generalized algebraic data types ([GADT](http://en.wikibooks.org/wiki/Haskell/GADT)s), flexible [type classes](http://en.wikibooks.org/wiki/Haskell/Advanced_type_classes), associated [type families](http://en.wikipedia.org/wiki/Type_family), and more.
 
-> [haskell.org](http://www.haskell.org)
+Haskell's [`ghc`](http://www.haskell.org/ghc) is a [portable](https://ghc.haskell.org/trac/ghc/wiki/Platforms), [optimizing](http://benchmarksgame.alioth.debian.org/u64q/haskell.php) compiler  with a foreign-function interface ([FFI](http://en.wikibooks.org/wiki/Haskell/FFI)), an [LLVM backend](https://www.haskell.org/ghc/docs/7.8.3/html/users_guide/code-generators.html), and sophisticated runtime support for [concurrency](http://en.wikibooks.org/wiki/Haskell/Concurrency), explicit/implicit [parallelism](http://community.haskell.org/~simonmar/pcph/), runtime [profiling](http://www.haskell.org/haskellwiki/ThreadScope), etc. Other Haskell tools like [`criterion`](http://www.serpentine.com/criterion/tutorial.html), [`quickcheck`](https://www.fpcomplete.com/user/pbv/an-introduction-to-quickcheck-testing), [`hpc`](http://www.haskell.org/haskellwiki/Haskell_program_coverage#Examples), and [`haddock`](http://en.wikipedia.org/wiki/Haddock_(software)) provide advanced benchmarking, property-based testing, code coverage, and documentation generation.
 
-> [Glasgow Haskell Compiler](http://www.haskell.org/ghc)
+A large number of production-quality Haskell libraries are available from [Hackage](https://hackage.haskell.org). The [`cabal`](https://www.fpcomplete.com/user/simonmichael/how-to-cabal-install) tool fetches packages and build projects using the Hackage ecosystem.
 
-The default configuration of this image provides the following packages:
+## Contents
+
+This image ships a minimal Haskell toolchain with the following packages:
 
 | package         | version    |
 |-----------------|------------|
@@ -27,28 +19,33 @@ The default configuration of this image provides the following packages:
 | `happy`         | `1.19.4`   |
 | `ghc`           | `7.8.3`    |
 
-## How to use this image
 
-Directly run `ghci`.
+## Usage
 
+* Start an interactive interpreter session with `ghci`:
+
+```
     $ docker run -it --rm haskell:7.8
     GHCi, version 7.8.3: http://www.haskell.org/ghc/  :? for help
     Loading package ghc-prim ... linking ... done.
     Loading package integer-gmp ... linking ... done.
     Loading package base ... linking ... done.
     Prelude>
+```
 
-Dockerize an application on Hackage with a Dockerfile that inherits from the
-base image.
+* Dockerize a [Hackage](http://hackage.haskell.org) app with a Dockerfile inheriting from the base image:
 
+```
     FROM haskell:7.8
     RUN cabal update && cabal install MazesOfMonad
     VOLUME /root/.MazesOfMonad
     ENTRYPOINT ["/root/.cabal/bin/mazesofmonad"]
+```
 
-Develop and ship your Haskell application with a Dockerfile that utilizes the
-build cache for quick iteration.
+* Iteratively develop then ship a Haskell app with a Dockerfile utilizing the
+build cache:
 
+```
     FROM haskell:7.8
 
     RUN cabal update
@@ -70,6 +67,8 @@ build cache for quick iteration.
     # Default Command for Container
     WORKDIR /opt/server
     CMD ["snap-example"]
+```
 
-This example can be reviewed in more depth at
-https://github.com/darinmorrison/docker-haskell/tree/docker-library/examples/7.8.3/snap
+## Examples
+
+See the application snippet above in more detail in the [example snap application](https://github.com/darinmorrison/docker-haskell/tree/docker-library/examples/7.8.3/snap).
