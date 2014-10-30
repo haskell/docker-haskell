@@ -6,7 +6,7 @@
 
 Haskell's [`ghc`](http://www.haskell.org/ghc) is a [portable](https://ghc.haskell.org/trac/ghc/wiki/Platforms), [optimizing](http://benchmarksgame.alioth.debian.org/u64q/haskell.php) compiler  with a foreign-function interface ([FFI](http://en.wikibooks.org/wiki/Haskell/FFI)), an [LLVM backend](https://www.haskell.org/ghc/docs/7.8.3/html/users_guide/code-generators.html), and sophisticated runtime support for [concurrency](http://en.wikibooks.org/wiki/Haskell/Concurrency), explicit/implicit [parallelism](http://community.haskell.org/~simonmar/pcph/), runtime [profiling](http://www.haskell.org/haskellwiki/ThreadScope), etc. Other Haskell tools like [`criterion`](http://www.serpentine.com/criterion/tutorial.html), [`quickcheck`](https://www.fpcomplete.com/user/pbv/an-introduction-to-quickcheck-testing), [`hpc`](http://www.haskell.org/haskellwiki/Haskell_program_coverage#Examples), and [`haddock`](http://en.wikipedia.org/wiki/Haddock_(software)) provide advanced benchmarking, property-based testing, code coverage, and documentation generation.
 
-A large number of production-quality Haskell libraries are available from [Hackage](https://hackage.haskell.org). The [`cabal`](https://www.fpcomplete.com/user/simonmichael/how-to-cabal-install) tool fetches packages and build projects using the Hackage ecosystem.
+A large number of production-quality Haskell libraries are available from [Hackage](https://hackage.haskell.org). The [`cabal`](https://www.fpcomplete.com/user/simonmichael/how-to-cabal-install) tool fetches packages and builds projects using the Hackage ecosystem.
 
 ## Contents
 
