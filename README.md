@@ -1,50 +1,16 @@
-# docker-haskell: haskell in a container
-
-`docker-haskell` is a docker container shipping a minimal haskell toolchain
+![image](https://github.com/darinmorrison/docker-haskell/blob/docker-library/logo.png?raw=true)
 
 ---
 
-### NOTE: [docker-library](https://github.com/darinmorrison/docker-haskell/tree/docker-library) will soon replace this branch
+[Haskell](http://www.haskell.org) is a [lazy](http://en.wikibooks.org/wiki/Haskell/Laziness), functional, statically-typed programming language with advanced type system features such as higher-rank, higher-kinded parametric [polymorphism](http://en.wikibooks.org/wiki/Haskell/Polymorphism), monadic [effects](http://en.wikibooks.org/wiki/Haskell/Understanding_monads/IO), generalized algebraic data types ([GADT](http://en.wikibooks.org/wiki/Haskell/GADT)s), flexible [type classes](http://en.wikibooks.org/wiki/Haskell/Advanced_type_classes), associated [type families](http://en.wikipedia.org/wiki/Type_family), and more.
 
----
+Haskell's [`ghc`](http://www.haskell.org/ghc) is a [portable](https://ghc.haskell.org/trac/ghc/wiki/Platforms), [optimizing](http://benchmarksgame.alioth.debian.org/u64q/haskell.php) compiler  with a foreign-function interface ([FFI](http://en.wikibooks.org/wiki/Haskell/FFI)), an [LLVM backend](https://www.haskell.org/ghc/docs/7.8.3/html/users_guide/code-generators.html), and sophisticated runtime support for [concurrency](http://en.wikibooks.org/wiki/Haskell/Concurrency), explicit/implicit [parallelism](http://community.haskell.org/~simonmar/pcph/), runtime [profiling](http://www.haskell.org/haskellwiki/ThreadScope), etc. Other Haskell tools like [`criterion`](http://www.serpentine.com/criterion/tutorial.html), [`quickcheck`](https://www.fpcomplete.com/user/pbv/an-introduction-to-quickcheck-testing), [`hpc`](http://www.haskell.org/haskellwiki/Haskell_program_coverage#Examples), and [`haddock`](http://en.wikipedia.org/wiki/Haddock_(software)) provide advanced benchmarking, property-based testing, code coverage, and documentation generation.
 
-**Table of Contents**
+A large number of production-quality Haskell libraries are available from [Hackage](https://hackage.haskell.org). The [`cabal`](https://www.fpcomplete.com/user/simonmichael/how-to-cabal-install) tool fetches packages and builds projects using the Hackage ecosystem.
 
-*   [Overview](#overview)
-    *   [Use Cases](#use_cases)
-    *   [Container Contents](#container_contents)
-*   [Usage](#usage)
-    *   [Getting Started](#getting_started)
-        *   [Running via Vagrant](#running_via_vagrant)
-    *   [Installing Docker](#installing_docker)
-    *   [Upgrading the Container](#upgrading_the_container)
-*   [Customization](#customization)
+## Contents
 
------------------------------------------
-
-## Overview
-
-<a name="use_cases"></a>
-### Use Cases
-
-`docker-haskell` can be used in the following ways:
-
-*   **As a haskell development environment**
-
-     _run `alex`, `cabal`, `ghc`, or `happy` directly_
-
-*   **As a container in which to run haskell apps**
-
-    _compile/run haskell app locally; access via ssh_
-
-*   **As a base image for other containers**
-
-    _`docker-agda`, `docker-idris`, `docker-purescript`, `docker-<your-haskell-app>` etc._
-
-<a name="container_contents"></a>
-### Container Contents
-
-The default configuration of `docker-haskell` provides the following:
+This image ships a minimal Haskell toolchain with the following packages:
 
 | package         | version    |
 |-----------------|------------|
@@ -53,63 +19,56 @@ The default configuration of `docker-haskell` provides the following:
 | `happy`         | `1.19.4`   |
 | `ghc`           | `7.8.3`    |
 
+
 ## Usage
 
-<a name="getting_started"></a>
-### Getting Started
+* Start an interactive interpreter session with `ghci`:
 
-<span style='font-size: small;'>_See [Installing Docker](https://github.com/darinmorrison/docker-haskell#requirements) if you don't already have `docker` configured on your workstation._</span>
+```
+    $ docker run -it --rm haskell:7.8
+    GHCi, version 7.8.3: http://www.haskell.org/ghc/  :? for help
+    Loading package ghc-prim ... linking ... done.
+    Loading package integer-gmp ... linking ... done.
+    Loading package base ... linking ... done.
+    Prelude>
+```
 
-*   **pull the container, start a ghci session, and attach interactively**:
+* Dockerize a [Hackage](http://hackage.haskell.org) app with a Dockerfile inheriting from the base image:
 
-        docker run -itP --rm=true --name='ghci' darinmorrison/haskell
+```
+    FROM haskell:7.8
+    RUN cabal update && cabal install MazesOfMonad
+    VOLUME /root/.MazesOfMonad
+    ENTRYPOINT ["/root/.cabal/bin/mazesofmonad"]
+```
 
-*   **pull the container, start sshd, and detach to the backround**:
+* Iteratively develop then ship a Haskell app with a Dockerfile utilizing the
+build cache:
 
-        docker run -dP --name='ghc-sshd' darinmorrison/haskell /sbin/my_init --enable-insecure-key
+```
+    FROM haskell:7.8
 
-      NOTE: see [here](https://github.com/phusion/baseimage-docker#login-to-the-container-or-running-a-command-inside-it-via-ssh) for details on how to log in to the container via ssh
+    RUN cabal update
 
-<a name="running_via_vagrant"></a>
-#### Running via Vagrant
+    # Add .cabal file
+    ADD ./server/snap-example.cabal /opt/server/snap-example.cabal
 
-`docker-haskell` can also be run through a [Vagrant](http://www.vagrantup.com/) wrapper such as the one at [darinmorrison/vagrant-haskell](https://github.com/darinmorrison/vagrant-haskell) which uses a lightweight Linux distribution and the Vagrant docker provider.
+    # Docker will cache this command as a layer, freeing us up to
+    # modify source code without re-installing dependencies
+    RUN cd /opt/server && cabal install --only-dependencies -j4
 
-If you are running OS X, using `docker-haskell` as a portable development environment, and need NFS-style shared folders, the Vagrant wrapper will likely provide a more convenient workflow¹.
+    # Add and Install Application Code
+    ADD ./server /opt/server
+    RUN cd /opt/server && cabal install
 
-If you are running Linux the Vagrant wrapper isn't necessary—just [mount volumes](https://docs.docker.com/userguide/dockervolumes) and use [nsenter](https://github.com/jpetazzo/nsenter) instead of using NFS and ssh.
+    # Add installed cabal executables to PATH
+    ENV PATH /root/.cabal/bin:$PATH
 
-¹ <span style='font-size: small;'>_This will no longer be necessary once volumes are mountable from an OS X host._</span>
+    # Default Command for Container
+    WORKDIR /opt/server
+    CMD ["snap-example"]
+```
 
-<a name="installing_docker"></a>
-### Installing Docker
+## Examples
 
-You will need the following:
-
-*   access to a docker host
-*   the docker client installed on your workstation
-
-See the [docker installation](https://docs.docker.com/installation/) page for details.
-
-#### tl;dr
-
-*   Mac OS X
-
-        brew install caskroom/cask/brew-cask boot2docker && !#:0 cask !#:1 virtualbox && (!#:3 init; !#:3 up)
-
-      NOTE: set `DOCKER_HOST=:2375` or use `docker -H :2375`; see [directions](https://github.com/boot2docker/boot2docker#how-to-use)
-
-*   Ubuntu
-
-        curl -sSL https://get.docker.io/ubuntu/ | sudo sh
-
-<a name="upgrading_the_container"></a>
-### Upgrading the Container
-
-You can upgrade to the latest image with an explicit pull:
-
-    docker pull darinmorrison/haskell:latest
-
-### Customization
-
-For the time being, see [phusion/baseimage-docker](https://github.com/phusion/baseimage-docker) for further details.
+See the application snippet above in more detail in the [example snap application](https://github.com/darinmorrison/docker-haskell/tree/docker-library/examples/7.8.3/snap).
