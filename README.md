@@ -1,4 +1,4 @@
-![image](https://github.com/darinmorrison/docker-haskell/blob/docker-library/logo.png?raw=true)
+![image](https://github.com/darinmorrison/docker-haskell/blob/master/logo.png?raw=true)
 
 ---
 
