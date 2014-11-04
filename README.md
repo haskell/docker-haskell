@@ -71,4 +71,4 @@ build cache:
 
 ## Examples
 
-See the application snippet above in more detail in the [example snap application](https://github.com/darinmorrison/docker-haskell/tree/docker-library/examples/7.8.3/snap).
+See the application snippet above in more detail in the [example snap application](https://github.com/darinmorrison/docker-haskell/tree/master/examples/7.8.3/snap).
