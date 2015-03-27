@@ -14,9 +14,9 @@ RUN apt-get update && \
     sed -i s/jessie/trusty/g /etc/apt/sources.list.d/hvr-ghc-jessie.list
 
 RUN apt-get update && \
-    apt-get install ${OPTS_APT} cabal-install-1.20 ghc-7.8.4 happy-1.19.4 alex-3.1.3
+    apt-get install ${OPTS_APT} cabal-install-1.22 ghc-7.10.1 happy-1.19.4 alex-3.1.3
 
-ENV PATH /root/.cabal/bin:/opt/cabal/1.20/bin:/opt/ghc/7.8.4/bin:/opt/happy/1.19.4/bin:/opt/alex/3.1.3/bin:$PATH
+ENV PATH /root/.cabal/bin:/opt/cabal/1.22/bin:/opt/ghc/7.10.1/bin:/opt/happy/1.19.4/bin:/opt/alex/3.1.3/bin:$PATH
 
 ## install additional libs typically needed by hackage packages
 #RUN apt-get update && \
