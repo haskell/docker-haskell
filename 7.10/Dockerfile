@@ -7,20 +7,15 @@ ENV OPTS_APT        -y --no-install-recommends
 
 ## ensure locale is set during build
 ENV LANG            C.UTF-8
+ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update && \
-    apt-get install ${OPTS_APT} software-properties-common && \
-    add-apt-repository -y ppa:hvr/ghc && \
-    sed -i s/jessie/trusty/g /etc/apt/sources.list.d/hvr-ghc-jessie.list
-
-RUN apt-get update && \
-    apt-get install ${OPTS_APT} cabal-install-1.22 ghc-7.10.1 happy-1.19.4 alex-3.1.3
+RUN echo 'deb http://ppa.launchpad.net/hvr/ghc/ubuntu trusty main' > /etc/apt/sources.list.d/ghc.list && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F6F88286 && \
+    apt-get update && \
+    apt-get install ${OPTS_APT} cabal-install-1.22 ghc-7.10.1 happy-1.19.4 alex-3.1.3 zlib1g-dev libtinfo-dev && \
+    rm -rf /var/lib/apt/lists/*
 
 ENV PATH /root/.cabal/bin:/opt/cabal/1.22/bin:/opt/ghc/7.10.1/bin:/opt/happy/1.19.4/bin:/opt/alex/3.1.3/bin:$PATH
-
-## install additional libs typically needed by hackage packages
-#RUN apt-get update && \
-#    apt-get install ${OPTS_APT} zlib1g-dev libtinfo-dev
 
 ## run ghci by default unless a command is specified
 CMD ["ghci"]
