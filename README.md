@@ -10,26 +10,33 @@ A large number of production-quality Haskell libraries are available from [Hacka
 
 ## Contents
 
-This image ships a minimal Haskell toolchain with the following packages:
+This image ships a minimal Haskell toolchain with the following packages
+(provided by the [hvr PPA](https://launchpad.net/~hvr/+archive/ubuntu/ghc)):
+
+| package         | version     |
+|-----------------|-------------|
+| `ghc`           | `7.10.1`    |
+| `alex`          | `3.1.4`     |
+| `cabal-install` | `1.22.2.0`  |
+| `happy`         | `1.19.5`    |
+
+The most recent GHC release in the 7.8 series is also available, though no longer
+receiving updates from upstream, so users are encouraged to upgrade to 7.10.
 
 | package         | version    |
 |-----------------|------------|
+| `ghc`           | `7.8.4`    |
 | `alex`          | `3.1.3`    |
 | `cabal-install` | `1.20.0.3` |
 | `happy`         | `1.19.4`   |
-| `ghc`           | `7.8.3`    |
-
 
 ## Usage
 
 * Start an interactive interpreter session with `ghci`:
 
 ```
-    $ docker run -it --rm haskell:7.8
-    GHCi, version 7.8.3: http://www.haskell.org/ghc/  :? for help
-    Loading package ghc-prim ... linking ... done.
-    Loading package integer-gmp ... linking ... done.
-    Loading package base ... linking ... done.
+    $ docker run -it --rm haskell:7.10
+    GHCi, version 7.10.1: http://www.haskell.org/ghc/  :? for help
     Prelude>
 ```
 
