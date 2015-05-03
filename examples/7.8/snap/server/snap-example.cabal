@@ -27,12 +27,12 @@ Executable snap-example
     heist                     >= 0.14    && < 0.15,
     MonadCatchIO-transformers >= 0.2.1   && < 0.4,
     mtl                       >= 2       && < 3,
-    snap                      >= 0.13    && < 0.14,
+    snap                      >= 0.13    && < 0.15,
     snap-core                 >= 0.9     && < 0.10,
     snap-server               >= 0.9     && < 0.10,
     snap-loader-static        >= 0.9     && < 0.10,
     text                      >= 0.11    && < 1.3,
-    time                      >= 1.1     && < 1.5,
+    time                      >= 1.1     && < 1.6,
     xmlhtml                   >= 0.1     && < 0.3
 
   if flag(old-base)
@@ -42,7 +42,7 @@ Executable snap-example
   else
     build-depends:
       base                      >= 4.4      && < 5,
-      lens                      >= 3.7.6    && < 4.5
+      lens                      >= 3.7.6    && < 4.10
 
   if flag(development)
     build-depends:
