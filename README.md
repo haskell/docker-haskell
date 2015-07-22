@@ -78,4 +78,4 @@ build cache:
 
 ## Examples
 
-See the application snippet above in more detail in the [example snap application](https://github.com/freebroccolo/docker-haskell/tree/master/examples/7.8.3/snap).
+See the application snippet above in more detail in the [example snap application](https://github.com/freebroccolo/docker-haskell/tree/master/examples/7.8/snap).
