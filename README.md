@@ -15,9 +15,9 @@ This image ships a minimal Haskell toolchain with the following packages
 
 | package         | version     |
 |-----------------|-------------|
-| `ghc`           | `7.10.1`    |
+| `ghc`           | `7.10.3`    |
 | `alex`          | `3.1.4`     |
-| `cabal-install` | `1.22.2.0`  |
+| `cabal-install` | `1.22.4.0`  |
 | `happy`         | `1.19.5`    |
 
 The most recent GHC release in the 7.8 series is also available, though no longer
