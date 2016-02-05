@@ -1,0 +1,4 @@
+dist
+.dockerignore
+Dockerfile*
+**/.stack-work/
