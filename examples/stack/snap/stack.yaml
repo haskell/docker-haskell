@@ -1,6 +1,0 @@
-flags: {}
-
-resolver: lts-5.1
-
-extra-deps:
-  - snap-loader-static-0.9.0.2
