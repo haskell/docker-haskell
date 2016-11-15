@@ -49,7 +49,9 @@ RUN cabal update && cabal install pandoc pandoc-citeproc
 ENTRYPOINT ["pandoc"]
 ```
 
-Iteratively develop a Haskell application with a `Dockerfile` utilizing the build cache:
+Iteratively develop a Haskell application with a `Dockerfile`
+utilizing the build cache. Note that `cabal update` will not run after
+the first build unless the `--no-cache` flag is used.
 
 ```dockerfile
 FROM haskell:7.10
