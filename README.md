@@ -19,7 +19,7 @@ This image ships a minimal Haskell toolchain with the following packages from th
 -	`cabal-install`
 -	`happy`
 
-As of `7.10.3`, the `stack` tool is included via FPComplete's Debian repository.
+As of `7.10.3`, the `stack` tool is also included.
 
 Note: The GHC developers do not support legacy release branches (i.e. `7.8.x`). While older GHC release tags are available in this DockerHub repository, only the latest stable release (or upcoming release candidates) will be shown in the "Supported tags ..." section at the top of the DockerHub repository page.
 
