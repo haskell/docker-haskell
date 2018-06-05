@@ -22,7 +22,7 @@ RUN apt-get update && \
     /usr/local/bin/stack config set install-ghc --global false && \
     rm -rf "$GNUPGHOME" /var/lib/apt/lists/* /stack.tar.gz.asc /stack.tar.gz
 
-ENV PATH /root/.cabal/bin:/root/.local/bin:/opt/cabal/bin:/opt/ghc/bin:$PATH
+ENV PATH /root/.cabal/bin:/root/.local/bin:/opt/cabal/2.2/bin:/opt/ghc/8.4.3/bin:$PATH
 
 ## run ghci by default unless a command is specified
 CMD ["ghci"]
