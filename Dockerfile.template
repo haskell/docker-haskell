@@ -1,0 +1,34 @@
+## Dockerfile for a haskell environment
+{% if slim %}
+FROM       debian:{{distribution}}
+{% else %}
+FROM       buildpack-deps:{{distribution}}
+{% endif %}
+
+## ensure locale is set during build
+ENV LANG            C.UTF-8
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gnupg ca-certificates dirmngr curl git && \
+    echo 'deb http://downloads.haskell.org/debian {{distribution}} main' > /etc/apt/sources.list.d/ghc.list && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys BA3CBA3FFE22B574 && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends ghc-{{ghcVersion}} cabal-install-3.0 \
+{% if slim %}
+{# See https://github.c om/docker-library/buildpack-deps/blob/master/buster/Dockerfile #}
+{# And https://github.com/docker-library/buildpack-deps/blob/master/buster/scm/Dockerfile #}
+        zlib1g-dev libtinfo-dev libsqlite3-dev g++ netbase xz-utils make && \
+{% else %}
+        libtinfo-dev && \
+{% endif %}
+    curl -fSL https://github.com/commercialhaskell/stack/releases/download/v{{stackVersion}}/stack-{{stackVersion}}-linux-x86_64.tar.gz -o stack.tar.gz && \
+    echo "{{stackSha256}}  stack.tar.gz" | sha256sum -c - && \
+    tar -xf stack.tar.gz -C /usr/local/bin --strip-components=1 && \
+    /usr/local/bin/stack config set system-ghc --global true && \
+    /usr/local/bin/stack config set install-ghc --global false && \
+    rm -rf "$GNUPGHOME" /var/lib/apt/lists/* /stack.tar.gz
+
+ENV PATH /root/.cabal/bin:/root/.local/bin:/opt/cabal/3.0/bin:/opt/ghc/8.8.1/bin:$PATH
+
+## run ghci by default unless a command is specified
+CMD ["ghci"]
