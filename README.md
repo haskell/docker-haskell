@@ -1,4 +1,4 @@
-![image](https://github.com/freebroccolo/docker-haskell/blob/master/logo.png?raw=true)
+![image](https://github.com/haskell/docker-haskell/blob/master/logo.png?raw=true)
 
 ---
 
