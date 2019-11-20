@@ -19,7 +19,7 @@ RUN apt-get update && \
 {# And https://github.com/docker-library/buildpack-deps/blob/master/buster/scm/Dockerfile #}
         zlib1g-dev libtinfo-dev libsqlite3-dev g++ netbase xz-utils make && \
 {% else %}
-        libtinfo-dev && \
+        ghc-{{ghcVersion}}-prof libtinfo-dev && \
 {% endif %}
     curl -fSL https://github.com/commercialhaskell/stack/releases/download/v{{stackVersion}}/stack-{{stackVersion}}-linux-x86_64.tar.gz -o stack.tar.gz && \
     echo "{{stackSha256}}  stack.tar.gz" | sha256sum -c - && \
