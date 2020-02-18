@@ -1,0 +1,32 @@
+name: Build and Smoke Test
+
+on:
+  push:
+
+jobs:
+  ci:
+    timeout-minutes: 30
+    runs-on: ubuntu-18.04
+    strategy:
+      fail-fast: false
+      matrix:
+        ghc: [8.6.5, 8.8.1]
+        include:
+          - ghc: 8.6.5
+            ghc_minor: 8.6
+          - ghc: 8.8.1
+            ghc_minor: 8.8
+    steps:
+    - uses: actions/checkout@v2
+    - name: docker build [${{ matrix.ghc }}]
+      uses: nick-invision/retry@v1
+      with:
+        timeout_minutes: 8
+        max_attempts: 3
+        command: docker build --pull --build-arg GHC=${{ matrix.ghc }} -t haskell:${{ matrix.ghc }} ${{ matrix.ghc_minor }}
+    - uses: actions/checkout@v2
+      with:
+        repository: docker-library/official-images
+        path: official-images
+    - name: run official-images tests
+      run: ./official-images/test/run.sh haskell:${{ matrix.ghc }}
