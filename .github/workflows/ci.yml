@@ -11,11 +11,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ghc: [8.6.5, 8.8.1]
+        ghc: [8.6.5, 8.8.2, 8.8.3]
         include:
           - ghc: 8.6.5
             ghc_minor: 8.6
-          - ghc: 8.8.1
+          - ghc: 8.8.2
+            ghc_minor: 8.8
+          - ghc: 8.8.3
             ghc_minor: 8.8
     steps:
     - uses: actions/checkout@v2
@@ -39,13 +41,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ghc: [8.6.5, 8.8.1, 8.8.2]
+        ghc: [8.6.5, 8.8.2, 8.8.3]
         include:
           - ghc: 8.6.5
             ghc_minor: 8.6
-          - ghc: 8.8.1
-            ghc_minor: 8.8
           - ghc: 8.8.2
+            ghc_minor: 8.8
+          - ghc: 8.8.3
             ghc_minor: 8.8
     steps:
     - uses: actions/checkout@v2
