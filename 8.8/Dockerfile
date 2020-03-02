@@ -4,7 +4,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends gnupg ca-certificates dirmngr && \
     rm -rf /var/lib/apt/lists/*
 
-ARG GHC=8.8.3
+ARG GHC=8.8.2
 ARG STACK=2.1.3
 ARG CABAL_INSTALL=3.0
 
