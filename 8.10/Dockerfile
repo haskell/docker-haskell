@@ -6,7 +6,7 @@ RUN apt-get update && \
 
 ARG GHC=8.10.1
 ARG STACK=2.1.3
-ARG CABAL_INSTALL=3.0
+ARG CABAL_INSTALL=3.2
 
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 427CB69AAC9D00F2A43CAF1CBA3CBA3FFE22B574 && \
     echo 'deb http://downloads.haskell.org/debian buster main' > /etc/apt/sources.list.d/ghc.list && \
