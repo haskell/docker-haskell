@@ -5,7 +5,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 ARG GHC=8.10.1
-ARG STACK=2.1.3
+ARG STACK=2.3.0.1
 ARG CABAL_INSTALL=3.2
 
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 427CB69AAC9D00F2A43CAF1CBA3CBA3FFE22B574 && \
@@ -27,7 +27,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 427CB69AAC9D00F2A43
     rm -rf /var/lib/apt/lists/*
 
 RUN export GNUPGHOME="$(mktemp -d)" && \
-    gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys 2C6A674E85EE3FB896AFC9B965101FF31C5C154D && \
+    gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys E17D38358F72BEF7 && \
     curl -fSL https://github.com/commercialhaskell/stack/releases/download/v${STACK}/stack-${STACK}-linux-x86_64.tar.gz -o stack.tar.gz && \
     curl -fSL https://github.com/commercialhaskell/stack/releases/download/v${STACK}/stack-${STACK}-linux-x86_64.tar.gz.asc -o stack.tar.gz.asc && \
     gpg --batch --trusted-key 0x575159689BEFB442 --verify stack.tar.gz.asc stack.tar.gz && \
