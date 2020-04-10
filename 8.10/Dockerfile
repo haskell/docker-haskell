@@ -5,7 +5,6 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 ARG GHC=8.10.1
-ARG STACK=2.3.0.1
 ARG CABAL_INSTALL=3.2
 
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 427CB69AAC9D00F2A43CAF1CBA3CBA3FFE22B574 && \
@@ -26,16 +25,6 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 427CB69AAC9D00F2A43
         zlib1g-dev && \
     rm -rf /var/lib/apt/lists/*
 
-RUN export GNUPGHOME="$(mktemp -d)" && \
-    gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys E17D38358F72BEF7 && \
-    curl -fSL https://github.com/commercialhaskell/stack/releases/download/v${STACK}/stack-${STACK}-linux-x86_64.tar.gz -o stack.tar.gz && \
-    curl -fSL https://github.com/commercialhaskell/stack/releases/download/v${STACK}/stack-${STACK}-linux-x86_64.tar.gz.asc -o stack.tar.gz.asc && \
-    gpg --batch --trusted-key 0x575159689BEFB442 --verify stack.tar.gz.asc stack.tar.gz && \
-    tar -xf stack.tar.gz -C /usr/local/bin --strip-components=1 && \
-    /usr/local/bin/stack config set system-ghc --global true && \
-    /usr/local/bin/stack config set install-ghc --global false && \
-    rm -rf "$GNUPGHOME" /var/lib/apt/lists/* /stack.tar.gz.asc /stack.tar.gz
-
-ENV PATH /root/.cabal/bin:/root/.local/bin:/opt/cabal/${CABAL_INSTALL}/bin:/opt/ghc/${GHC}/bin:$PATH
+ENV PATH /root/.cabal/bin:/opt/cabal/${CABAL_INSTALL}/bin:/opt/ghc/${GHC}/bin:$PATH
 
 CMD ["ghci"]
