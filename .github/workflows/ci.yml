@@ -1,68 +1,41 @@
 name: Build and Smoke Test
 
 on:
-  push:
+  pull_request:
+    branches:
+      - master
 
 jobs:
   ci:
     if: github.repository == 'haskell/docker-haskell'
     timeout-minutes: 30
     runs-on: ubuntu-18.04
+    name: ${{ matrix.ghc }}-${{ matrix.deb }}
     strategy:
       fail-fast: false
       matrix:
-        ghc: [8.6.5, 8.8.2, 8.8.3]
+        ghc: ['8.8.3', '8.10.1']
+        deb: ['stretch', 'buster']
         include:
-          - ghc: 8.6.5
-            ghc_minor: 8.6
-          - ghc: 8.8.2
-            ghc_minor: 8.8
-          - ghc: 8.8.3
-            ghc_minor: 8.8
+          - ghc: '8.8.3'
+            ghc_minor: '8.8'
+          - ghc: '8.10.1'
+            ghc_minor: '8.10'
     steps:
-    - uses: actions/checkout@v2
-    - name: docker build [${{ matrix.ghc }}]
-      uses: nick-invision/retry@v1
-      with:
-        timeout_minutes: 8
-        max_attempts: 3
-        command: docker build --pull --build-arg GHC=${{ matrix.ghc }} -t haskell:${{ matrix.ghc }} ${{ matrix.ghc_minor }}
-    - uses: actions/checkout@v2
-      with:
-        repository: docker-library/official-images
-        path: official-images
-    - name: run official-images tests
-      run: ./official-images/test/run.sh haskell:${{ matrix.ghc }}
+      - uses: actions/checkout@v2
+      - name: docker build [${{ matrix.ghc }}]
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 8
+          max_attempts: 3
+          command: |
+            docker build --pull \
+              -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
+              ${{ matrix.ghc_minor }}/${{ matrix.deb }}
+      - uses: actions/checkout@v2
+        with:
+          repository: docker-library/official-images
+          path: official-images
+      - name: run official-images tests
+        run: ./official-images/test/run.sh haskell:${{ matrix.ghc }}-${{ matrix.deb }}
 
-  ci-self-hosted:
-    if: github.repository == 'psftw/docker-haskell-private'
-    timeout-minutes: 20
-    runs-on: self-hosted
-    strategy:
-      fail-fast: false
-      matrix:
-        ghc: [8.6.5, 8.8.2, 8.8.3]
-        include:
-          - ghc: 8.6.5
-            ghc_minor: 8.6
-          - ghc: 8.8.2
-            ghc_minor: 8.8
-          - ghc: 8.8.3
-            ghc_minor: 8.8
-    steps:
-    - uses: actions/checkout@v2
-    - name: docker build [${{ matrix.ghc }}]
-      run: docker build --pull --build-arg GHC=${{ matrix.ghc }} -t haskell:${{ matrix.ghc }} ${{ matrix.ghc_minor }}
-    - name: check for cabal-cache
-      run: |
-        docker volume inspect cabal-cache-${{ matrix.ghc }} &> /dev/null || \
-        docker run -t --rm -v cabal-cache-${{ matrix.ghc }}:/root/.cabal haskell:${{ matrix.ghc }} cabal new-update
-    - name: cabal new-install
-      run: docker run -t --rm -v cabal-cache-${{ matrix.ghc }}:/root/.cabal haskell:${{ matrix.ghc }} cabal new-install --lib primitive
-    - name: wipe stack cache
-      run: docker volume rm stack-test-${{ matrix.ghc }}
-      continue-on-error: true
-    - name: stack new
-      run: docker run -t --rm -v stack-test-${{ matrix.ghc }}:/stack -w /stack haskell:${{ matrix.ghc }} stack --resolver ghc-${{ matrix.ghc }} new testproject --bare
-    - name: stack run
-      run: docker run -t --rm -v stack-test-${{ matrix.ghc }}:/stack -w /stack haskell:${{ matrix.ghc }} stack run
