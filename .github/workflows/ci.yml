@@ -7,7 +7,6 @@ on:
 
 jobs:
   ci:
-    if: github.repository == 'haskell/docker-haskell'
     timeout-minutes: 30
     runs-on: ubuntu-18.04
     name: ${{ matrix.ghc }}-${{ matrix.deb }}
