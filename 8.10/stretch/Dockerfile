@@ -9,9 +9,6 @@ RUN apt-get update && \
 ARG GHC=8.10.4
 ARG DEBIAN_KEY=427CB69AAC9D00F2A43CAF1CBA3CBA3FFE22B574
 ARG CABAL_INSTALL=3.4
-ARG STACK=2.7.1
-ARG STACK_KEY=C5705533DA4F78D8664B5DC0575159689BEFB442
-ARG STACK_RELEASE_KEY=2C6A674E85EE3FB896AFC9B965101FF31C5C154D
 
 RUN export GNUPGHOME="$(mktemp -d)" && \
     gpg --batch --keyserver keyserver.ubuntu.com --recv-keys ${DEBIAN_KEY} && \
@@ -33,6 +30,10 @@ RUN export GNUPGHOME="$(mktemp -d)" && \
         xz-utils \
         zlib1g-dev && \
     rm -rf "$GNUPGHOME" /var/lib/apt/lists/*
+
+ARG STACK=2.7.1
+ARG STACK_KEY=C5705533DA4F78D8664B5DC0575159689BEFB442
+ARG STACK_RELEASE_KEY=2C6A674E85EE3FB896AFC9B965101FF31C5C154D
 
 RUN export GNUPGHOME="$(mktemp -d)" && \
     gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys ${STACK_KEY} && \
