@@ -3,7 +3,20 @@ FROM debian:buster
 ENV LANG C.UTF-8
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends gnupg ca-certificates dirmngr && \
+    apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        dirmngr \
+        g++ \
+        git \
+        gnupg \
+        libsqlite3-dev \
+        libtinfo-dev \
+        make \
+        netbase \
+        openssh-client \
+        xz-utils \
+        zlib1g-dev && \
     rm -rf /var/lib/apt/lists/*
 
 ARG GHC=9.0.1
@@ -18,17 +31,7 @@ RUN export GNUPGHOME="$(mktemp -d)" && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
         cabal-install-${CABAL_INSTALL} \
-        curl \
-        g++ \
-        ghc-${GHC} \
-        git \
-        libsqlite3-dev \
-        libtinfo-dev \
-        make \
-        netbase \
-        openssh-client \
-        xz-utils \
-        zlib1g-dev && \
+        ghc-${GHC} && \
     rm -rf "$GNUPGHOME" /var/lib/apt/lists/*
 
 ARG STACK=2.7.1
