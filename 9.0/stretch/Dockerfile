@@ -34,13 +34,13 @@ RUN export GNUPGHOME="$(mktemp -d)" && \
         ghc-${GHC} && \
     rm -rf "$GNUPGHOME" /var/lib/apt/lists/*
 
-ARG STACK=2.7.1
+ARG STACK=2.7.3
 ARG STACK_KEY=C5705533DA4F78D8664B5DC0575159689BEFB442
 ARG STACK_RELEASE_KEY=2C6A674E85EE3FB896AFC9B965101FF31C5C154D
 
 RUN export GNUPGHOME="$(mktemp -d)" && \
-    gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys ${STACK_KEY} && \
-    gpg --batch --keyserver ha.pool.sks-keyservers.net --recv-keys ${STACK_RELEASE_KEY} && \
+    gpg --batch --keyserver keyserver.ubuntu.com --recv-keys ${STACK_KEY} && \
+    gpg --batch --keyserver keyserver.ubuntu.com --recv-keys ${STACK_RELEASE_KEY} && \
     curl -fSL https://github.com/commercialhaskell/stack/releases/download/v${STACK}/stack-${STACK}-linux-x86_64.tar.gz -o stack.tar.gz && \
     curl -fSL https://github.com/commercialhaskell/stack/releases/download/v${STACK}/stack-${STACK}-linux-x86_64.tar.gz.asc -o stack.tar.gz.asc && \
     gpg --batch --trusted-key 0x575159689BEFB442 --verify stack.tar.gz.asc stack.tar.gz && \
