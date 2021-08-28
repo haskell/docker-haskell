@@ -31,7 +31,7 @@ ARG STACK_VERSION=2.7.3
 RUN ghcup install stack -i /usr/local/bin $STACK_VERSION
 
 # install GHC into /opt/ghc + remove profiling support
-ARG GHC_VERSION=8.10.6
+ARG GHC_VERSION=8.10.7
 RUN ghcup install ghc -i /opt/ghc $GHC_VERSION && \
   find /opt/ghc/lib -name "*.p_hi" -type f -delete && \
   find /opt/ghc/lib -name "*_p.a" -type f -delete
