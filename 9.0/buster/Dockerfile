@@ -12,6 +12,7 @@ RUN apt-get update && \
         gnupg \
         libsqlite3-dev \
         libtinfo-dev \
+        libgmp-dev \
         make \
         netbase \
         openssh-client \
@@ -19,36 +20,34 @@ RUN apt-get update && \
         zlib1g-dev && \
     rm -rf /var/lib/apt/lists/*
 
+ARG GHCUP_VERSION=0.1.17
+ARG GPG_KEY=7784930957807690A66EBDBE3786C5262ECB4A3F
+
+# install ghcup
+RUN gpg --batch --keyserver keys.openpgp.org --recv-keys $GPG_KEY && \
+    curl -sSfL -O https://downloads.haskell.org/~ghcup/$GHCUP_VERSION/x86_64-linux-ghcup-$GHCUP_VERSION && \
+    curl -sSfL -O https://downloads.haskell.org/~ghcup/$GHCUP_VERSION/SHA256SUMS && \
+    curl -sSfL -O https://downloads.haskell.org/~ghcup/$GHCUP_VERSION/SHA256SUMS.sig && \
+    gpg --verify SHA256SUMS.sig SHA256SUMS && \
+    sha256sum -c --ignore-missing SHA256SUMS && \
+    mv x86_64-linux-ghcup-$GHCUP_VERSION /usr/bin/ghcup && \
+    chmod +x /usr/bin/ghcup && \
+    rm -rf SHA256SUMS SHA256SUMS.sig
+
 ARG GHC=9.0.1
-ARG DEBIAN_KEY=427CB69AAC9D00F2A43CAF1CBA3CBA3FFE22B574
-ARG CABAL_INSTALL=3.4
-
-RUN export GNUPGHOME="$(mktemp -d)" && \
-    gpg --batch --keyserver keyserver.ubuntu.com --recv-keys ${DEBIAN_KEY} && \
-    gpg --batch --armor --export ${DEBIAN_KEY} > /etc/apt/trusted.gpg.d/haskell.org.gpg.asc && \
-    gpgconf --kill all && \
-    echo 'deb http://downloads.haskell.org/debian buster main' > /etc/apt/sources.list.d/ghc.list && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends \
-        cabal-install-${CABAL_INSTALL} \
-        ghc-${GHC} && \
-    rm -rf "$GNUPGHOME" /var/lib/apt/lists/*
-
+ARG CABAL_INSTALL=3.6.0.0
 ARG STACK=2.7.3
-ARG STACK_KEY=C5705533DA4F78D8664B5DC0575159689BEFB442
-ARG STACK_RELEASE_KEY=2C6A674E85EE3FB896AFC9B965101FF31C5C154D
 
-RUN export GNUPGHOME="$(mktemp -d)" && \
-    gpg --batch --keyserver keyserver.ubuntu.com --recv-keys ${STACK_KEY} && \
-    gpg --batch --keyserver keyserver.ubuntu.com --recv-keys ${STACK_RELEASE_KEY} && \
-    curl -fSL https://github.com/commercialhaskell/stack/releases/download/v${STACK}/stack-${STACK}-linux-x86_64.tar.gz -o stack.tar.gz && \
-    curl -fSL https://github.com/commercialhaskell/stack/releases/download/v${STACK}/stack-${STACK}-linux-x86_64.tar.gz.asc -o stack.tar.gz.asc && \
-    gpg --batch --trusted-key 0x575159689BEFB442 --verify stack.tar.gz.asc stack.tar.gz && \
-    tar -xf stack.tar.gz -C /usr/local/bin --strip-components=1 && \
-    /usr/local/bin/stack config set system-ghc --global true && \
-    /usr/local/bin/stack config set install-ghc --global false && \
-    rm -rf "$GNUPGHOME" /var/lib/apt/lists/* /stack.tar.gz.asc /stack.tar.gz
+# install haskell toolchain
+RUN export GHCUP_CURL_OPTS="--silent" && \
+	ghcup config set gpg-setting GPGStrict && \
+	ghcup --verbose install ghc   --isolate=/usr     --force ${GHC} && \
+	ghcup --verbose install cabal --isolate=/usr/bin --force ${CABAL_INSTALL} && \
+	ghcup --verbose install stack --isolate=/usr/bin --force ${STACK} && \
+	find "/usr/lib/ghc-${GHC}/" \( -name "*_p.a" -o -name "*.p_hi" \) -type f -delete && \
+	rm -r "/usr/share/doc/ghc-${GHC}" && \
+	rm -rf /tmp/ghcup*
 
-ENV PATH /root/.cabal/bin:/root/.local/bin:/opt/cabal/${CABAL_INSTALL}/bin:/opt/ghc/${GHC}/bin:$PATH
+ENV PATH /root/.cabal/bin:/root/.local/bin:$PATH
 
 CMD ["ghci"]
