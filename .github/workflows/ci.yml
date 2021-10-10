@@ -14,7 +14,7 @@ jobs:
       fail-fast: false
       matrix:
         ghc: ['8.10.7', '9.0.1']
-        deb: ['stretch', 'buster']
+        deb: ['buster']
         include:
           - ghc: '8.10.7'
             ghc_minor: '8.10'
