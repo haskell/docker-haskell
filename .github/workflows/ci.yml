@@ -1,4 +1,4 @@
-name: Build and Smoke Test
+name: Validate
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  ci:
+  build-smoke-test:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     name: ${{ matrix.ghc }}-${{ matrix.deb }}
@@ -24,8 +24,8 @@ jobs:
             ghc_minor: '9.2'
     steps:
       - uses: actions/checkout@v2
-      - name: docker build [${{ matrix.ghc }}]
-        uses: nick-invision/retry@v1
+      - name: build + smoke test [${{ matrix.ghc }}]
+        uses: nick-invision/retry@v2
         with:
           timeout_minutes: 8
           max_attempts: 3
@@ -39,3 +39,11 @@ jobs:
           path: official-images
       - name: run official-images tests
         run: ./official-images/test/run.sh haskell:${{ matrix.ghc }}-${{ matrix.deb }}
+
+  hadolint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: hadolint/hadolint-action@v1.6.0
+      with:
+        recursive: true
