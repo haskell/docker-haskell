@@ -14,6 +14,7 @@ RUN apt-get update && \
         libc6-dev \
         libffi-dev \
         libgmp-dev \
+        libnuma-dev \
         libsqlite3-dev \
         libtinfo-dev \
         make \
@@ -39,17 +40,17 @@ RUN cd /tmp && \
     tar -xf cabal-install.tar.gz -C /usr/local/bin && \
     rm -rf "$GNUPGHOME" /var/lib/apt/lists/* /tmp/*
 
-ARG GHC=9.0.1
-ARG GHC_RELEASE_KEY=FFEB7CE81E16A36B3E2DED6F2DE04D4E97DB64AD
+ARG GHC=9.0.2
+ARG GHC_RELEASE_KEY=88B57FCF7DB53B4DB3BFA4B1588764FBE22D19C4
 # get from https://downloads.haskell.org/~ghc/$GHC/SHA256SUMS
-ARG GHC_RELEASE_SHA256=C253E7EB62CC9DA6524C491C85EC8D3727C2CA6035A8653388E636AAA30A2A0F
+ARG GHC_RELEASE_SHA256=5D0B9414B10CFB918453BCD01C5EA7A1824FE95948B08498D6780F20BA247AFC
 
 RUN cd /tmp && \
   export GNUPGHOME="$(mktemp -d)" && \
   curl -sSL https://downloads.haskell.org/~ghc/$GHC/ghc-$GHC-x86_64-deb10-linux.tar.xz -o ghc.tar.xz && \
   curl -sSL https://downloads.haskell.org/~ghc/$GHC/ghc-$GHC-x86_64-deb10-linux.tar.xz.sig -o ghc.tar.xz.sig && \
   gpg --batch --keyserver keyserver.ubuntu.com --receive-keys ${GHC_RELEASE_KEY} && \
-  gpg --batch --trusted-key 2DE04D4E97DB64AD --verify ghc.tar.xz.sig ghc.tar.xz && \
+  gpg --batch --trusted-key 588764FBE22D19C4 --verify ghc.tar.xz.sig ghc.tar.xz && \
   echo "$GHC_RELEASE_SHA256 ghc.tar.xz" | sha256sum --strict --check && \
   tar xf ghc.tar.xz && \
   cd ghc-$GHC && \
