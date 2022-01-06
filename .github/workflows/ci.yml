@@ -78,8 +78,6 @@ jobs:
           arch: ${{ matrix.arch }}
           distro: ${{ matrix.deb }}
           githubToken: ${{ github.token }}
-          dockerRunArgs:
-            --volume /var/run/docker.sock:/var/run/docker.sock
           install: |
             apt-get update
             apt-get install -y curl
