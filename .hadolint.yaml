@@ -1,0 +1,10 @@
+ignored:
+  # https://github.com/hadolint/hadolint/wiki/DL3008
+  # Don't want to micro manage the dependency versions.
+  - DL3008
+  # https://github.com/hadolint/hadolint/wiki/DL3003
+  # Using cd /tmp is a very convenient way to clean up after a step.
+  - DL3003
+  # https://github.com/hadolint/hadolint/wiki/DL4006
+  # The set -eux; pattern is common in many of the official images. It likely is a better approach here.
+  - DL4006

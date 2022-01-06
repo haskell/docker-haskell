@@ -1,14 +1,17 @@
-name: Build and Smoke Test
+name: Validate Docker
 
 on:
   pull_request:
     branches:
       - master
+    paths:
+      - '**/Dockerfile'
+      - '.github/workflows/**'
 
 jobs:
-  ci:
+  build-smoke-test:
     timeout-minutes: 30
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     name: ${{ matrix.ghc }}-${{ matrix.deb }}
     strategy:
       fail-fast: false
@@ -24,8 +27,8 @@ jobs:
             ghc_minor: '9.2'
     steps:
       - uses: actions/checkout@v2
-      - name: docker build [${{ matrix.ghc }}]
-        uses: nick-invision/retry@v1
+      - name: build + smoke test [${{ matrix.ghc }}]
+        uses: nick-invision/retry@v2
         with:
           timeout_minutes: 8
           max_attempts: 3
@@ -39,3 +42,62 @@ jobs:
           path: official-images
       - name: run official-images tests
         run: ./official-images/test/run.sh haskell:${{ matrix.ghc }}-${{ matrix.deb }}
+
+  hadolint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: hadolint/hadolint-action@v1.6.0
+      with:
+        recursive: true
+
+  emulated-architecture-tests:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    name: ${{ matrix.arch }}-${{ matrix.ghc }}-${{ matrix.deb }}
+    strategy:
+      fail-fast: false
+      matrix:
+        ghc: ['8.10.7', '9.0.2', '9.2.1']
+        deb: ['buster']
+        arch: ['aarch64']
+        include:
+          - ghc: '8.10.7'
+            ghc_minor: '8.10'
+          - ghc: '9.0.2'
+            ghc_minor: '9.0'
+          - ghc: '9.2.1'
+            ghc_minor: '9.2'
+          - arch: aarch64
+            docker_platform: arm64
+    steps:
+      - uses: actions/checkout@v2
+      - name: docker build [ ${{ matrix.arch }} ${{ matrix.ghc }}]
+        uses: uraimo/run-on-arch-action@e9117b926d001f8683802c315b5a134f8c5da3d3
+        with:
+          arch: ${{ matrix.arch }}
+          distro: ${{ matrix.deb }}
+          githubToken: ${{ github.token }}
+          dockerRunArgs:
+            --volume /var/run/docker.sock:/var/run/docker.sock
+          install: |
+            apt-get update
+            apt-get install -y curl
+            curl -fsSL https://get.docker.com | sh
+          run: |
+            docker build --pull \
+              --platform "linux/${{ matrix.docker_platform }}" \
+              -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
+              ${{ matrix.ghc_minor }}/${{ matrix.deb }}
+            echo 'testing..'
+            docker run \
+              --platform "linux/${{ matrix.docker_platform }}" \
+              -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
+              bash -c "cabal update && cabal install --lib hashable"
+            docker run \
+              --platform "linux/${{ matrix.docker_platform }}" \
+              -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
+              bash -c "echo | ghci"
+
+# Running the official tests does not work as we need to hardcode the plaform due to the emulated nature.
+# This solution is fairly hacky, but gets us most of benefit of the official tests.
