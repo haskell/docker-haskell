@@ -31,7 +31,8 @@ ARG CABAL_INSTALL_RELEASE_KEY=A970DF3AC3B9709706D74544B3D9F94B8DCAE210
 RUN set -eux; \
     cd /tmp; \
     ARCH="$(dpkg-architecture --query DEB_BUILD_GNU_CPU)"; \
-    CABAL_INSTALL_URL="https://downloads.haskell.org/~cabal/cabal-install-$CABAL_INSTALL/cabal-install-$CABAL_INSTALL-$ARCH-linux-deb10.tar.xz"; \
+    CABAL_INSTALL_TAR="cabal-install-$CABAL_INSTALL-$ARCH-linux-deb10.tar.xz"; \
+    CABAL_INSTALL_URL="https://downloads.haskell.org/~cabal/cabal-install-$CABAL_INSTALL/$CABAL_INSTALL_TAR"; \
     CABAL_INSTALL_SHA256SUMS_URL="https://downloads.haskell.org/~cabal/cabal-install-$CABAL_INSTALL/SHA256SUMS"; \
     # sha256 from https://downloads.haskell.org/~cabal/cabal-install-$CABAL_INSTALL/SHA256SUMS
     case "$ARCH" in \
@@ -51,6 +52,8 @@ RUN set -eux; \
     GNUPGHOME="$(mktemp -d)"; export GNUPGHOME; \
     gpg --batch --keyserver keyserver.ubuntu.com --receive-keys "$CABAL_INSTALL_RELEASE_KEY"; \
     gpg --batch --verify SHA256SUMS.sig SHA256SUMS; \
+    # confirm we are verying SHA256SUMS that matches the release + sha256
+    grep "$CABAL_INSTALL_SHA256  $CABAL_INSTALL_TAR" SHA256SUMS; \
     gpgconf --kill all; \
     \
     tar -xf cabal-install.tar.gz -C /usr/local/bin; \
@@ -61,15 +64,19 @@ RUN set -eux; \
 
 # GHC 8.10 requires LLVM version 9 - 12 on aarch64
 ARG LLVM_VERSION=12
+ARG LLVM_KEY=6084F3CF814B57C1CF12EFD515CF4D18AF4F7421
 
 RUN set -eux; \
     if [ "$(dpkg-architecture --query DEB_BUILD_GNU_CPU)" = "aarch64" ]; then \
-        # adapted from https://apt.llvm.org/llvm.sh
-        curl -sSL https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -; \
-        echo "deb http://apt.llvm.org/buster/ llvm-toolchain-buster-$LLVM_VERSION main" > /etc/apt/sources.list.d/llvm.list; \
+        GNUPGHOME="$(mktemp -d)"; export GNUPGHOME; \
+        mkdir -p /usr/local/share/keyrings/; \
+        gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$LLVM_KEY"; \
+        gpg --batch --armor --export "$LLVM_KEY" > /usr/local/share/keyrings/apt.llvm.org.gpg.asc; \
+        echo "deb [ signed-by=/usr/local/share/keyrings/apt.llvm.org.gpg.asc ] http://apt.llvm.org/buster/ llvm-toolchain-buster-$LLVM_VERSION main" > /etc/apt/sources.list.d/llvm.list; \
         apt-get update; \
         apt-get install -y --no-install-recommends llvm-$LLVM_VERSION; \
-        rm -rf /var/lib/apt/lists/*; \
+        gpgconf --kill all; \
+        rm -rf "$GNUPGHOME" /var/lib/apt/lists/*; \
     fi
 
 ARG GHC=8.10.7
