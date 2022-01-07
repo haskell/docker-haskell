@@ -64,15 +64,19 @@ RUN set -eux; \
 
 # GHC 9.0 requires LLVM version 9 - 12 on aarch64
 ARG LLVM_VERSION=12
+ARG LLVM_KEY=6084F3CF814B57C1CF12EFD515CF4D18AF4F7421
 
 RUN set -eux; \
     if [ "$(dpkg-architecture --query DEB_BUILD_GNU_CPU)" = "aarch64" ]; then \
-        # adapted from https://apt.llvm.org/llvm.sh
-        curl -sSL https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -; \
-        echo "deb http://apt.llvm.org/buster/ llvm-toolchain-buster-$LLVM_VERSION main" > /etc/apt/sources.list.d/llvm.list; \
+        GNUPGHOME="$(mktemp -d)"; export GNUPGHOME; \
+        mkdir -p /usr/local/share/keyrings/; \
+        gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$LLVM_KEY"; \
+        gpg --batch --armor --export "$LLVM_KEY" > /usr/local/share/keyrings/apt.llvm.org.gpg.asc; \
+        echo "deb [ signed-by=/usr/local/share/keyrings/apt.llvm.org.gpg.asc ] http://apt.llvm.org/buster/ llvm-toolchain-buster-$LLVM_VERSION main" > /etc/apt/sources.list.d/llvm.list; \
         apt-get update; \
         apt-get install -y --no-install-recommends llvm-$LLVM_VERSION; \
-        rm -rf /var/lib/apt/lists/*; \
+        gpgconf --kill all; \
+        rm -rf "$GNUPGHOME" /var/lib/apt/lists/*; \
     fi
 
 ARG GHC=9.0.2
