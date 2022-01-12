@@ -1,0 +1,41 @@
+name: Validate Windows
+
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - '**/windows/**/Dockerfile'
+      - '.github/workflows/windows.yml'
+
+jobs:
+  build-smoke-test:
+    timeout-minutes: 30
+    runs-on: windows-latest
+    name: ${{ matrix.ghc }}-alpine${{ matrix.os_version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        ghc: ['9.0.2']
+        os_version: ['ltsc2016']
+        include:
+          - ghc: '9.0.2'
+            ghc_minor: '9.0'
+    steps:
+      - uses: actions/checkout@v2
+      - name: build + smoke test [${{ matrix.ghc }}]
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 8
+          max_attempts: 3
+          command: |
+            docker build --pull \
+              -t haskell:${{ matrix.ghc }}-windowsservercore-${{ matrix.os_version }} \
+              ${{ matrix.ghc_minor }}/windowsservercore-${{ matrix.os_version }}
+      # - uses: actions/checkout@v2
+      #   with:
+      #     repository: AlistairB/official-images
+      #     ref: haskell-sh
+      #     path: official-images
+      # - name: run official-images tests
+      #   run: ./official-images/test/run.sh haskell:${{ matrix.ghc }}-alpine${{ matrix.os_version }}
