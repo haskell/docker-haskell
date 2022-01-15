@@ -9,3 +9,6 @@ ignored:
   # https://github.com/hadolint/hadolint/wiki/DL4006
   # The set -eux; pattern is common in many of the official images. It likely is a better approach here.
   - DL4006
+  # https://github.com/hadolint/hadolint/wiki/DL3059
+  # In windows the ARG style does not seem popular, so consecutive runs are ok
+  - DL3059
