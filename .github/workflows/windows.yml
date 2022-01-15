@@ -22,16 +22,10 @@ jobs:
           - ghc: '9.0.2'
             ghc_minor: '9.0'
     steps:
-      - uses: actions/checkout@v2
-      - name: build + smoke test [${{ matrix.ghc }}]
-        uses: nick-invision/retry@v2
-        with:
-          timeout_minutes: 8
-          max_attempts: 3
-          command: |
-            docker build --pull \
-              -t haskell:${{ matrix.ghc }}-windowsservercore-${{ matrix.os_version }} \
-              ${{ matrix.ghc_minor }}/windowsservercore-${{ matrix.os_version }}
+      run: |
+        docker build --pull \
+          -t haskell:${{ matrix.ghc }}-windowsservercore-${{ matrix.os_version }} \
+          ${{ matrix.ghc_minor }}/windowsservercore-${{ matrix.os_version }}
       # - uses: actions/checkout@v2
       #   with:
       #     repository: AlistairB/official-images
