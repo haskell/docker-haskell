@@ -12,12 +12,12 @@ jobs:
   build-smoke-test:
     timeout-minutes: 30
     runs-on: windows-latest
-    name: ${{ matrix.ghc }}-alpine${{ matrix.os_version }}
+    name: ${{ matrix.ghc }}-windowsservercore-${{ matrix.os_version }}
     strategy:
       fail-fast: false
       matrix:
         ghc: ['9.0.2']
-        os_version: ['ltsc2016']
+        os_version: ['1809']
         include:
           - ghc: '9.0.2'
             ghc_minor: '9.0'
