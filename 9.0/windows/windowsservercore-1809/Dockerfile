@@ -97,6 +97,10 @@ RUN $url = ('https://github.com/commercialhaskell/stack/releases/download/v{0}/s
 	Remove-Item stack.zip -Force; \
     Remove-Item -Path 'C:\stack' -Recurse -Force; \
     \
+	Write-Host 'Configure ...'; \
+	stack config set system-ghc --global true; \
+	stack config set install-ghc --global false; \
+	\	
 	Write-Host 'Verifying install ("stack --version") ...'; \
 	stack --version; \
 	\
