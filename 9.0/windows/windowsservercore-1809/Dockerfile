@@ -37,6 +37,37 @@ RUN $url = ('https://github.com/git-for-windows/git/releases/download/v{0}.windo
 	\
 	Write-Host 'Complete.';
 
+# The install hangs in docker https://github.com/msys2/MSYS2-packages/issues/2305 .. will need to find a solution
+# ARG MSYS2_VERSION=2021-11-30
+# ARG MSYS2_SHA256=971f247546d1c7f92e711650136004a4f54119ce3131fe558112e24d69d0d352
+
+# RUN $collapsedVersion = $env:MSYS2_VERSION -replace '-','';\
+# 	$url = ('https://github.com/msys2/msys2-installer/releases/download/{0}/msys2-base-x86_64-{1}.sfx.exe' -f $env:MSYS2_VERSION, $collapsedVersion); \
+# 	Write-Host ('Downloading {0} ...' -f $url); \
+# 	[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; \
+# 	Invoke-WebRequest -Uri $url -OutFile 'msys2.exe'; \
+# 	\
+# 	Write-Host ('Verifying sha256 ({0}) ...' -f $env:MSYS2_SHA256); \
+# 	if ((Get-FileHash msys2.exe -Algorithm sha256).Hash -ne $env:MSYS2_SHA256) { \
+# 		Write-Host 'FAILED!'; \
+# 		exit 1; \
+# 	}; \
+# 	\
+# 	Write-Host 'Installing ...'; \
+# 	.\msys2.exe -y -oC:\; \
+# 	\
+# 	Write-Host 'Removing ...'; \
+# 	Remove-Item msys2.exe -Force; \
+# 	\
+# 	Write-Host 'Configure + Verify...'; \
+# 	function msys() { C:\msys64\usr\bin\bash.exe @('-lc') + @Args; } \
+# 	msys ' '; \
+# 	msys 'pacman --noconfirm -Syuu'; \
+# 	msys 'pacman --noconfirm -Syuu'; \
+# 	msys 'pacman --noconfirm -Scc'; \
+# 	\
+# 	Write-Host 'Complete.';
+
 # PATH isn't actually set in the Docker image, so we have to set it from within the container
 RUN $newPath = ('C:\Program Files\ghc\bin;C:\Program Files\cabal-install;C:\Program Files\stack;{0}' -f $env:PATH); \
 	Write-Host ('Updating PATH: {0}' -f $newPath); \
@@ -69,7 +100,7 @@ RUN $url = ('https://downloads.haskell.org/~cabal/cabal-install-{0}/cabal-instal
 	Write-Host 'Verifying install ("cabal --version") ...'; \
 	cabal --version; \
 	\
-	Write-Host 'Complete.';    
+	Write-Host 'Complete.';
 
 ARG STACK_VERSION=2.7.3
 ARG STACK_SHA256=9f8c406f5ffbe72670c9499959ddab76fa8a378b4f25e3b82700c16c7fd2bad6
@@ -100,11 +131,11 @@ RUN $url = ('https://github.com/commercialhaskell/stack/releases/download/v{0}/s
 	Write-Host 'Configure ...'; \
 	stack config set system-ghc --global true; \
 	stack config set install-ghc --global false; \
-	\	
+	\
 	Write-Host 'Verifying install ("stack --version") ...'; \
 	stack --version; \
 	\
-	Write-Host 'Complete.';  
+	Write-Host 'Complete.';
 
 ARG GHC_VERSION=9.0.2
 ARG GHC_SHA256=ddd22abb7e6731506320585bffa11a4182fd6b4f9751111a588409568fd95d9f
