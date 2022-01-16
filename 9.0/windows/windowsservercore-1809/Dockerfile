@@ -39,36 +39,44 @@ RUN $url = ('https://github.com/git-for-windows/git/releases/download/v{0}.windo
 
 # The latest release hangs docker https://github.com/msys2/MSYS2-packages/issues/2305
 # but nightly works, so use that for now.
-ARG MSYS2_VERSION=2021-11-30
-ARG MSYS2_SHA256=61a0514eb41f2c7199874eabc7db0abf3250d5daf4c8867c6c699cb52dcb8440
+# ARG MSYS2_VERSION=2021-11-30
+# ARG MSYS2_SHA256=61a0514eb41f2c7199874eabc7db0abf3250d5daf4c8867c6c699cb52dcb8440
 
-RUN $collapsedVersion = $env:MSYS2_VERSION -replace '-','';\
-	# $url = ('https://github.com/msys2/msys2-installer/releases/download/{0}/msys2-base-x86_64-{1}.sfx.exe' -f $env:MSYS2_VERSION, $collapsedVersion); \
-	$url = 'https://github.com/msys2/msys2-installer/releases/download/nightly-x86_64/msys2-base-x86_64-latest.sfx.exe'; \
-	Write-Host ('Downloading {0} ...' -f $url); \
-	[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; \
-	Invoke-WebRequest -Uri $url -OutFile 'msys2.exe'; \
-	\
-	Write-Host ('Verifying sha256 ({0}) ...' -f $env:MSYS2_SHA256); \
-	if ((Get-FileHash msys2.exe -Algorithm sha256).Hash -ne $env:MSYS2_SHA256) { \
-		Write-Host 'FAILED!'; \
-		exit 1; \
-	}; \
-	\
-	Write-Host 'Installing ...'; \
-	.\msys2.exe -y -oC:\; \
-	\
-	Write-Host 'Removing ...'; \
-	Remove-Item msys2.exe -Force; \
-	\
-	Write-Host 'Configure + Verify...'; \
-	function msys() { C:\msys64\usr\bin\bash.exe @('-lc') + @Args; } \
-	msys ' '; \
-	msys 'pacman --noconfirm -Syuu'; \
-	msys 'pacman --noconfirm -Syuu'; \
-	msys 'pacman --noconfirm -Scc'; \
-	\
-	Write-Host 'Complete.';
+# RUN $collapsedVersion = $env:MSYS2_VERSION -replace '-','';\
+# 	# $url = ('https://github.com/msys2/msys2-installer/releases/download/{0}/msys2-base-x86_64-{1}.sfx.exe' -f $env:MSYS2_VERSION, $collapsedVersion); \
+# 	$url = 'https://github.com/msys2/msys2-installer/releases/download/nightly-x86_64/msys2-base-x86_64-latest.sfx.exe'; \
+# 	Write-Host ('Downloading {0} ...' -f $url); \
+# 	[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; \
+# 	Invoke-WebRequest -Uri $url -OutFile 'msys2.exe'; \
+# 	\
+# 	Write-Host ('Verifying sha256 ({0}) ...' -f $env:MSYS2_SHA256); \
+# 	if ((Get-FileHash msys2.exe -Algorithm sha256).Hash -ne $env:MSYS2_SHA256) { \
+# 		Write-Host 'FAILED!'; \
+# 		exit 1; \
+# 	}; \
+# 	\
+# 	Write-Host 'Installing ...'; \
+# 	.\msys2.exe -y -oC:\; \
+# 	\
+# 	Write-Host 'Removing ...'; \
+# 	Remove-Item msys2.exe -Force; \
+# 	\
+# 	Write-Host 'Configure + Verify...'; \
+# 	function msys() { C:\msys64\usr\bin\bash.exe @('-lc') + @Args; } \
+# 	msys ' '; \
+# 	# Upgrading full system...
+# 	msys 'pacman --noconfirm -Syuu'; \
+# 	# Upgrading full system twice...
+# 	msys 'pacman --noconfirm -Syuu'; \
+# 	# Installing Haskell Dependencies...
+# 	msys 'pacman --noconfirm -S --needed curl autoconf mingw-w64-x86_64-pkgconf'; \
+# 	# Updating SSL root certificate authorities...
+# 	msys 'pacman --noconfirm -S ca-certificates'; \
+# 	# Clean up the cache...
+# 	msys 'pacman --noconfirm -Scc'; \
+# 	\
+# 	Write-Host 'Complete.';
+# https://gitlab.haskell.org/haskell/ghcup-hs/-/blob/master/scripts/bootstrap/bootstrap-haskell.ps1#L428-435 ?
 
 # PATH isn't actually set in the Docker image, so we have to set it from within the container
 RUN $newPath = ('C:\Program Files\ghc\bin;C:\Program Files\cabal-install;C:\Program Files\stack;{0}' -f $env:PATH); \
