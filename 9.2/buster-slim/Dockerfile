@@ -1,4 +1,4 @@
-FROM debian:buster
+FROM debian:buster-slim
 
 ENV LANG C.UTF-8
 
@@ -62,25 +62,8 @@ RUN set -eux; \
     \
     cabal --version
 
-# GHC 8.10 requires LLVM version 9 - 12 on aarch64
-ARG LLVM_VERSION=12
-ARG LLVM_KEY=6084F3CF814B57C1CF12EFD515CF4D18AF4F7421
-
-RUN set -eux; \
-    if [ "$(dpkg-architecture --query DEB_BUILD_GNU_CPU)" = "aarch64" ]; then \
-        GNUPGHOME="$(mktemp -d)"; export GNUPGHOME; \
-        mkdir -p /usr/local/share/keyrings/; \
-        gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$LLVM_KEY"; \
-        gpg --batch --armor --export "$LLVM_KEY" > /usr/local/share/keyrings/apt.llvm.org.gpg.asc; \
-        echo "deb [ signed-by=/usr/local/share/keyrings/apt.llvm.org.gpg.asc ] http://apt.llvm.org/buster/ llvm-toolchain-buster-$LLVM_VERSION main" > /etc/apt/sources.list.d/llvm.list; \
-        apt-get update; \
-        apt-get install -y --no-install-recommends llvm-$LLVM_VERSION; \
-        gpgconf --kill all; \
-        rm -rf "$GNUPGHOME" /var/lib/apt/lists/*; \
-    fi
-
-ARG GHC=8.10.7
-ARG GHC_RELEASE_KEY=88B57FCF7DB53B4DB3BFA4B1588764FBE22D19C4
+ARG GHC=9.2.1
+ARG GHC_RELEASE_KEY=FFEB7CE81E16A36B3E2DED6F2DE04D4E97DB64AD
 
 RUN set -eux; \
     cd /tmp; \
@@ -89,10 +72,10 @@ RUN set -eux; \
     # sha256 from https://downloads.haskell.org/~ghc/$GHC/SHA256SUMS
     case "$ARCH" in \
         'aarch64') \
-            GHC_SHA256='fad2417f9b295233bf8ade79c0e6140896359e87be46cb61cd1d35863d9d0e55'; \
+            GHC_SHA256='717d4246a8b407a807048ce6eddb2785aca2e4c73b6b634c01e1726f42d539a1'; \
             ;; \
         'x86_64') \
-            GHC_SHA256='a13719bca87a0d3ac0c7d4157a4e60887009a7f1a8dbe95c4759ec413e086d30'; \
+            GHC_SHA256='53f1650ed092230480ff5750b94f409e5dfe66bd07ced00bbbcdf5d6b180234c'; \
             ;; \
         *) echo >&2 "error: unsupported architecture '$ARCH'" ; exit 1 ;; \
     esac; \
@@ -109,6 +92,8 @@ RUN set -eux; \
     cd "ghc-$GHC"; \
     ./configure --prefix "/opt/ghc/$GHC"; \
     make install; \
+    # remove profiling support to save space
+    find "/opt/ghc/$GHC/" \( -name "*_p.a" -o -name "*.p_hi" \) -type f -delete; \
     # remove some docs
     rm -rf "/opt/ghc/$GHC/share/"; \
     \

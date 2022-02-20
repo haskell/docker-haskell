@@ -1,4 +1,4 @@
-FROM debian:buster
+FROM debian:buster-slim
 
 ENV LANG C.UTF-8
 
@@ -62,7 +62,7 @@ RUN set -eux; \
     \
     cabal --version
 
-# GHC 8.10 requires LLVM version 9 - 12 on aarch64
+# GHC 9.0 requires LLVM version 9 - 12 on aarch64
 ARG LLVM_VERSION=12
 ARG LLVM_KEY=6084F3CF814B57C1CF12EFD515CF4D18AF4F7421
 
@@ -79,7 +79,7 @@ RUN set -eux; \
         rm -rf "$GNUPGHOME" /var/lib/apt/lists/*; \
     fi
 
-ARG GHC=8.10.7
+ARG GHC=9.0.2
 ARG GHC_RELEASE_KEY=88B57FCF7DB53B4DB3BFA4B1588764FBE22D19C4
 
 RUN set -eux; \
@@ -89,10 +89,10 @@ RUN set -eux; \
     # sha256 from https://downloads.haskell.org/~ghc/$GHC/SHA256SUMS
     case "$ARCH" in \
         'aarch64') \
-            GHC_SHA256='fad2417f9b295233bf8ade79c0e6140896359e87be46cb61cd1d35863d9d0e55'; \
+            GHC_SHA256='cb016344c70a872738a24af60bd15d3b18749087b9905c1b3f1b1549dc01f46d'; \
             ;; \
         'x86_64') \
-            GHC_SHA256='a13719bca87a0d3ac0c7d4157a4e60887009a7f1a8dbe95c4759ec413e086d30'; \
+            GHC_SHA256='5d0b9414b10cfb918453bcd01c5ea7a1824fe95948b08498d6780f20ba247afc'; \
             ;; \
         *) echo >&2 "error: unsupported architecture '$ARCH'" ; exit 1 ;; \
     esac; \
@@ -109,6 +109,8 @@ RUN set -eux; \
     cd "ghc-$GHC"; \
     ./configure --prefix "/opt/ghc/$GHC"; \
     make install; \
+    # remove profiling support to save space
+    find "/opt/ghc/$GHC/" \( -name "*_p.a" -o -name "*.p_hi" \) -type f -delete; \
     # remove some docs
     rm -rf "/opt/ghc/$GHC/share/"; \
     \

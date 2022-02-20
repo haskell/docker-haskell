@@ -1,4 +1,4 @@
-FROM debian:buster
+FROM debian:buster-slim
 
 ENV LANG C.UTF-8
 
@@ -109,6 +109,8 @@ RUN set -eux; \
     cd "ghc-$GHC"; \
     ./configure --prefix "/opt/ghc/$GHC"; \
     make install; \
+    # remove profiling support to save space
+    find "/opt/ghc/$GHC/" \( -name "*_p.a" -o -name "*.p_hi" \) -type f -delete; \
     # remove some docs
     rm -rf "/opt/ghc/$GHC/share/"; \
     \
