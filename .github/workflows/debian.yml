@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - '**/buster/Dockerfile'
+      - '**/buster-slim/Dockerfile'
       - '.github/workflows/debian.yml'
 
 jobs:
@@ -17,7 +18,7 @@ jobs:
       fail-fast: false
       matrix:
         ghc: ['8.10.7', '9.0.2', '9.2.1']
-        deb: ['buster']
+        deb: ['buster', 'buster-slim']
         include:
           - ghc: '8.10.7'
             ghc_minor: '8.10'
@@ -52,6 +53,7 @@ jobs:
       fail-fast: false
       matrix:
         ghc: ['8.10.7', '9.0.2', '9.2.1']
+        # uraimo/run-on-arch-action does not support debian slim variants
         deb: ['buster']
         arch: ['aarch64']
         include:
