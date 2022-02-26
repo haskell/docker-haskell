@@ -16,11 +16,9 @@ RUN apt-get update && \
         libffi-dev \
         libgmp-dev \
         libnuma-dev \
-        libsqlite3-dev \
         libtinfo-dev \
         make \
         netbase \
-        openssh-client \
         xz-utils \
         zlib1g-dev && \
     rm -rf /var/lib/apt/lists/*
