@@ -99,7 +99,7 @@ RUN set -eux; \
     \
     "/opt/ghc/$GHC/bin/ghc" --version
 
-ARG STACK=2.7.3
+ARG STACK=2.7.5
 ARG STACK_RELEASE_KEY=C5705533DA4F78D8664B5DC0575159689BEFB442
 
 RUN set -eux; \
@@ -116,7 +116,7 @@ RUN set -eux; \
             INSTALL_STACK="false"; \
             ;; \
         'x86_64') \
-            STACK_SHA256='a6c090555fa1c64aa61c29aa4449765a51d79e870cf759cde192937cd614e72b'; \
+            STACK_SHA256='9bcd165358d4dcafd2b33320d4fe98ce72faaf62300cc9b0fb86a27eb670da50'; \
             ;; \
         *) echo >&2 "error: unsupported architecture '$ARCH'" ; exit 1 ;; \
     esac; \
