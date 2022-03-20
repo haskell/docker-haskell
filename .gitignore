@@ -55,7 +55,8 @@ tramp
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
@@ -100,3 +101,5 @@ tmtags
 Session.vim
 .netrwhist
 *~
+
+dist-newstyle

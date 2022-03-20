@@ -1,0 +1,42 @@
+cabal-version:      2.4
+name:               docker-haskell
+version:            0.1.0.0
+
+-- A short (one-line) description of the package.
+-- synopsis:
+
+-- A longer description of the package.
+-- description:
+
+-- A URL where users can report bugs.
+-- bug-reports:
+
+-- The license under which the package is released.
+license:            MIT
+author:             Alistair Burrowes
+maintainer:         afburrowes@gmail.com
+
+-- A copyright notice.
+-- copyright:
+-- category:
+extra-source-files:
+    README.md
+
+executable docker-haskell
+    main-is:          Main.hs
+
+    -- Modules included in this executable, other than Main.
+    other-modules:
+        Model.DebianDistribution,
+        Model.OperatingSystem,
+        Model.ProcessorArchitecture,
+        Model.ImageVariant
+
+    -- LANGUAGE extensions used by modules in this package.
+    default-extensions:
+        LambdaCase
+    build-depends:    base ^>=4.14.3.0,
+                      ginger >= 0.10.4 && < 0.11,
+                      text >= 1.2.4 && < 1.3,
+    hs-source-dirs:   gen
+    default-language: Haskell2010
