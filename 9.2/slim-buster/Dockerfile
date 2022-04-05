@@ -90,7 +90,7 @@ RUN set -eux; \
     GNUPGHOME="$(mktemp -d)"; export GNUPGHOME; \
     gpg --batch --keyserver keyserver.ubuntu.com --receive-keys "$CABAL_INSTALL_RELEASE_KEY"; \
     gpg --batch --verify SHA256SUMS.sig SHA256SUMS; \
-    # confirm we are verying SHA256SUMS that matches the release + sha256
+    # confirm we are verifying SHA256SUMS that matches the release + sha256
     grep "$CABAL_INSTALL_SHA256  $CABAL_INSTALL_TAR" SHA256SUMS; \
     gpgconf --kill all; \
     \
