@@ -1,28 +1,12 @@
-FROM debian:buster
+FROM buildpack-deps:buster
 
 ENV LANG C.UTF-8
 
-# common haskell + stack dependencies
+# additional haskell specific deps
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        ca-certificates \
-        curl \
-        dpkg-dev \
-        git \
-        gcc \
-        gnupg \
-        g++ \
-        libc6-dev \
-        libffi-dev \
-        libgmp-dev \
         libnuma-dev \
-        libsqlite3-dev \
-        libtinfo-dev \
-        make \
-        netbase \
-        openssh-client \
-        xz-utils \
-        zlib1g-dev && \
+        libtinfo-dev && \
     rm -rf /var/lib/apt/lists/*
 
 ARG STACK=2.7.5
