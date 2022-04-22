@@ -36,7 +36,7 @@ executable docker-haskell
     default-extensions:
         LambdaCase
     build-depends:    base ^>=4.14.3.0,
-                      ginger >= 0.10.4 && < 0.11,
+                      stache >= 2.3.1 && < 2.4,
                       text >= 1.2.4 && < 1.3,
     hs-source-dirs:   gen
     default-language: Haskell2010
