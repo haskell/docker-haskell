@@ -1,6 +1,6 @@
 module Model.GHC.GHCReleaser where
 
-data GHCReleaser = GHCReleaser {
+data GhcReleaser = GhcReleaser {
   _name :: String,
   _pgpKey :: PGPKey
 }
