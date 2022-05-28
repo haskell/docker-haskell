@@ -23,7 +23,7 @@ jobs:
       fail-fast: false
       matrix:
         ghc: ['8.10.7', '9.0.2', '9.2.3']
-        deb: ['buster', 'slim-buster']
+        deb: ['buster', 'slim-buster', 'bullseye', 'slim-bullseye']
         include:
           - ghc: '8.10.7'
             ghc_minor: '8.10'
