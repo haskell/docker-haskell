@@ -47,7 +47,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           repository: AlistairB/official-images
-          ref: haskell-sh
+          ref: haskell-cabal-test-change
           path: official-images
       - name: run official-images tests
         run: ./official-images/test/run.sh haskell:${{ matrix.ghc }}-${{ matrix.deb }}
@@ -95,7 +95,7 @@ jobs:
             docker run \
               --platform "linux/${{ matrix.docker_platform }}" \
               -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
-              bash -c "cabal update && cabal install --lib hashable"
+              bash -c "cabal update && cabal install --lib vector"
             docker run \
               --platform "linux/${{ matrix.docker_platform }}" \
               -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
