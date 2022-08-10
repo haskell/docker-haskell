@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ghc: ['8.10.7', '9.0.2', '9.2.4']
+        ghc: ['8.10.7', '9.0.2', '9.2.4', '9.4.1']
         deb: ['buster', 'slim-buster']
         include:
           - ghc: '8.10.7'
@@ -31,6 +31,8 @@ jobs:
             ghc_minor: '9.0'
           - ghc: '9.2.4'
             ghc_minor: '9.2'
+          - ghc: '9.4.1'
+            ghc_minor: '9.4'
     steps:
       - uses: actions/checkout@v2
       - name: build + smoke test [${{ matrix.ghc }}]
@@ -45,7 +47,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           repository: AlistairB/official-images
-          ref: haskell-sh
+          ref: haskell-cabal-test-change
           path: official-images
       - name: run official-images tests
         run: ./official-images/test/run.sh haskell:${{ matrix.ghc }}-${{ matrix.deb }}
@@ -57,7 +59,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ghc: ['8.10.7', '9.0.2', '9.2.4']
+        ghc: ['8.10.7', '9.0.2', '9.2.4', '9.4.1']
         # uraimo/run-on-arch-action does not support debian slim variants
         deb: ['buster']
         arch: ['aarch64']
@@ -68,6 +70,8 @@ jobs:
             ghc_minor: '9.0'
           - ghc: '9.2.4'
             ghc_minor: '9.2'
+          - ghc: '9.4.1'
+            ghc_minor: '9.4'
           - arch: aarch64
             docker_platform: arm64
     steps:
@@ -91,7 +95,7 @@ jobs:
             docker run \
               --platform "linux/${{ matrix.docker_platform }}" \
               -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
-              bash -c "cabal update && cabal install --lib hashable"
+              bash -c "cabal update && cabal install --lib primitive"
             docker run \
               --platform "linux/${{ matrix.docker_platform }}" \
               -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
