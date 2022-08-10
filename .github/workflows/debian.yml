@@ -95,7 +95,7 @@ jobs:
             docker run \
               --platform "linux/${{ matrix.docker_platform }}" \
               -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
-              bash -c "cabal update && cabal install --lib vector"
+              bash -c "cabal update && cabal install --lib primitive"
             docker run \
               --platform "linux/${{ matrix.docker_platform }}" \
               -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
