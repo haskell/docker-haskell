@@ -100,6 +100,10 @@ Images are built and released by the central docker official images system. Spec
 
 This [doc](https://github.com/docker-library/faq#an-images-source-changed-in-git-now-what) described the process in more detail.
 
+### Update Docker Hub Docs
+
+The [docker hub haskell docs](https://github.com/docker-library/docs/tree/master/haskell) live in a separate repo.
+
 ### Image Tests
 
 #### Functionality Tests
