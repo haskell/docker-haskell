@@ -98,7 +98,7 @@ Images are built and released by the central docker official images system. Spec
 3. Create a PR, including info on what has changed. The official images people will review the actual Dockerfile changes as they want official images to maintain a high level of quality.
 4. Once merged, their build system will run and the image updates will eventually be released.
 
-This [doc](https://github.com/docker-library/faq#an-images-source-changed-in-git-now-what) described the process in more detail.
+This [doc](https://github.com/docker-library/faq#an-images-source-changed-in-git-now-what) describes the process in more detail.
 
 ### Update Docker Hub Docs
 
