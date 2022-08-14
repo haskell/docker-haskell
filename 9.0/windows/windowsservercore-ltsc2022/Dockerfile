@@ -38,12 +38,15 @@ RUN $url = ('https://github.com/git-for-windows/git/releases/download/v{0}.windo
 	Write-Host 'Complete.';
 
 # Try this
-ARG MSYS2_VERSION=2022-06-03
-ARG MSYS2_SHA256=0694bf6661aa9dae8338be87b633ae9ac20c68d593cc17658a1dffe6291098bf
+# ARG MSYS2_VERSION=2022-06-03
+# ARG MSYS2_SHA256=0694bf6661aa9dae8338be87b633ae9ac20c68d593cc17658a1dffe6291098bf
+
+ARG MSYS2_VERSION=2021-11-30
+ARG MSYS2_SHA256=61a0514eb41f2c7199874eabc7db0abf3250d5daf4c8867c6c699cb52dcb8440
 
 RUN $collapsedVersion = $env:MSYS2_VERSION -replace '-','';\
-	$url = ('https://github.com/msys2/msys2-installer/releases/download/{0}/msys2-base-x86_64-{1}.sfx.exe' -f $env:MSYS2_VERSION, $collapsedVersion); \
-	# $url = 'https://github.com/msys2/msys2-installer/releases/download/nightly-x86_64/msys2-base-x86_64-latest.sfx.exe'; \
+	# $url = ('https://github.com/msys2/msys2-installer/releases/download/{0}/msys2-base-x86_64-{1}.sfx.exe' -f $env:MSYS2_VERSION, $collapsedVersion); \
+	$url = 'https://github.com/msys2/msys2-installer/releases/download/nightly-x86_64/msys2-base-x86_64-latest.sfx.exe'; \
 	Write-Host ('Downloading {0} ...' -f $url); \
 	[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; \
 	Invoke-WebRequest -Uri $url -OutFile 'msys2.exe'; \
@@ -75,6 +78,7 @@ RUN $collapsedVersion = $env:MSYS2_VERSION -replace '-','';\
 	msys 'pacman --noconfirm -Scc'; \
 	\
 	Write-Host 'Complete.';
+
 # https://gitlab.haskell.org/haskell/ghcup-hs/-/blob/master/scripts/bootstrap/bootstrap-haskell.ps1#L428-435 ?
 
 # PATH isn't actually set in the Docker image, so we have to set it from within the container
