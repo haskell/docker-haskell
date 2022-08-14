@@ -42,8 +42,8 @@ ARG MSYS2_VERSION=2022-06-03
 ARG MSYS2_SHA256=0694bf6661aa9dae8338be87b633ae9ac20c68d593cc17658a1dffe6291098bf
 
 RUN $collapsedVersion = $env:MSYS2_VERSION -replace '-','';\
-	# $url = ('https://github.com/msys2/msys2-installer/releases/download/{0}/msys2-base-x86_64-{1}.sfx.exe' -f $env:MSYS2_VERSION, $collapsedVersion); \
-	$url = 'https://github.com/msys2/msys2-installer/releases/download/nightly-x86_64/msys2-base-x86_64-latest.sfx.exe'; \
+	$url = ('https://github.com/msys2/msys2-installer/releases/download/{0}/msys2-base-x86_64-{1}.sfx.exe' -f $env:MSYS2_VERSION, $collapsedVersion); \
+	# $url = 'https://github.com/msys2/msys2-installer/releases/download/nightly-x86_64/msys2-base-x86_64-latest.sfx.exe'; \
 	Write-Host ('Downloading {0} ...' -f $url); \
 	[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; \
 	Invoke-WebRequest -Uri $url -OutFile 'msys2.exe'; \
