@@ -154,7 +154,7 @@ RUN $url = ('https://github.com/commercialhaskell/stack/releases/download/v{0}/s
 	Write-Host 'Complete.';
 
 ARG GHC_VERSION=9.0.2
-ARG GHC_SHA256=ddd22abb7e6731506320585bffa11a4182fd6b4f9751111a588409568fd95d9f
+ARG GHC_SHA256=f6fbb8047ae16049dc6215a6abb652b4307205310bfffddea695a854af92dc99
 
 RUN $releaseName = ('ghc-{0}-x86_64-unknown-mingw32' -f $env:GHC_VERSION); \
     $url = ('https://downloads.haskell.org/~ghc/{0}/{1}.zip' -f $env:GHC_VERSION, $releaseName); \
@@ -162,7 +162,6 @@ RUN $releaseName = ('ghc-{0}-x86_64-unknown-mingw32' -f $env:GHC_VERSION); \
 	[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; \
 	Invoke-WebRequest -Uri $url -OutFile 'ghc.zip'; \
 	\
-	$sha256 = 'ddd22abb7e6731506320585bffa11a4182fd6b4f9751111a588409568fd95d9f'; \
 	Write-Host ('Verifying sha256 ({0}) ...' -f $env:GHC_SHA256); \
 	if ((Get-FileHash ghc.zip -Algorithm sha256).Hash -ne $env:GHC_SHA256) { \
 		Write-Host 'FAILED!'; \
