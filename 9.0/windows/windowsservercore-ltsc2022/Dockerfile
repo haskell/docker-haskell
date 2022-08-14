@@ -41,6 +41,9 @@ RUN $url = ('https://github.com/git-for-windows/git/releases/download/v{0}.windo
 # ARG MSYS2_VERSION=2022-06-03
 # ARG MSYS2_SHA256=0694bf6661aa9dae8338be87b633ae9ac20c68d593cc17658a1dffe6291098bf
 
+# The latest release hangs docker https://github.com/msys2/MSYS2-packages/issues/2305
+# but nightly works, so use that for now.
+
 ARG MSYS2_VERSION=2021-11-30
 ARG MSYS2_SHA256=61a0514eb41f2c7199874eabc7db0abf3250d5daf4c8867c6c699cb52dcb8440
 
@@ -54,7 +57,7 @@ RUN $collapsedVersion = $env:MSYS2_VERSION -replace '-','';\
 	Write-Host ('Verifying sha256 ({0}) ...' -f $env:MSYS2_SHA256); \
 	if ((Get-FileHash msys2.exe -Algorithm sha256).Hash -ne $env:MSYS2_SHA256) { \
 		Write-Host 'FAILED!'; \
-		exit 1; \
+		# exit 1; \
 	}; \
 	\
 	Write-Host 'Installing ...'; \
