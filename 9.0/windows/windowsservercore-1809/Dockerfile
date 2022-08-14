@@ -37,45 +37,44 @@ RUN $url = ('https://github.com/git-for-windows/git/releases/download/v{0}.windo
 	\
 	Write-Host 'Complete.';
 
-# The latest release hangs docker https://github.com/msys2/MSYS2-packages/issues/2305
-# but nightly works, so use that for now.
-# ARG MSYS2_VERSION=2021-11-30
-# ARG MSYS2_SHA256=61a0514eb41f2c7199874eabc7db0abf3250d5daf4c8867c6c699cb52dcb8440
+# Try this
+ARG MSYS2_VERSION=2022-06-03
+ARG MSYS2_SHA256=0694bf6661aa9dae8338be87b633ae9ac20c68d593cc17658a1dffe6291098bf
 
-# RUN $collapsedVersion = $env:MSYS2_VERSION -replace '-','';\
-# 	# $url = ('https://github.com/msys2/msys2-installer/releases/download/{0}/msys2-base-x86_64-{1}.sfx.exe' -f $env:MSYS2_VERSION, $collapsedVersion); \
-# 	$url = 'https://github.com/msys2/msys2-installer/releases/download/nightly-x86_64/msys2-base-x86_64-latest.sfx.exe'; \
-# 	Write-Host ('Downloading {0} ...' -f $url); \
-# 	[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; \
-# 	Invoke-WebRequest -Uri $url -OutFile 'msys2.exe'; \
-# 	\
-# 	Write-Host ('Verifying sha256 ({0}) ...' -f $env:MSYS2_SHA256); \
-# 	if ((Get-FileHash msys2.exe -Algorithm sha256).Hash -ne $env:MSYS2_SHA256) { \
-# 		Write-Host 'FAILED!'; \
-# 		exit 1; \
-# 	}; \
-# 	\
-# 	Write-Host 'Installing ...'; \
-# 	.\msys2.exe -y -oC:\; \
-# 	\
-# 	Write-Host 'Removing ...'; \
-# 	Remove-Item msys2.exe -Force; \
-# 	\
-# 	Write-Host 'Configure + Verify...'; \
-# 	function msys() { C:\msys64\usr\bin\bash.exe @('-lc') + @Args; } \
-# 	msys ' '; \
-# 	# Upgrading full system...
-# 	msys 'pacman --noconfirm -Syuu'; \
-# 	# Upgrading full system twice...
-# 	msys 'pacman --noconfirm -Syuu'; \
-# 	# Installing Haskell Dependencies...
-# 	msys 'pacman --noconfirm -S --needed curl autoconf mingw-w64-x86_64-pkgconf'; \
-# 	# Updating SSL root certificate authorities...
-# 	msys 'pacman --noconfirm -S ca-certificates'; \
-# 	# Clean up the cache...
-# 	msys 'pacman --noconfirm -Scc'; \
-# 	\
-# 	Write-Host 'Complete.';
+RUN $collapsedVersion = $env:MSYS2_VERSION -replace '-','';\
+	# $url = ('https://github.com/msys2/msys2-installer/releases/download/{0}/msys2-base-x86_64-{1}.sfx.exe' -f $env:MSYS2_VERSION, $collapsedVersion); \
+	$url = 'https://github.com/msys2/msys2-installer/releases/download/nightly-x86_64/msys2-base-x86_64-latest.sfx.exe'; \
+	Write-Host ('Downloading {0} ...' -f $url); \
+	[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; \
+	Invoke-WebRequest -Uri $url -OutFile 'msys2.exe'; \
+	\
+	Write-Host ('Verifying sha256 ({0}) ...' -f $env:MSYS2_SHA256); \
+	if ((Get-FileHash msys2.exe -Algorithm sha256).Hash -ne $env:MSYS2_SHA256) { \
+		Write-Host 'FAILED!'; \
+		exit 1; \
+	}; \
+	\
+	Write-Host 'Installing ...'; \
+	.\msys2.exe -y -oC:\; \
+	\
+	Write-Host 'Removing ...'; \
+	Remove-Item msys2.exe -Force; \
+	\
+	Write-Host 'Configure + Verify...'; \
+	function msys() { C:\msys64\usr\bin\bash.exe @('-lc') + @Args; } \
+	msys ' '; \
+	# Upgrading full system...
+	msys 'pacman --noconfirm -Syuu'; \
+	# Upgrading full system twice...
+	msys 'pacman --noconfirm -Syuu'; \
+	# Installing Haskell Dependencies...
+	msys 'pacman --noconfirm -S --needed curl autoconf mingw-w64-x86_64-pkgconf'; \
+	# Updating SSL root certificate authorities...
+	msys 'pacman --noconfirm -S ca-certificates'; \
+	# Clean up the cache...
+	msys 'pacman --noconfirm -Scc'; \
+	\
+	Write-Host 'Complete.';
 # https://gitlab.haskell.org/haskell/ghcup-hs/-/blob/master/scripts/bootstrap/bootstrap-haskell.ps1#L428-435 ?
 
 # PATH isn't actually set in the Docker image, so we have to set it from within the container
@@ -84,8 +83,8 @@ RUN $newPath = ('C:\Program Files\ghc\bin;C:\Program Files\cabal-install;C:\Prog
 	[Environment]::SetEnvironmentVariable('PATH', $newPath, [EnvironmentVariableTarget]::Machine);
 # doing this first to share cache across versions more aggressively
 
-ARG CABAL_INSTALL_VERSION=3.6.2.0
-ARG CABAL_INSTALL_SHA256=89aa3aa3f76d15182c0d03227639890cd537627ba0bf0ef9ab451fee504b24c6
+ARG CABAL_INSTALL_VERSION=3.8.1.0
+ARG CABAL_INSTALL_SHA256=b6dd6afe0e5a883f84dc52d836af0e90d9cd2b2978dd87200332085ecb4a0315
 
 RUN $url = ('https://downloads.haskell.org/~cabal/cabal-install-{0}/cabal-install-{0}-x86_64-windows.zip' -f $env:CABAL_INSTALL_VERSION); \
 	Write-Host ('Downloading {0} ...' -f $url); \
@@ -112,8 +111,8 @@ RUN $url = ('https://downloads.haskell.org/~cabal/cabal-install-{0}/cabal-instal
 	\
 	Write-Host 'Complete.';
 
-ARG STACK_VERSION=2.7.3
-ARG STACK_SHA256=9f8c406f5ffbe72670c9499959ddab76fa8a378b4f25e3b82700c16c7fd2bad6
+ARG STACK_VERSION=2.7.5
+ARG STACK_SHA256=a77a1b27501d78800baa7e88d8ccca1d6e9b19b9c59f02f2a40ca260aaa75260
 
 RUN $url = ('https://github.com/commercialhaskell/stack/releases/download/v{0}/stack-{0}-windows-x86_64.zip' -f $env:STACK_VERSION); \
 	Write-Host ('Downloading {0} ...' -f $url); \
