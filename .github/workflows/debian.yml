@@ -52,6 +52,37 @@ jobs:
       - name: run official-images tests
         run: ./official-images/test/run.sh haskell:${{ matrix.ghc }}-${{ matrix.deb }}
 
+  build-smoke-test-deb11:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    name: ${{ matrix.ghc }}-${{ matrix.deb }}
+    strategy:
+      fail-fast: false
+      matrix:
+        ghc: ['9.4.1']
+        deb: ['bullseye', 'slim-bullseye']
+        include:
+          - ghc: '9.4.1'
+            ghc_minor: '9.4'
+    steps:
+      - uses: actions/checkout@v2
+      - name: build + smoke test [${{ matrix.ghc }}]
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 8
+          max_attempts: 3
+          command: |
+            docker build --pull \
+              -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
+              ${{ matrix.ghc_minor }}/${{ matrix.deb }}
+      - uses: actions/checkout@v2
+        with:
+          repository: AlistairB/official-images
+          ref: haskell-cabal-test-change
+          path: official-images
+      - name: run official-images tests
+        run: ./official-images/test/run.sh haskell:${{ matrix.ghc }}-${{ matrix.deb }}
+
   emulated-architecture-tests:
     timeout-minutes: 60
     runs-on: ubuntu-latest
