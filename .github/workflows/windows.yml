@@ -22,6 +22,7 @@ jobs:
           - ghc: '9.0.2'
             ghc_minor: '9.0'
     steps:
+      - uses: actions/checkout@v3
       - name: build + smoke test [${{ matrix.ghc }}]
         run: |
           docker build --pull -t haskell:${{ matrix.ghc }}-windowsservercore-${{ matrix.os_version }} ${{ matrix.ghc_minor }}\windows\windowsservercore-${{ matrix.os_version }}
