@@ -154,7 +154,7 @@ RUN $url = ('https://github.com/commercialhaskell/stack/releases/download/v{0}/s
 	Write-Host 'Complete.';
 
 ARG GHC_VERSION=9.0.2
-ARG GHC_SHA256=f6fbb8047ae16049dc6215a6abb652b4307205310bfffddea695a854af92dc99
+ARG GHC_SHA256=fe2d37b68562281d61fca9a02ff5ec413a6272f9d77239c2e641a57550900999
 
 RUN $releaseName = ('ghc-{0}-x86_64-unknown-mingw32' -f $env:GHC_VERSION); \
     $url = ('https://downloads.haskell.org/~ghc/{0}/{1}.zip' -f $env:GHC_VERSION, $releaseName); \
