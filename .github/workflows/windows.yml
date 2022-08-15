@@ -26,10 +26,9 @@ jobs:
       - name: build + smoke test [${{ matrix.ghc }}]
         run: |
           docker build --pull -t haskell:${{ matrix.ghc }}-windowsservercore-${{ matrix.os_version }} ${{ matrix.ghc_minor }}\windows\windowsservercore-${{ matrix.os_version }}
-      # - uses: actions/checkout@v2
-      #   with:
-      #     repository: AlistairB/official-images
-      #     ref: haskell-sh
-      #     path: official-images
-      # - name: run official-images tests
-      #   run: ./official-images/test/run.sh haskell:${{ matrix.ghc }}-alpine${{ matrix.os_version }}
+      - uses: actions/checkout@v3
+        with:
+          repository: docker-library/official-images
+          path: official-images
+      - name: run official-images tests
+        run: ./official-images/test/run.sh haskell:${{ matrix.ghc }}-windowsservercore-${{ matrix.os_version }}
