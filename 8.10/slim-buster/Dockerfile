@@ -23,7 +23,7 @@ RUN apt-get update && \
         zlib1g-dev && \
     rm -rf /var/lib/apt/lists/*
 
-ARG STACK=2.7.5
+ARG STACK=2.9.1
 ARG STACK_RELEASE_KEY=C5705533DA4F78D8664B5DC0575159689BEFB442
 
 RUN set -eux; \
@@ -40,7 +40,7 @@ RUN set -eux; \
             INSTALL_STACK="false"; \
             ;; \
         'x86_64') \
-            STACK_SHA256='9bcd165358d4dcafd2b33320d4fe98ce72faaf62300cc9b0fb86a27eb670da50'; \
+            STACK_SHA256='0581cebe880b8ed47556ee73d8bbb9d602b5b82e38f89f6aa53acaec37e7760d'; \
             ;; \
         *) echo >&2 "error: unsupported architecture '$ARCH'" ; exit 1 ;; \
     esac; \
