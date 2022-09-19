@@ -29,33 +29,39 @@ ARG STACK_RELEASE_KEY=C5705533DA4F78D8664B5DC0575159689BEFB442
 RUN set -eux; \
     cd /tmp; \
     ARCH="$(dpkg-architecture --query DEB_BUILD_GNU_CPU)"; \
+    INSTALL_STACK="true"; \
     STACK_URL="https://github.com/commercialhaskell/stack/releases/download/v${STACK}/stack-${STACK}-linux-$ARCH.tar.gz"; \
     # sha256 from https://github.com/commercialhaskell/stack/releases/download/v${STACK}/stack-${STACK}-linux-$ARCH.tar.gz.sha256
     case "$ARCH" in \
         'aarch64') \
-            STACK_SHA256='741cf6552adcd41ca0c38c4f03b1e8f244873d988f70ef5ed4b502c0df28ea5a'; \
+            # Stack does not officially support ARM64, nor do the binaries that exist work.
+            # Hitting https://github.com/commercialhaskell/stack/issues/2103#issuecomment-972329065 when trying to use
+            # stack-2.7.1-linux-aarch64.tar.gz
+            INSTALL_STACK="false"; \
             ;; \
         'x86_64') \
             STACK_SHA256='0581cebe880b8ed47556ee73d8bbb9d602b5b82e38f89f6aa53acaec37e7760d'; \
             ;; \
         *) echo >&2 "error: unsupported architecture '$ARCH'" ; exit 1 ;; \
     esac; \
-    curl -sSL "$STACK_URL" -o stack.tar.gz; \
-    echo "$STACK_SHA256 stack.tar.gz" | sha256sum --strict --check; \
-    \
-    curl -sSL "$STACK_URL.asc" -o stack.tar.gz.asc; \
-    GNUPGHOME="$(mktemp -d)"; export GNUPGHOME; \
-    gpg --batch --keyserver keyserver.ubuntu.com --receive-keys "$STACK_RELEASE_KEY"; \
-    gpg --batch --verify stack.tar.gz.asc stack.tar.gz; \
-    gpgconf --kill all; \
-    \
-    tar -xf stack.tar.gz -C /usr/local/bin --strip-components=1 "stack-$STACK-linux-$ARCH/stack"; \
-    stack config set system-ghc --global true; \
-    stack config set install-ghc --global false; \
-    \
-    rm -rf /tmp/*; \
-    \
-    stack --version
+    if [ "$INSTALL_STACK" = "true" ]; then \
+        curl -sSL "$STACK_URL" -o stack.tar.gz; \
+        echo "$STACK_SHA256 stack.tar.gz" | sha256sum --strict --check; \
+        \
+        curl -sSL "$STACK_URL.asc" -o stack.tar.gz.asc; \
+        GNUPGHOME="$(mktemp -d)"; export GNUPGHOME; \
+        gpg --batch --keyserver keyserver.ubuntu.com --receive-keys "$STACK_RELEASE_KEY"; \
+        gpg --batch --verify stack.tar.gz.asc stack.tar.gz; \
+        gpgconf --kill all; \
+        \
+        tar -xf stack.tar.gz -C /usr/local/bin --strip-components=1 "stack-$STACK-linux-$ARCH/stack"; \
+        stack config set system-ghc --global true; \
+        stack config set install-ghc --global false; \
+        \
+        rm -rf /tmp/*; \
+        \
+        stack --version; \
+    fi
 
 ARG CABAL_INSTALL=3.8.1.0
 ARG CABAL_INSTALL_RELEASE_KEY=E9EC5616017C3EE26B33468CCE1ED8AE0B011D8C
