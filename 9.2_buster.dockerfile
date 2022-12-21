@@ -1,67 +1,19 @@
-FROM debian:buster-slim
+FROM buildpack-deps:buster
 
 ENV LANG C.UTF-8
 
-# common haskell + stack dependencies
+# additional haskell specific deps
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        ca-certificates \
-        curl \
-        dpkg-dev \
-        git \
-        gcc \
-        gnupg \
-        g++ \
-        libc6-dev \
-        libffi-dev \
-        libgmp-dev \
         libnuma-dev \
-        libtinfo-dev \
-        make \
-        netbase \
-        xz-utils \
-        zlib1g-dev && \
+        libtinfo-dev && \
     rm -rf /var/lib/apt/lists/*
 
 ARG STACK=2.9.3
 ARG STACK_RELEASE_KEY=C5705533DA4F78D8664B5DC0575159689BEFB442
 
-RUN set -eux; \
-    cd /tmp; \
-    ARCH="$(dpkg-architecture --query DEB_BUILD_GNU_CPU)"; \
-    INSTALL_STACK="true"; \
-    STACK_URL="https://github.com/commercialhaskell/stack/releases/download/v${STACK}/stack-${STACK}-linux-$ARCH.tar.gz"; \
-    # sha256 from https://github.com/commercialhaskell/stack/releases/download/v${STACK}/stack-${STACK}-linux-$ARCH.tar.gz.sha256
-    case "$ARCH" in \
-        'aarch64') \
-            # Stack does not officially support ARM64, nor do the binaries that exist work.
-            # Hitting https://github.com/commercialhaskell/stack/issues/2103#issuecomment-972329065 when trying to use
-            # stack-2.7.1-linux-aarch64.tar.gz
-            INSTALL_STACK="false"; \
-            ;; \
-        'x86_64') \
-            STACK_SHA256='0581cebe880b8ed47556ee73d8bbb9d602b5b82e38f89f6aa53acaec37e7760d'; \
-            ;; \
-        *) echo >&2 "error: unsupported architecture '$ARCH'" ; exit 1 ;; \
-    esac; \
-    if [ "$INSTALL_STACK" = "true" ]; then \
-        curl -sSL "$STACK_URL" -o stack.tar.gz; \
-        echo "$STACK_SHA256 stack.tar.gz" | sha256sum --strict --check; \
-        \
-        curl -sSL "$STACK_URL.asc" -o stack.tar.gz.asc; \
-        GNUPGHOME="$(mktemp -d)"; export GNUPGHOME; \
-        gpg --batch --keyserver keyserver.ubuntu.com --receive-keys "$STACK_RELEASE_KEY"; \
-        gpg --batch --verify stack.tar.gz.asc stack.tar.gz; \
-        gpgconf --kill all; \
-        \
-        tar -xf stack.tar.gz -C /usr/local/bin --strip-components=1 "stack-$STACK-linux-$ARCH/stack"; \
-        stack config set system-ghc --global true; \
-        stack config set install-ghc --global false; \
-        \
-        rm -rf /tmp/*; \
-        \
-        stack --version; \
-    fi
+COPY ./install-stack.sh ./
+RUN ./install-stack.sh
 
 ARG CABAL_INSTALL=3.8.1.0
 ARG CABAL_INSTALL_RELEASE_KEY=E9EC5616017C3EE26B33468CCE1ED8AE0B011D8C
@@ -100,8 +52,8 @@ RUN set -eux; \
     \
     cabal --version
 
-ARG GHC=9.4.3
-ARG GHC_RELEASE_KEY=FFEB7CE81E16A36B3E2DED6F2DE04D4E97DB64AD
+ARG GHC=9.2.5
+ARG GHC_RELEASE_KEY=88B57FCF7DB53B4DB3BFA4B1588764FBE22D19C4
 
 RUN set -eux; \
     cd /tmp; \
@@ -110,10 +62,10 @@ RUN set -eux; \
     # sha256 from https://downloads.haskell.org/~ghc/$GHC/SHA256SUMS
     case "$ARCH" in \
         'aarch64') \
-            GHC_SHA256='9694131b02f938e72e1740b772ff1c1c81a36ef44233dc230bbd978e7dd08e71'; \
+            GHC_SHA256='29c0735ada90cdbf7e4a227dee08f18d74e33ec05d7c681e4ef95b8aa13104b3'; \
             ;; \
         'x86_64') \
-            GHC_SHA256='940ac2b1770dc63b5f3f38f829bfe69f4a572d6b26cd93094cdd99d5300b5067'; \
+            GHC_SHA256='89f2df47d86a45593d6ba3fd3a44b627d100588cd59be257570dbe3f92b17c48'; \
             ;; \
         *) echo >&2 "error: unsupported architecture '$ARCH'" ; exit 1 ;; \
     esac; \
@@ -127,11 +79,9 @@ RUN set -eux; \
     gpgconf --kill all; \
     \
     tar xf ghc.tar.xz; \
-    cd "ghc-$GHC-$ARCH-unknown-linux"; \
+    cd "ghc-$GHC"; \
     ./configure --prefix "/opt/ghc/$GHC"; \
     make install; \
-    # remove profiling support to save space
-    find "/opt/ghc/$GHC/" \( -name "*_p.a" -o -name "*.p_hi" \) -type f -delete; \
     # remove some docs
     rm -rf "/opt/ghc/$GHC/share/"; \
     \

@@ -52,25 +52,8 @@ RUN set -eux; \
     \
     cabal --version
 
-# GHC 9.0 requires LLVM version 9 - 12 on aarch64
-ARG LLVM_VERSION=12
-ARG LLVM_KEY=6084F3CF814B57C1CF12EFD515CF4D18AF4F7421
-
-RUN set -eux; \
-    if [ "$(dpkg-architecture --query DEB_BUILD_GNU_CPU)" = "aarch64" ]; then \
-        GNUPGHOME="$(mktemp -d)"; export GNUPGHOME; \
-        mkdir -p /usr/local/share/keyrings/; \
-        gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$LLVM_KEY"; \
-        gpg --batch --armor --export "$LLVM_KEY" > /usr/local/share/keyrings/apt.llvm.org.gpg.asc; \
-        echo "deb [ signed-by=/usr/local/share/keyrings/apt.llvm.org.gpg.asc ] http://apt.llvm.org/buster/ llvm-toolchain-buster-$LLVM_VERSION main" > /etc/apt/sources.list.d/llvm.list; \
-        apt-get update; \
-        apt-get install -y --no-install-recommends llvm-$LLVM_VERSION; \
-        gpgconf --kill all; \
-        rm -rf "$GNUPGHOME" /var/lib/apt/lists/*; \
-    fi
-
-ARG GHC=9.0.2
-ARG GHC_RELEASE_KEY=88B57FCF7DB53B4DB3BFA4B1588764FBE22D19C4
+ARG GHC=9.4.3
+ARG GHC_RELEASE_KEY=FFEB7CE81E16A36B3E2DED6F2DE04D4E97DB64AD
 
 RUN set -eux; \
     cd /tmp; \
@@ -79,10 +62,10 @@ RUN set -eux; \
     # sha256 from https://downloads.haskell.org/~ghc/$GHC/SHA256SUMS
     case "$ARCH" in \
         'aarch64') \
-            GHC_SHA256='cb016344c70a872738a24af60bd15d3b18749087b9905c1b3f1b1549dc01f46d'; \
+            GHC_SHA256='9694131b02f938e72e1740b772ff1c1c81a36ef44233dc230bbd978e7dd08e71'; \
             ;; \
         'x86_64') \
-            GHC_SHA256='5d0b9414b10cfb918453bcd01c5ea7a1824fe95948b08498d6780f20ba247afc'; \
+            GHC_SHA256='940ac2b1770dc63b5f3f38f829bfe69f4a572d6b26cd93094cdd99d5300b5067'; \
             ;; \
         *) echo >&2 "error: unsupported architecture '$ARCH'" ; exit 1 ;; \
     esac; \
@@ -96,7 +79,7 @@ RUN set -eux; \
     gpgconf --kill all; \
     \
     tar xf ghc.tar.xz; \
-    cd "ghc-$GHC"; \
+    cd "ghc-$GHC-$ARCH-unknown-linux"; \
     ./configure --prefix "/opt/ghc/$GHC"; \
     make install; \
     # remove some docs

@@ -1,47 +1,33 @@
-FROM buildpack-deps:buster
+FROM debian:buster-slim
 
 ENV LANG C.UTF-8
 
-# additional haskell specific deps
+# common haskell + stack dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        dpkg-dev \
+        git \
+        gcc \
+        gnupg \
+        g++ \
+        libc6-dev \
+        libffi-dev \
+        libgmp-dev \
         libnuma-dev \
-        libtinfo-dev && \
+        libtinfo-dev \
+        make \
+        netbase \
+        xz-utils \
+        zlib1g-dev && \
     rm -rf /var/lib/apt/lists/*
 
 ARG STACK=2.9.3
 ARG STACK_RELEASE_KEY=C5705533DA4F78D8664B5DC0575159689BEFB442
 
-RUN set -eux; \
-    cd /tmp; \
-    ARCH="$(dpkg-architecture --query DEB_BUILD_GNU_CPU)"; \
-    STACK_URL="https://github.com/commercialhaskell/stack/releases/download/v${STACK}/stack-${STACK}-linux-$ARCH.tar.gz"; \
-    # sha256 from https://github.com/commercialhaskell/stack/releases/download/v${STACK}/stack-${STACK}-linux-$ARCH.tar.gz.sha256
-    case "$ARCH" in \
-        'aarch64') \
-            STACK_SHA256='0581cebe880b8ed47556ee73d8bbb9d602b5b82e38f89f6aa53acaec37e7760d'; \
-            ;; \
-        'x86_64') \
-            STACK_SHA256='0581cebe880b8ed47556ee73d8bbb9d602b5b82e38f89f6aa53acaec37e7760d'; \
-            ;; \
-        *) echo >&2 "error: unsupported architecture '$ARCH'" ; exit 1 ;; \
-    esac; \
-    curl -sSL "$STACK_URL" -o stack.tar.gz; \
-    echo "$STACK_SHA256 stack.tar.gz" | sha256sum --strict --check; \
-    \
-    curl -sSL "$STACK_URL.asc" -o stack.tar.gz.asc; \
-    GNUPGHOME="$(mktemp -d)"; export GNUPGHOME; \
-    gpg --batch --keyserver keyserver.ubuntu.com --receive-keys "$STACK_RELEASE_KEY"; \
-    gpg --batch --verify stack.tar.gz.asc stack.tar.gz; \
-    gpgconf --kill all; \
-    \
-    tar -xf stack.tar.gz -C /usr/local/bin --strip-components=1 "stack-$STACK-linux-$ARCH/stack"; \
-    stack config set system-ghc --global true; \
-    stack config set install-ghc --global false; \
-    \
-    rm -rf /tmp/*; \
-    \
-    stack --version; \
+COPY ./install-stack.sh ./
+RUN ./install-stack.sh
 
 ARG CABAL_INSTALL=3.8.1.0
 ARG CABAL_INSTALL_RELEASE_KEY=E9EC5616017C3EE26B33468CCE1ED8AE0B011D8C
@@ -80,8 +66,25 @@ RUN set -eux; \
     \
     cabal --version
 
-ARG GHC=9.4.3
-ARG GHC_RELEASE_KEY=FFEB7CE81E16A36B3E2DED6F2DE04D4E97DB64AD
+# GHC 9.0 requires LLVM version 9 - 12 on aarch64
+ARG LLVM_VERSION=12
+ARG LLVM_KEY=6084F3CF814B57C1CF12EFD515CF4D18AF4F7421
+
+RUN set -eux; \
+    if [ "$(dpkg-architecture --query DEB_BUILD_GNU_CPU)" = "aarch64" ]; then \
+        GNUPGHOME="$(mktemp -d)"; export GNUPGHOME; \
+        mkdir -p /usr/local/share/keyrings/; \
+        gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$LLVM_KEY"; \
+        gpg --batch --armor --export "$LLVM_KEY" > /usr/local/share/keyrings/apt.llvm.org.gpg.asc; \
+        echo "deb [ signed-by=/usr/local/share/keyrings/apt.llvm.org.gpg.asc ] http://apt.llvm.org/buster/ llvm-toolchain-buster-$LLVM_VERSION main" > /etc/apt/sources.list.d/llvm.list; \
+        apt-get update; \
+        apt-get install -y --no-install-recommends llvm-$LLVM_VERSION; \
+        gpgconf --kill all; \
+        rm -rf "$GNUPGHOME" /var/lib/apt/lists/*; \
+    fi
+
+ARG GHC=9.0.2
+ARG GHC_RELEASE_KEY=88B57FCF7DB53B4DB3BFA4B1588764FBE22D19C4
 
 RUN set -eux; \
     cd /tmp; \
@@ -90,10 +93,10 @@ RUN set -eux; \
     # sha256 from https://downloads.haskell.org/~ghc/$GHC/SHA256SUMS
     case "$ARCH" in \
         'aarch64') \
-            GHC_SHA256='9694131b02f938e72e1740b772ff1c1c81a36ef44233dc230bbd978e7dd08e71'; \
+            GHC_SHA256='cb016344c70a872738a24af60bd15d3b18749087b9905c1b3f1b1549dc01f46d'; \
             ;; \
         'x86_64') \
-            GHC_SHA256='940ac2b1770dc63b5f3f38f829bfe69f4a572d6b26cd93094cdd99d5300b5067'; \
+            GHC_SHA256='5d0b9414b10cfb918453bcd01c5ea7a1824fe95948b08498d6780f20ba247afc'; \
             ;; \
         *) echo >&2 "error: unsupported architecture '$ARCH'" ; exit 1 ;; \
     esac; \
@@ -107,9 +110,11 @@ RUN set -eux; \
     gpgconf --kill all; \
     \
     tar xf ghc.tar.xz; \
-    cd "ghc-$GHC-$ARCH-unknown-linux"; \
+    cd "ghc-$GHC"; \
     ./configure --prefix "/opt/ghc/$GHC"; \
     make install; \
+    # remove profiling support to save space
+    find "/opt/ghc/$GHC/" \( -name "*_p.a" -o -name "*.p_hi" \) -type f -delete; \
     # remove some docs
     rm -rf "/opt/ghc/$GHC/share/"; \
     \
