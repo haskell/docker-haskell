@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - '**/Dockerfile'
+      - '*.dockerfile'
       - '.github/workflows/lint.yml'
 
 jobs:

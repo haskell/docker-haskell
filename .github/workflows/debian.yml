@@ -90,7 +90,8 @@ jobs:
             docker build --pull \
               --platform "linux/${{ matrix.docker_platform }}" \
               -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
-              ${{ matrix.ghc_minor }}/${{ matrix.deb }}
+              -f ${{ matrix.ghc_minor }}_${{ matrix.deb }}.dockerfile
+              .
             echo 'testing..'
             docker run \
               --platform "linux/${{ matrix.docker_platform }}" \
