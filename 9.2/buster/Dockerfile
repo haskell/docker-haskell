@@ -110,8 +110,6 @@ RUN set -eux; \
     cd "ghc-$GHC"; \
     ./configure --prefix "/opt/ghc/$GHC"; \
     make install; \
-    # remove some docs
-    rm -rf "/opt/ghc/$GHC/share/"; \
     \
     rm -rf /tmp/*; \
     \
