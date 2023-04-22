@@ -22,14 +22,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ghc: ['9.0.2', '9.2.7', '9.4.4']
+        ghc: ['9.0.2', '9.2.7', '9.4.5']
         deb: ['buster', 'slim-buster']
         include:
           - ghc: '9.0.2'
             ghc_minor: '9.0'
           - ghc: '9.2.7'
             ghc_minor: '9.2'
-          - ghc: '9.4.4'
+          - ghc: '9.4.5'
             ghc_minor: '9.4'
     steps:
       - uses: actions/checkout@v2
@@ -57,7 +57,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ghc: ['9.0.2', '9.2.7', '9.4.4']
+        ghc: ['9.0.2', '9.2.7', '9.4.5']
         # uraimo/run-on-arch-action does not support debian slim variants
         deb: ['buster']
         arch: ['aarch64']
@@ -66,7 +66,7 @@ jobs:
             ghc_minor: '9.0'
           - ghc: '9.2.7'
             ghc_minor: '9.2'
-          - ghc: '9.4.4'
+          - ghc: '9.4.5'
             ghc_minor: '9.4'
           - arch: aarch64
             docker_platform: arm64
