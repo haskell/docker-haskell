@@ -23,7 +23,7 @@ RUN apt-get update && \
         zlib1g-dev && \
     rm -rf /var/lib/apt/lists/*
 
-ARG STACK=2.9.3
+ARG STACK=2.11.1
 ARG STACK_RELEASE_KEY=C5705533DA4F78D8664B5DC0575159689BEFB442
 
 RUN set -eux; \
