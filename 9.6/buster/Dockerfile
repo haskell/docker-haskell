@@ -81,7 +81,7 @@ RUN set -eux; \
     cabal --version
 
 ARG GHC=9.6.2
-ARG GHC_RELEASE_KEY=88b57fcf7db53b4db3bfa4b1588764fbe22d19c4
+ARG GHC_RELEASE_KEY=FFEB7CE81E16A36B3E2DED6F2DE04D4E97DB64AD
 
 RUN set -eux; \
     cd /tmp; \
