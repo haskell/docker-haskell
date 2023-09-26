@@ -99,6 +99,7 @@ When a new version of Cabal, Stack or GHC is released the images need to be upda
 
 * [Ben Gamari](https://keyserver.ubuntu.com/pks/lookup?search=ben%40well-typed.com&fingerprint=on&op=index)
 * [Zubin Duggal](https://keyserver.ubuntu.com/pks/lookup?search=zubin%40well-typed.com&fingerprint=on&op=index)
+* [Bryan Richter](https://keyserver.ubuntu.com/pks/lookup?search=bryan%40haskell.foundation&fingerprint=on&op=index)
 
 An [example](https://github.com/haskell/docker-haskell/commit/d25abd175c94517494f55e74c2a908cb2caa8552)
 
