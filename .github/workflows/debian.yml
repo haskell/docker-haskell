@@ -61,7 +61,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ghc: ['9.0.2', '9.2.8', '9.4.7', '9.6.3']
+        ghc: ['9.0.2', '9.2.8', '9.4.7', '9.6.3', '9.8.1']
         # uraimo/run-on-arch-action does not support debian slim variants
         deb: ['buster']
         arch: ['aarch64']
@@ -74,6 +74,8 @@ jobs:
             ghc_minor: '9.4'
           - ghc: '9.6.3'
             ghc_minor: '9.6'
+          - ghc: '9.8.1'
+            ghc_minor: '9.8'
           - arch: aarch64
             docker_platform: arm64
     steps:
