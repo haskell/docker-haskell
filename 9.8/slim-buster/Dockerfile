@@ -107,7 +107,7 @@ RUN set -eux; \
             GHC_SHA256='aab7af72614f8bf9ca624407aa4dbc69bc009c2b4cc1a0f3c062008db81bdb95'; \
             ;; \
         'x86_64') \
-            GHC_SHA256='fe7a4ac1777de7ae8e0c7375b841e3c74b13ef611a5b65e71d4e9873402d5821'; \
+            GHC_SHA256='51d498657ca00514bc4620b591f74b93f9a3b64e5282e5c4e2876a734c130f1fbf'; \
             ;; \
         *) echo >&2 "error: unsupported architecture '$ARCH'" ; exit 1 ;; \
     esac; \
