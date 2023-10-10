@@ -33,6 +33,8 @@ jobs:
             ghc_minor: '9.4'
           - ghc: '9.6.3'
             ghc_minor: '9.6'
+          - ghc: '9.8.1'
+            ghc_minor: '9.8'
     steps:
       - uses: actions/checkout@v2
       - name: build + smoke test [${{ matrix.ghc }}]
