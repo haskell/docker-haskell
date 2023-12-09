@@ -111,6 +111,7 @@ An [example](https://github.com/haskell/docker-haskell/commit/d25abd175c94517494
 4. Update the PGP key if the person doing the release has changed. You can build the image locally at this point to see if it works or not. If it fails you need to update the PGP key. You need to find the key from the person doing the release on the ubuntu keyserver. See below for known releasers.
 
 * [Mikolaj Konarski](https://keyserver.ubuntu.com/pks/lookup?search=mikolaj.konarski%40gmail.com&fingerprint=on&op=index)
+* [Hécate](https://keyserver.ubuntu.com/pks/lookup?search=hecate%40glitchbra.in&fingerprint=on&op=index)
 
 An [example](https://github.com/haskell/docker-haskell/commit/73cf1f7f950cd34bf7cc9691067b0e7761016c1a)
 
