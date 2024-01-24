@@ -9,7 +9,7 @@ RUN apt-get update && \
         libtinfo-dev && \
     rm -rf /var/lib/apt/lists/*
 
-ARG STACK=2.11.1
+ARG STACK=2.13.1
 ARG STACK_RELEASE_KEY=C5705533DA4F78D8664B5DC0575159689BEFB442
 
 RUN set -eux; \
@@ -19,10 +19,10 @@ RUN set -eux; \
     # sha256 from https://github.com/commercialhaskell/stack/releases/download/v${STACK}/stack-${STACK}-linux-$ARCH.tar.gz.sha256
     case "$ARCH" in \
         'aarch64') \
-            STACK_SHA256='c7733d07ed78d6f4d82e0ebf6d260eb693c6c9df2208003d60caba69766f9c15'; \
+            STACK_SHA256='37b1dbf39131eea629a6e3685fd1153fdfd2f0cd2179db92bb33784987b4ddb8'; \
             ;; \
         'x86_64') \
-            STACK_SHA256='408a120e824ed6e6b24c548a2ff6f210fcb0eed246f204a280ed4c75af0517e7'; \
+            STACK_SHA256='45281bb2385e928916ec8bcbc7ab790ce8721bbf805f3d0752544ada22ad5ea3'; \
             ;; \
         *) echo >&2 "error: unsupported architecture '$ARCH'" ; exit 1 ;; \
     esac; \
