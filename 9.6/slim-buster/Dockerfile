@@ -23,7 +23,7 @@ RUN apt-get update && \
         zlib1g-dev && \
     rm -rf /var/lib/apt/lists/*
 
-ARG STACK=2.13.1
+ARG STACK=2.15.1
 ARG STACK_RELEASE_KEY=C5705533DA4F78D8664B5DC0575159689BEFB442
 
 RUN set -eux; \
@@ -33,10 +33,10 @@ RUN set -eux; \
     # sha256 from https://github.com/commercialhaskell/stack/releases/download/v${STACK}/stack-${STACK}-linux-$ARCH.tar.gz.sha256
     case "$ARCH" in \
         'aarch64') \
-            STACK_SHA256='37b1dbf39131eea629a6e3685fd1153fdfd2f0cd2179db92bb33784987b4ddb8'; \
+            STACK_SHA256='450126245044aa37ea8ba33f70c3c5bad331a3b4d3138f7b7ad0dee2a4ca1613'; \
             ;; \
         'x86_64') \
-            STACK_SHA256='45281bb2385e928916ec8bcbc7ab790ce8721bbf805f3d0752544ada22ad5ea3'; \
+            STACK_SHA256='3e8d85c4c9d24905498edc8c0ec0b4fa207093d9817f281d842c203f33ad9f5e'; \
             ;; \
         *) echo >&2 "error: unsupported architecture '$ARCH'" ; exit 1 ;; \
     esac; \
