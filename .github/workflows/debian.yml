@@ -38,7 +38,7 @@ jobs:
           - ghc: '9.10.1'
             ghc_minor: '9.10'
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: build + smoke test [${{ matrix.ghc }}]
         uses: nick-invision/retry@v2
         with:
@@ -48,7 +48,7 @@ jobs:
             docker build --pull \
               -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
               ${{ matrix.ghc_minor }}/${{ matrix.deb }}
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           repository: docker-library/official-images
           path: official-images
