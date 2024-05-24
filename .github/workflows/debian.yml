@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ghc: ['9.0.2', '9.2.8', '9.4.8', '9.6.5', '9.8.2']
+        ghc: ['9.0.2', '9.2.8', '9.4.8', '9.6.5', '9.8.2', '9.10.1']
         deb: ['buster', 'slim-buster']
         include:
           - ghc: '9.0.2'
@@ -35,6 +35,8 @@ jobs:
             ghc_minor: '9.6'
           - ghc: '9.8.2'
             ghc_minor: '9.8'
+          - ghc: '9.10.1'
+            ghc_minor: '9.10'
     steps:
       - uses: actions/checkout@v2
       - name: build + smoke test [${{ matrix.ghc }}]
@@ -48,8 +50,7 @@ jobs:
               ${{ matrix.ghc_minor }}/${{ matrix.deb }}
       - uses: actions/checkout@v2
         with:
-          repository: AlistairB/official-images
-          ref: haskell-cabal-test-change
+          repository: docker-library/official-images
           path: official-images
       - name: run official-images tests
         run: ./official-images/test/run.sh haskell:${{ matrix.ghc }}-${{ matrix.deb }}
@@ -61,7 +62,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ghc: ['9.0.2', '9.2.8', '9.4.8', '9.6.5', '9.8.2']
+        ghc: ['9.0.2', '9.2.8', '9.4.8', '9.6.5', '9.8.2', '9.10.1']
         # uraimo/run-on-arch-action does not support debian slim variants
         deb: ['buster']
         arch: ['aarch64']
@@ -76,6 +77,8 @@ jobs:
             ghc_minor: '9.6'
           - ghc: '9.8.2'
             ghc_minor: '9.8'
+          - ghc: '9.10.1'
+            ghc_minor: '9.10'
           - arch: aarch64
             docker_platform: arm64
     steps:
