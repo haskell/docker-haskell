@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ghc: ['9.0.2', '9.2.8', '9.4.8', '9.6.4', '9.8.1', '9.10.1']
+        ghc: ['9.0.2', '9.2.8', '9.4.8', '9.6.5', '9.8.2', '9.10.1']
         deb: ['buster', 'slim-buster']
         include:
           - ghc: '9.0.2'
@@ -31,9 +31,9 @@ jobs:
             ghc_minor: '9.2'
           - ghc: '9.4.8'
             ghc_minor: '9.4'
-          - ghc: '9.6.4'
+          - ghc: '9.6.5'
             ghc_minor: '9.6'
-          - ghc: '9.8.1'
+          - ghc: '9.8.2'
             ghc_minor: '9.8'
           - ghc: '9.10.1'
             ghc_minor: '9.10'
@@ -63,7 +63,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ghc: ['9.0.2', '9.2.8', '9.4.8', '9.6.4', '9.8.1', '9.10.1']
+        ghc: ['9.0.2', '9.2.8', '9.4.8', '9.6.5', '9.8.2', '9.10.1']
         # uraimo/run-on-arch-action does not support debian slim variants
         deb: ['buster']
         arch: ['aarch64']
@@ -74,9 +74,9 @@ jobs:
             ghc_minor: '9.2'
           - ghc: '9.4.8'
             ghc_minor: '9.4'
-          - ghc: '9.6.4'
+          - ghc: '9.6.5'
             ghc_minor: '9.6'
-          - ghc: '9.8.1'
+          - ghc: '9.8.2'
             ghc_minor: '9.8'
           - ghc: '9.10.1'
             ghc_minor: '9.10'
