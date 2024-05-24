@@ -50,8 +50,7 @@ jobs:
               ${{ matrix.ghc_minor }}/${{ matrix.deb }}
       - uses: actions/checkout@v2
         with:
-          repository: AlistairB/official-images
-          ref: haskell-cabal-test-change
+          repository: docker-library/official-images
           path: official-images
       - name: run official-images tests
         run: ./official-images/test/run.sh haskell:${{ matrix.ghc }}-${{ matrix.deb }}
