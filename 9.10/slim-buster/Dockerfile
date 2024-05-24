@@ -69,11 +69,11 @@ RUN set -eux; \
     # sha256 from https://downloads.haskell.org/~cabal/cabal-install-$CABAL_INSTALL/SHA256SUMS
     case "$ARCH" in \
         'aarch64') \
-            CABAL_INSTALL_SHA256='004ed4a7ca890fadee23f58f9cb606c066236a43e16b34be2532b177b231b06d'; \
+            CABAL_INSTALL_SHA256='92d341620c60294535f03098bff796ef6de2701de0c4fcba249cde18a2923013'; \
             ;; \
         'x86_64') \
-            CABAL_INSTALL_SHA256='bdeb27c008b09c3b86f8a2768018d62a1aee02565304d123fda87ed432549418'; \
-            ;; \
+            CABAL_INSTALL_SHA256='1d7a7131402295b01f25be5373fde095a404c45f9b5a5508fb7474bb0d3d057a'; \
+        ;; \
         *) echo >&2 "error: unsupported architecture '$ARCH'"; exit 1 ;; \
     esac; \
     curl -fSL "$CABAL_INSTALL_URL" -o cabal-install.tar.gz; \
