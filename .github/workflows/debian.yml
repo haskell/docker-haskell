@@ -37,6 +37,10 @@ jobs:
             ghc_minor: '9.8'
           - ghc: '9.10.1'
             ghc_minor: '9.10'
+          - ghc: '9.10.1'
+            ghc_minor: '9.10'
+            deb: 'bullseye'
+
     steps:
       - uses: actions/checkout@v4
       - name: build + smoke test [${{ matrix.ghc }}]
