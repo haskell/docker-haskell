@@ -1,4 +1,4 @@
-FROM buildpack-deps:buster
+FROM debian:buster
 
 ENV LANG C.UTF-8
 

@@ -1,4 +1,4 @@
-FROM buildpack-deps:bullseye-slim
+FROM debian:bullseye-slim
 
 ENV LANG C.UTF-8
 
