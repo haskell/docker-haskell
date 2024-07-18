@@ -25,21 +25,24 @@ jobs:
         ghc: ['9.0.2', '9.2.8', '9.4.8', '9.6.6', '9.8.2', '9.10.1']
         deb: ['buster', 'slim-buster']
         include:
-          - ghc: '9.0.2'
-            ghc_minor: '9.0'
-          - ghc: '9.2.8'
-            ghc_minor: '9.2'
-          - ghc: '9.4.8'
-            ghc_minor: '9.4'
-          - ghc: '9.6.6'
-            ghc_minor: '9.6'
-          - ghc: '9.8.2'
-            ghc_minor: '9.8'
           - ghc: '9.10.1'
             ghc_minor: '9.10'
+            deb: 'slim-bullseye'
           - ghc: '9.10.1'
             ghc_minor: '9.10'
             deb: 'bullseye'
+          - ghc: '9.10.1'
+            ghc_minor: '9.10'
+          - ghc: '9.8.2'
+            ghc_minor: '9.8'
+          - ghc: '9.6.6'
+            ghc_minor: '9.6'
+          - ghc: '9.4.8'
+            ghc_minor: '9.4'
+          - ghc: '9.2.8'
+            ghc_minor: '9.2'
+          - ghc: '9.0.2'
+            ghc_minor: '9.0'
 
     steps:
       - uses: actions/checkout@v4
@@ -71,18 +74,18 @@ jobs:
         deb: ['buster']
         arch: ['aarch64']
         include:
-          - ghc: '9.0.2'
-            ghc_minor: '9.0'
-          - ghc: '9.2.8'
-            ghc_minor: '9.2'
-          - ghc: '9.4.8'
-            ghc_minor: '9.4'
-          - ghc: '9.6.6'
-            ghc_minor: '9.6'
-          - ghc: '9.8.2'
-            ghc_minor: '9.8'
           - ghc: '9.10.1'
             ghc_minor: '9.10'
+          - ghc: '9.8.2'
+            ghc_minor: '9.8'
+          - ghc: '9.6.6'
+            ghc_minor: '9.6'
+          - ghc: '9.4.8'
+            ghc_minor: '9.4'
+          - ghc: '9.2.8'
+            ghc_minor: '9.2'
+          - ghc: '9.0.2'
+            ghc_minor: '9.0'
           - arch: aarch64
             docker_platform: arm64
     steps:
