@@ -1,4 +1,4 @@
-FROM buildpack-deps:slim-bullseye
+FROM buildpack-deps:bullseye-slim
 
 ENV LANG C.UTF-8
 
