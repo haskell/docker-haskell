@@ -2,11 +2,25 @@ FROM debian:buster
 
 ENV LANG C.UTF-8
 
-# additional haskell specific deps
+# common haskell + stack dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        dpkg-dev \
+        git \
+        gcc \
+        gnupg \
+        g++ \
+        libc6-dev \
+        libffi-dev \
+        libgmp-dev \
         libnuma-dev \
-        libtinfo-dev && \
+        libtinfo-dev \
+        make \
+        netbase \
+        xz-utils \
+        zlib1g-dev && \
     rm -rf /var/lib/apt/lists/*
 
 ARG STACK=2.15.7
