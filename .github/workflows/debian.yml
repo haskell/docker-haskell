@@ -84,6 +84,7 @@ jobs:
           - ghc: '9.6.6'
             ghc_minor: '9.6'
             deb: 'bullseye'
+            arch: aarch64
           - ghc: '9.8.2'
             ghc_minor: '9.8'
           - ghc: '9.10.1'
