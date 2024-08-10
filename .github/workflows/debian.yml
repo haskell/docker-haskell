@@ -5,7 +5,9 @@ on:
     branches:
       - master
     paths:
+      - '**/bullseye/Dockerfile'
       - '**/buster/Dockerfile'
+      - '**/slim-bullseye/Dockerfile'
       - '**/slim-buster/Dockerfile'
       - '.github/workflows/debian.yml'
 
@@ -35,6 +37,12 @@ jobs:
             ghc_minor: '9.10'
           - ghc: '9.8.2'
             ghc_minor: '9.8'
+          - ghc: '9.6.6'
+            ghc_minor: '9.6'
+            deb: 'slim-bullseye'
+          - ghc: '9.6.6'
+            ghc_minor: '9.6'
+            deb: 'bullseye'
           - ghc: '9.6.6'
             ghc_minor: '9.6'
           - ghc: '9.4.8'
