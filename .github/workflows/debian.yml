@@ -82,6 +82,16 @@ jobs:
         deb: ['buster']
         arch: ['aarch64']
         include:
+          # bullseye (debian 11)
+          - ghc: '9.10.1'
+            ghc_minor: '9.10'
+            deb: 'bullseye'
+            arch: 'aarch64'
+          - ghc: '9.6.6'
+            ghc_minor: '9.6'
+            deb: 'bullseye'
+            arch: 'aarch64'
+          # buster (debian 10)
           - ghc: '9.10.1'
             ghc_minor: '9.10'
           - ghc: '9.8.2'
