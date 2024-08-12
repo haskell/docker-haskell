@@ -86,16 +86,17 @@ ARG GHC_RELEASE_KEY=88B57FCF7DB53B4DB3BFA4B1588764FBE22D19C4
 RUN set -eux; \
     cd /tmp; \
     ARCH="$(dpkg-architecture --query DEB_BUILD_GNU_CPU)"; \
-    # Note: the 'aarch64-deb11' (bullseye) variant of images doesn't exist in https://downloads.haskell.org/~ghc/9.6.6/
-    # But deb10 (buster) images should be binary compatible with deb11, so using deb10 instead
-    GHC_URL="https://downloads.haskell.org/~ghc/$GHC/ghc-$GHC-$ARCH-deb10-linux.tar.xz"; \
     # sha256 from https://downloads.haskell.org/~ghc/$GHC/SHA256SUMS
     case "$ARCH" in \
         'aarch64') \
+            # Note: the 'aarch64-deb11' (bullseye) variant of images doesn't exist in https://downloads.haskell.org/~ghc/9.6.6/
+            # But deb10 (buster) images should be binary compatible with deb11, so using deb10 instead
+            GHC_URL="https://downloads.haskell.org/~ghc/$GHC/ghc-$GHC-$ARCH-deb10-linux.tar.xz"; \
             GHC_SHA256='58d5ce65758ec5179b448e4e1a2f835924b4ada96cf56af80d011bed87d91fef'; \
             ;; \
         'x86_64') \
-            GHC_SHA256='15ee68cede5d114a672fb468b9545700edd70a68724ab4e9122c8a23aba8570b'; \
+            GHC_URL="https://downloads.haskell.org/~ghc/$GHC/ghc-$GHC-$ARCH-deb11-linux.tar.xz"; \
+            GHC_SHA256='a34bdfc1f65b000135d9c8eb12d69670026a64043a8b33ef5ba24b0f8e28d046'; \
             ;; \
         *) echo >&2 "error: unsupported architecture '$ARCH'" ; exit 1 ;; \
     esac; \
