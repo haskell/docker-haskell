@@ -87,10 +87,12 @@ jobs:
             ghc_minor: '9.10'
             deb: 'bullseye'
             arch: 'aarch64'
+            docker_platform: arm64
           - ghc: '9.6.6'
             ghc_minor: '9.6'
             deb: 'bullseye'
             arch: 'aarch64'
+            docker_platform: arm64
           # buster (debian 10)
           - ghc: '9.10.1'
             ghc_minor: '9.10'
@@ -119,7 +121,7 @@ jobs:
             apt-get install -y curl
             curl -fsSL https://get.docker.com | sh
           run: |
-            docker build --pull \
+            docker build --pull --progress=plain \
               --platform "linux/${{ matrix.docker_platform }}" \
               -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
               ${{ matrix.ghc_minor }}/${{ matrix.deb }}
