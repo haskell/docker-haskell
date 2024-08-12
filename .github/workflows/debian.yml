@@ -5,7 +5,9 @@ on:
     branches:
       - master
     paths:
+      - '**/bullseye/Dockerfile'
       - '**/buster/Dockerfile'
+      - '**/slim-bullseye/Dockerfile'
       - '**/slim-buster/Dockerfile'
       - '.github/workflows/debian.yml'
 
@@ -35,6 +37,12 @@ jobs:
             ghc_minor: '9.10'
           - ghc: '9.8.2'
             ghc_minor: '9.8'
+          - ghc: '9.6.6'
+            ghc_minor: '9.6'
+            deb: 'slim-bullseye'
+          - ghc: '9.6.6'
+            ghc_minor: '9.6'
+            deb: 'bullseye'
           - ghc: '9.6.6'
             ghc_minor: '9.6'
           - ghc: '9.4.8'
@@ -74,6 +82,18 @@ jobs:
         deb: ['buster']
         arch: ['aarch64']
         include:
+          # bullseye (debian 11)
+          - ghc: '9.10.1'
+            ghc_minor: '9.10'
+            deb: 'bullseye'
+            arch: 'aarch64'
+            docker_platform: arm64
+          - ghc: '9.6.6'
+            ghc_minor: '9.6'
+            deb: 'bullseye'
+            arch: 'aarch64'
+            docker_platform: arm64
+          # buster (debian 10)
           - ghc: '9.10.1'
             ghc_minor: '9.10'
           - ghc: '9.8.2'
@@ -101,7 +121,7 @@ jobs:
             apt-get install -y curl
             curl -fsSL https://get.docker.com | sh
           run: |
-            docker build --pull \
+            docker build --pull --progress=plain \
               --platform "linux/${{ matrix.docker_platform }}" \
               -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
               ${{ matrix.ghc_minor }}/${{ matrix.deb }}
