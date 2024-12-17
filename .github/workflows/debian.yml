@@ -68,7 +68,8 @@ jobs:
           command: |
             docker build --pull \
               -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
-              ${{ matrix.ghc_minor }}/${{ matrix.deb }}
+              ${{ matrix.ghc_minor }}/${{ matrix.deb }} \
+              --build-arg "BUILDKIT_DOCKERFILE_CHECK=skip=SecretsUsedInArgOrEnv;error=true"
       - uses: actions/checkout@v4
         with:
           repository: docker-library/official-images
@@ -135,7 +136,8 @@ jobs:
             docker build --pull --progress=plain \
               --platform "linux/${{ matrix.docker_platform }}" \
               -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
-              ${{ matrix.ghc_minor }}/${{ matrix.deb }}
+              ${{ matrix.ghc_minor }}/${{ matrix.deb }} \
+              --build-arg "BUILDKIT_DOCKERFILE_CHECK=skip=SecretsUsedInArgOrEnv;error=true"
             echo 'testing..'
             docker run \
               --platform "linux/${{ matrix.docker_platform }}" \
