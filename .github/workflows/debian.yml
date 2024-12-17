@@ -111,7 +111,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: docker build [ ${{ matrix.arch }} ${{ matrix.ghc }}]
-        uses: uraimo/run-on-arch-action@v2.7.2
+        uses: uraimo/run-on-arch-action@v2.8.1
         with:
           arch: ${{ matrix.arch }}
           distro: ${{ matrix.deb }}
