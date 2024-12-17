@@ -37,6 +37,12 @@ jobs:
             ghc_minor: '9.10'
           - ghc: '9.8.4'
             ghc_minor: '9.8'
+            deb: 'slim-bullseye'
+          - ghc: '9.8.4'
+            ghc_minor: '9.8'
+            deb: 'bullseye'
+          - ghc: '9.8.4'
+            ghc_minor: '9.8'
           - ghc: '9.6.6'
             ghc_minor: '9.6'
             deb: 'slim-bullseye'
@@ -85,6 +91,11 @@ jobs:
           # bullseye (debian 11)
           - ghc: '9.10.1'
             ghc_minor: '9.10'
+            deb: 'bullseye'
+            arch: 'aarch64'
+            docker_platform: arm64
+          - ghc: '9.8.4'
+            ghc_minor: '9.8'
             deb: 'bullseye'
             arch: 'aarch64'
             docker_platform: arm64
