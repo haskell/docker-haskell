@@ -27,6 +27,12 @@ jobs:
         ghc: ['9.10.1', '9.8.4', '9.6.6', '9.4.8', '9.2.8', '9.0.2' ]
         deb: ['buster', 'slim-buster']
         include:
+          - ghc: '9.12.1'
+            ghc_minor: '9.12'
+            deb: 'slim-bookworm'
+          - ghc: '9.12.1'
+            ghc_minor: '9.12'
+            deb: 'bookworm'
           - ghc: '9.10.1'
             ghc_minor: '9.10'
             deb: 'slim-bullseye'
@@ -88,6 +94,12 @@ jobs:
         deb: ['buster']
         arch: ['aarch64']
         include:
+          # bookworm (debian 12)
+          - ghc: '9.12.1'
+            ghc_minor: '9.12'
+            deb: 'bookworm'
+            arch: 'aarch64'
+            docker_platform: arm64
           # bullseye (debian 11)
           - ghc: '9.10.1'
             ghc_minor: '9.10'
