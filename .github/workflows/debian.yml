@@ -19,7 +19,7 @@ concurrency:
 jobs:
   build-smoke-test:
     timeout-minutes: 30
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: ${{ matrix.ghc }}-${{ matrix.deb }}
     strategy:
       fail-fast: false
@@ -78,7 +78,7 @@ jobs:
 
   emulated-architecture-tests:
     timeout-minutes: 60
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: ${{ matrix.arch }}-${{ matrix.ghc }}-${{ matrix.deb }}
     strategy:
       fail-fast: false
