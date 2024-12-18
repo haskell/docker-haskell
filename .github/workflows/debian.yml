@@ -19,7 +19,7 @@ concurrency:
 jobs:
   build-smoke-test:
     timeout-minutes: 30
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: ${{ matrix.ghc }}-${{ matrix.deb }}
     strategy:
       fail-fast: false
@@ -68,7 +68,8 @@ jobs:
           command: |
             docker build --pull \
               -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
-              ${{ matrix.ghc_minor }}/${{ matrix.deb }}
+              ${{ matrix.ghc_minor }}/${{ matrix.deb }} \
+              --build-arg "BUILDKIT_DOCKERFILE_CHECK=skip=SecretsUsedInArgOrEnv;error=true"
       - uses: actions/checkout@v4
         with:
           repository: docker-library/official-images
@@ -78,7 +79,7 @@ jobs:
 
   emulated-architecture-tests:
     timeout-minutes: 60
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: ${{ matrix.arch }}-${{ matrix.ghc }}-${{ matrix.deb }}
     strategy:
       fail-fast: false
@@ -135,7 +136,8 @@ jobs:
             docker build --pull --progress=plain \
               --platform "linux/${{ matrix.docker_platform }}" \
               -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
-              ${{ matrix.ghc_minor }}/${{ matrix.deb }}
+              ${{ matrix.ghc_minor }}/${{ matrix.deb }} \
+              --build-arg "BUILDKIT_DOCKERFILE_CHECK=skip=SecretsUsedInArgOrEnv;error=true"
             echo 'testing..'
             docker run \
               --platform "linux/${{ matrix.docker_platform }}" \
