@@ -57,8 +57,8 @@ RUN set -eux; \
     \
     stack --version;
 
-ARG CABAL_INSTALL=3.10.3.0
-ARG CABAL_INSTALL_RELEASE_KEY=EAF2A9A722C0C96F2B431CA511AAD8CEDEE0CAEF
+ARG CABAL_INSTALL=3.12.1.0
+ARG CABAL_INSTALL_RELEASE_KEY=1E07C9A1A3088BAD47F74A3E227EE1942B0BDB95
 
 RUN set -eux; \
     cd /tmp; \
@@ -69,10 +69,10 @@ RUN set -eux; \
     # sha256 from https://downloads.haskell.org/~cabal/cabal-install-$CABAL_INSTALL/SHA256SUMS
     case "$ARCH" in \
         'aarch64') \
-            CABAL_INSTALL_SHA256='e0b6604d3596c5e5b7236e79ff4f5aa8af337792bf69ac4a90634c761f1b9ed5'; \
+            CABAL_INSTALL_SHA256='c14e8198407f37f7276c77b5cefef60ee6a929b4c22d7316577ce8e2301a758e'; \
             ;; \
         'x86_64') \
-            CABAL_INSTALL_SHA256='12d018bdd07efed470f278f22d94b33655c4fcbc44d28d97b5ebb7944d5607c5'; \
+            CABAL_INSTALL_SHA256='4f60cf1c72f4ad4d82d668839ac61ae15ae4faf6c4b809395799e8a3ee622051'; \
             ;; \
         *) echo >&2 "error: unsupported architecture '$ARCH'"; exit 1 ;; \
     esac; \
