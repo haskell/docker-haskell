@@ -26,75 +26,50 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        ghc: ['9.12.2', '9.10.1', '9.8.4', '9.6.6', '9.4.8', '9.2.8', '9.0.2']
+        deb: ['buster', 'slim-buster']
         include:
-          # 9.12.2
           - ghc: '9.12.2'
             ghc_minor: '9.12'
             deb: 'bookworm'
           - ghc: '9.12.2'
             ghc_minor: '9.12'
             deb: 'slim-bookworm'
-          # 9.10.1
+          - ghc: '9.10.1'
+            ghc_minor: '9.10'
+            deb: 'slim-bullseye'
           - ghc: '9.10.1'
             ghc_minor: '9.10'
             deb: 'bullseye'
           - ghc: '9.10.1'
             ghc_minor: '9.10'
+          - ghc: '9.8.4'
+            ghc_minor: '9.8'
             deb: 'slim-bullseye'
-          # - ghc: '9.10.1'
-          #   ghc_minor: '9.10'
-          #   deb: 'buster'
-          # - ghc: '9.10.1'
-          #   ghc_minor: '9.10'
-          #   deb: 'slim-buster'
-          # 9.8.4
           - ghc: '9.8.4'
             ghc_minor: '9.8'
             deb: 'bullseye'
           - ghc: '9.8.4'
             ghc_minor: '9.8'
+          - ghc: '9.6.6'
+            ghc_minor: '9.6'
             deb: 'slim-bullseye'
-          # - ghc: '9.8.4'
-          #   ghc_minor: '9.8'
-          #   deb: 'buster'
-          # - ghc: '9.8.4'
-          #   ghc_minor: '9.8'
-          #   deb: 'slim-buster'
-          # 9.6.6
           - ghc: '9.6.6'
             ghc_minor: '9.6'
             deb: 'bullseye'
           - ghc: '9.6.6'
             ghc_minor: '9.6'
-            deb: 'slim-bullseye'
-          # - ghc: '9.6.6'
-          #   ghc_minor: '9.6'
-          #   deb: 'buster'
-          # - ghc: '9.6.6'
-          #   ghc_minor: '9.6'
-          #   deb: 'slim-buster'
-          # 9.4.8
-          # - ghc: '9.4.8'
-          #   ghc_minor: '9.4'
-          #   deb: 'buster'
-          # - ghc: '9.4.8'
-          #   ghc_minor: '9.4'
-          #   deb: 'slim-buster'
-          # 9.2.8
-          # - ghc: '9.2.8'
-          #   ghc_minor: '9.2'
-          #   deb: 'buster'
-          # - ghc: '9.2.8'
-          #   ghc_minor: '9.2'
-          #   deb: 'slim-buster'
-          # 9.0.2
-          # - ghc: '9.0.2'
-          #   ghc_minor: '9.0'
-          #   deb: 'buster'
-          # - ghc: '9.0.2'
-          #   ghc_minor: '9.0'
-          #   deb: 'slim-buster'
-
+          - ghc: '9.4.8'
+            ghc_minor: '9.4'
+          - ghc: '9.2.8'
+            ghc_minor: '9.2'
+          - ghc: '9.0.2'
+            ghc_minor: '9.0'
+        exclude:
+          - ghc: '9.12.2'
+            deb: 'buster'
+          - ghc: '9.12.2'
+            deb: 'slim-buster'
     steps:
       - uses: actions/checkout@v4
       - name: build + smoke test [${{ matrix.ghc }}]
@@ -125,9 +100,6 @@ jobs:
         # uraimo/run-on-arch-action does not support debian slim variants
         deb: ['buster']
         arch: ['aarch64']
-        exclude:
-          - ghc: '9.12.2'
-            deb: 'buster'
         include:
           # bookworm (debian 12)
           - ghc: '9.12.2'
@@ -166,6 +138,10 @@ jobs:
             ghc_minor: '9.0'
           - arch: aarch64
             docker_platform: arm64
+        exclude:
+          - ghc: '9.12.2'
+            deb: 'buster'
+
     steps:
       - uses: actions/checkout@v4
       - name: docker build [ ${{ matrix.arch }} ${{ matrix.ghc }}]
