@@ -5,8 +5,10 @@ on:
     branches:
       - master
     paths:
+      - '**/bookworm/Dockerfile'
       - '**/bullseye/Dockerfile'
       - '**/buster/Dockerfile'
+      - '**/slim-bookworm/Dockerfile'
       - '**/slim-bullseye/Dockerfile'
       - '**/slim-buster/Dockerfile'
       - '.github/workflows/debian.yml'
