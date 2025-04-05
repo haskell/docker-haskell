@@ -24,8 +24,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ghc: ['9.12.1', '9.10.1', '9.8.4', '9.6.6', '9.4.8', '9.2.8', '9.0.2' ]
-        deb: ['bookworm', 'slim-bookworm', 'bullseye', 'slim-bullseye']
+        ghc: ['9.12.2', '9.10.1', '9.8.4', '9.6.6', '9.4.8', '9.2.8', '9.0.2' ]
+        deb: ['buster', 'slim-buster']
         include:
           - ghc: '9.12.2'
             ghc_minor: '9.12'
@@ -92,7 +92,7 @@ jobs:
       matrix:
         ghc: ['9.0.2', '9.2.8', '9.4.8', '9.6.6', '9.8.4', '9.10.1', '9.12.2']
         # uraimo/run-on-arch-action does not support debian slim variants
-        deb: ['bullseye', 'bookworm']
+        deb: ['buster']
         arch: ['aarch64']
         include:
           # bookworm (debian 12)
