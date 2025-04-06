@@ -1,6 +1,6 @@
 FROM debian:bookworm-slim
 
-ENV LANG C.UTF-8
+ENV LANG=C.UTF-8
 
 # common haskell + stack dependencies
 RUN apt-get update && \
@@ -129,6 +129,6 @@ RUN set -eux; \
     \
     "/opt/ghc/$GHC/bin/ghc" --version
 
-ENV PATH /root/.cabal/bin:/root/.local/bin:/opt/ghc/${GHC}/bin:$PATH
+ENV PATH=/root/.cabal/bin:/root/.local/bin:/opt/ghc/${GHC}/bin:$PATH
 
 CMD ["ghci"]
