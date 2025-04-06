@@ -94,8 +94,8 @@ RUN set -eux; \
     \
     cabal --version
 
-ARG GHC=9.6.6
-ARG GHC_RELEASE_KEY=88B57FCF7DB53B4DB3BFA4B1588764FBE22D19C4
+ARG GHC=9.6.7
+ARG GHC_RELEASE_KEY=8C961469C8FDC968718D6245AC7DE836C5DF907D
 
 RUN set -eux; \
     cd /tmp; \
@@ -104,10 +104,10 @@ RUN set -eux; \
     # sha256 from https://downloads.haskell.org/~ghc/$GHC/SHA256SUMS
     case "$ARCH" in \
         'aarch64') \
-            GHC_SHA256='58d5ce65758ec5179b448e4e1a2f835924b4ada96cf56af80d011bed87d91fef'; \
+            GHC_SHA256='3cfa843687856de304a946dbe849a497c4fdad021f0275628b8ca7b55ccf8082'; \
             ;; \
         'x86_64') \
-            GHC_SHA256='15ee68cede5d114a672fb468b9545700edd70a68724ab4e9122c8a23aba8570b'; \
+            GHC_SHA256='fc6a6247d1831745c67b27d6212f6911c35a933043f3b6851724e2e01484d077'; \
             ;; \
         *) echo >&2 "error: unsupported architecture '$ARCH'" ; exit 1 ;; \
     esac; \
