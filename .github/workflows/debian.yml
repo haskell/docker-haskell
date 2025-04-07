@@ -5,8 +5,10 @@ on:
     branches:
       - master
     paths:
+      - '**/bookworm/Dockerfile'
       - '**/bullseye/Dockerfile'
       - '**/buster/Dockerfile'
+      - '**/slim-bookworm/Dockerfile'
       - '**/slim-bullseye/Dockerfile'
       - '**/slim-buster/Dockerfile'
       - '.github/workflows/debian.yml'
@@ -24,9 +26,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ghc: ['9.10.1', '9.8.4', '9.6.6', '9.4.8', '9.2.8', '9.0.2' ]
+        ghc: ['9.12.2', '9.10.1', '9.8.4', '9.6.6', '9.4.8', '9.2.8', '9.0.2']
         deb: ['buster', 'slim-buster']
         include:
+          - ghc: '9.12.2'
+            ghc_minor: '9.12'
+            deb: 'bookworm'
+          - ghc: '9.12.2'
+            ghc_minor: '9.12'
+            deb: 'slim-bookworm'
           - ghc: '9.10.1'
             ghc_minor: '9.10'
             deb: 'slim-bullseye'
@@ -57,7 +65,11 @@ jobs:
             ghc_minor: '9.2'
           - ghc: '9.0.2'
             ghc_minor: '9.0'
-
+        exclude:
+          - ghc: '9.12.2'
+            deb: 'buster'
+          - ghc: '9.12.2'
+            deb: 'slim-buster'
     steps:
       - uses: actions/checkout@v4
       - name: build + smoke test [${{ matrix.ghc }}]
@@ -84,11 +96,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ghc: ['9.0.2', '9.2.8', '9.4.8', '9.6.6', '9.8.4', '9.10.1']
+        ghc: ['9.0.2', '9.2.8', '9.4.8', '9.6.6', '9.8.4', '9.10.1', '9.12.2']
         # uraimo/run-on-arch-action does not support debian slim variants
         deb: ['buster']
         arch: ['aarch64']
         include:
+          # bookworm (debian 12)
+          - ghc: '9.12.2'
+            ghc_minor: '9.12'
+            deb: 'bookworm'
+            arch: 'aarch64'
+            docker_platform: arm64
           # bullseye (debian 11)
           - ghc: '9.10.1'
             ghc_minor: '9.10'
@@ -120,10 +138,14 @@ jobs:
             ghc_minor: '9.0'
           - arch: aarch64
             docker_platform: arm64
+        exclude:
+          - ghc: '9.12.2'
+            deb: 'buster'
+
     steps:
       - uses: actions/checkout@v4
       - name: docker build [ ${{ matrix.arch }} ${{ matrix.ghc }}]
-        uses: uraimo/run-on-arch-action@v2.8.1
+        uses: uraimo/run-on-arch-action@v3.0.0
         with:
           arch: ${{ matrix.arch }}
           distro: ${{ matrix.deb }}
