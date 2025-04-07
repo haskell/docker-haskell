@@ -26,7 +26,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ghc: ['9.12.2', '9.10.1', '9.8.4', '9.6.6', '9.4.8', '9.2.8', '9.0.2']
+        ghc: ['9.12.2', '9.10.1', '9.8.4', '9.6.7', '9.4.8', '9.2.8', '9.0.2']
         deb: ['buster', 'slim-buster']
         include:
           - ghc: '9.12.2'
@@ -51,13 +51,13 @@ jobs:
             deb: 'bullseye'
           - ghc: '9.8.4'
             ghc_minor: '9.8'
-          - ghc: '9.6.6'
+          - ghc: '9.6.7'
             ghc_minor: '9.6'
             deb: 'slim-bullseye'
-          - ghc: '9.6.6'
+          - ghc: '9.6.7'
             ghc_minor: '9.6'
             deb: 'bullseye'
-          - ghc: '9.6.6'
+          - ghc: '9.6.7'
             ghc_minor: '9.6'
           - ghc: '9.4.8'
             ghc_minor: '9.4'
@@ -96,7 +96,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ghc: ['9.0.2', '9.2.8', '9.4.8', '9.6.6', '9.8.4', '9.10.1', '9.12.2']
+        ghc: ['9.0.2', '9.2.8', '9.4.8', '9.6.7', '9.8.4', '9.10.1', '9.12.2']
         # uraimo/run-on-arch-action does not support debian slim variants
         deb: ['buster']
         arch: ['aarch64']
@@ -118,7 +118,7 @@ jobs:
             deb: 'bullseye'
             arch: 'aarch64'
             docker_platform: arm64
-          - ghc: '9.6.6'
+          - ghc: '9.6.7'
             ghc_minor: '9.6'
             deb: 'bullseye'
             arch: 'aarch64'
@@ -128,7 +128,7 @@ jobs:
             ghc_minor: '9.10'
           - ghc: '9.8.4'
             ghc_minor: '9.8'
-          - ghc: '9.6.6'
+          - ghc: '9.6.7'
             ghc_minor: '9.6'
           - ghc: '9.4.8'
             ghc_minor: '9.4'
