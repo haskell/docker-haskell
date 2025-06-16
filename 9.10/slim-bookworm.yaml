@@ -1,0 +1,21 @@
+---
+distro:
+  codename: 'bookworm'
+  abbr: 'deb12'
+  image: 'debian:bookworm-slim'
+ghc:
+  version: "9.10.2"
+  release_key: "88B57FCF7DB53B4DB3BFA4B1588764FBE22D19C4"
+  sha256sum:
+    "aarch64": '0188ca098abdaf71eb0804d0f35311f405da489137d8d438bfaa43b8d1e3f1b0'
+    "x86_64": '71d025743f2eb4d3af95d4dd94a22c093c2814d78ab95dd0e12bb6751b1c7d4e'
+cabal_install:
+  sha256sum:
+    "aarch64": 'f763fb2af2bc1ff174b7361a7d51109a585954f87a0e14f86d144f3bce28f7a9'
+    "x86_64": '73a463306c771e18ca22c0a9469176ffab0138ec5925adb5364ef47174e1adc5'
+overrides:
+  ghc:
+    "aarch64":
+      # GHC 9.10.2 doesn't have a deb12 bindist for aarch64 for some reason, so we're using the bullseye one instead
+      url: "https://downloads.haskell.org/~ghc/9.10.2/ghc-9.10.2-aarch64-deb11-linux.tar.xz"
+_globals: !include '_globals.yaml'

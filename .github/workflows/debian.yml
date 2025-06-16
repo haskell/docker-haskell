@@ -35,17 +35,18 @@ jobs:
           - ghc: '9.12.2'
             ghc_minor: '9.12'
             deb: 'slim-bookworm'
+          - ghc: '9.12.2'
+            ghc_minor: '9.12'
+            deb: 'bullseye'
+          - ghc: '9.12.2'
+            ghc_minor: '9.12'
+            deb: 'slim-bullseye'
           - ghc: '9.10.2'
             ghc_minor: '9.10'
           - ghc: '9.8.4'
             ghc_minor: '9.8'
           - ghc: '9.6.7'
             ghc_minor: '9.6'
-        exclude:
-          - ghc: '9.12.2'
-            deb: 'bullseye'
-          - ghc: '9.12.2'
-            deb: 'slim-bullseye'
     steps:
       - uses: actions/checkout@v4
       - name: build + smoke test [${{ matrix.ghc }}]

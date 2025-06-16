@@ -25,8 +25,8 @@ RUN <<EOT
     rm -rf /var/lib/apt/lists/*
 EOT
 
-ARG STACK=3.3.1
-ARG STACK_RELEASE_KEY=C5705533DA4F78D8664B5DC0575159689BEFB442
+ARG STACK='3.3.1'
+ARG STACK_RELEASE_KEY='C5705533DA4F78D8664B5DC0575159689BEFB442'
 
 RUN <<EOT
     set -eux
@@ -62,8 +62,8 @@ RUN <<EOT
     stack --version;
 EOT
 
-ARG CABAL_INSTALL=3.14.1.1
-ARG CABAL_INSTALL_RELEASE_KEY=EAF2A9A722C0C96F2B431CA511AAD8CEDEE0CAEF
+ARG CABAL_INSTALL='3.14.1.1'
+ARG CABAL_INSTALL_RELEASE_KEY='EAF2A9A722C0C96F2B431CA511AAD8CEDEE0CAEF'
 
 RUN <<EOT
     set -eux
@@ -101,8 +101,8 @@ RUN <<EOT
     cabal --version
 EOT
 
-ARG GHC='9.10.2'
-ARG GHC_RELEASE_KEY='88B57FCF7DB53B4DB3BFA4B1588764FBE22D19C4'
+ARG GHC='9.12.2'
+ARG GHC_RELEASE_KEY='FFEB7CE81E16A36B3E2DED6F2DE04D4E97DB64AD'
 
 RUN <<EOT
     set -eux
@@ -112,10 +112,11 @@ RUN <<EOT
     # sha256 from https://downloads.haskell.org/~ghc/$GHC/SHA256SUMS
     case "$ARCH" in
         'aarch64')
-            GHC_SHA256='0188ca098abdaf71eb0804d0f35311f405da489137d8d438bfaa43b8d1e3f1b0'
+            GHC_SHA256='6048eae62ede069459398fa6f2e92ab9719e1b83e93a9014e6a410c54ed2755f'
+            GHC_URL='https://downloads.haskell.org/~ghc/9.12.2/ghc-9.12.2-aarch64-deb10-linux.tar.xz'
             ;;
         'x86_64')
-            GHC_SHA256='2fe2c3e0a07e4782530e8bf83eeda8ff6935e40d5450c1809abcdc6182c9c848'
+            GHC_SHA256='47d5faba492545b49b8dd49a79e64b4ef8eb4b1632d4ddc64355ce4e812eec75'
             ;;
         *) echo >&2 "error: unsupported architecture '$ARCH'" ; exit 1 ;;
     esac

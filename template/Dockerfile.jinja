@@ -1,4 +1,4 @@
-FROM debian:bullseye
+FROM {{ distro.image }}
 
 ENV LANG=C.UTF-8
 
@@ -25,8 +25,8 @@ RUN <<EOT
     rm -rf /var/lib/apt/lists/*
 EOT
 
-ARG STACK=3.3.1
-ARG STACK_RELEASE_KEY=C5705533DA4F78D8664B5DC0575159689BEFB442
+ARG STACK='{{ _globals.stack.version }}'
+ARG STACK_RELEASE_KEY='{{ _globals.stack.release_key }}'
 
 RUN <<EOT
     set -eux
@@ -36,10 +36,10 @@ RUN <<EOT
     # sha256 from https://github.com/commercialhaskell/stack/releases/download/v${STACK}/stack-${STACK}-linux-$ARCH.tar.gz.sha256
     case "$ARCH" in 
         'aarch64') 
-            STACK_SHA256='bdd618ea5a9c921417727011f2ecd78987dffa5cee5e741108baf65a9b5b58ab'
+            STACK_SHA256='{{ _globals.stack.sha256sum.aarch64 }}'
             ;;
         'x86_64') 
-            STACK_SHA256='88d7e517342c125b0a098d9d578fe53e590618ae4b2427283a27408a1ebd06d8'
+            STACK_SHA256='{{ _globals.stack.sha256sum.x86_64 }}'
             ;;
         *) echo >&2 "error: unsupported architecture '$ARCH'" exit 1 ;
     esac
@@ -62,23 +62,23 @@ RUN <<EOT
     stack --version;
 EOT
 
-ARG CABAL_INSTALL=3.14.1.1
-ARG CABAL_INSTALL_RELEASE_KEY=EAF2A9A722C0C96F2B431CA511AAD8CEDEE0CAEF
+ARG CABAL_INSTALL='{{ _globals.cabal_install.version }}'
+ARG CABAL_INSTALL_RELEASE_KEY='{{ _globals.cabal_install.release_key }}'
 
 RUN <<EOT
     set -eux
     cd /tmp
     ARCH="$(dpkg-architecture --query DEB_BUILD_GNU_CPU)"
-    CABAL_INSTALL_TAR="cabal-install-$CABAL_INSTALL-$ARCH-linux-deb11.tar.xz"
+    CABAL_INSTALL_TAR="cabal-install-$CABAL_INSTALL-$ARCH-linux-{{ distro.abbr }}.tar.xz"
     CABAL_INSTALL_URL="https://downloads.haskell.org/~cabal/cabal-install-$CABAL_INSTALL/$CABAL_INSTALL_TAR"
     CABAL_INSTALL_SHA256SUMS_URL="https://downloads.haskell.org/~cabal/cabal-install-$CABAL_INSTALL/SHA256SUMS"
     # sha256 from https://downloads.haskell.org/~cabal/cabal-install-$CABAL_INSTALL/SHA256SUMS
     case "$ARCH" in
         'aarch64')
-            CABAL_INSTALL_SHA256='5e8c47a055d5b744741039a7061ee43ec7d080d1251784e7a4cd836403e42523'
+            CABAL_INSTALL_SHA256='{{ cabal_install.sha256sum.aarch64 }}'
             ;;
         'x86_64')
-            CABAL_INSTALL_SHA256='41b85bb25fa654e4b79169014b9142fe696ff35e002e043caa0e52d65204ba8a'
+            CABAL_INSTALL_SHA256='{{ cabal_install.sha256sum.x86_64 }}'
             ;;
         *) echo >&2 "error: unsupported architecture '$ARCH'"; exit 1 ;;
     esac
@@ -101,21 +101,24 @@ RUN <<EOT
     cabal --version
 EOT
 
-ARG GHC='9.10.2'
-ARG GHC_RELEASE_KEY='88B57FCF7DB53B4DB3BFA4B1588764FBE22D19C4'
+ARG GHC='{{ ghc.version }}'
+ARG GHC_RELEASE_KEY='{{ ghc.release_key }}'
 
 RUN <<EOT
     set -eux
     cd /tmp
     ARCH="$(dpkg-architecture --query DEB_BUILD_GNU_CPU)"
-    GHC_URL="https://downloads.haskell.org/~ghc/$GHC/ghc-$GHC-$ARCH-deb11-linux.tar.xz"
+    GHC_URL="https://downloads.haskell.org/~ghc/$GHC/ghc-$GHC-$ARCH-{{ distro.abbr }}-linux.tar.xz"
     # sha256 from https://downloads.haskell.org/~ghc/$GHC/SHA256SUMS
     case "$ARCH" in
         'aarch64')
-            GHC_SHA256='0188ca098abdaf71eb0804d0f35311f405da489137d8d438bfaa43b8d1e3f1b0'
+            GHC_SHA256='{{ ghc.sha256sum.aarch64 }}'
+{% if overrides.ghc.aarch64.url %}
+            GHC_URL='{{ overrides.ghc.aarch64.url }}'
+{% endif %}
             ;;
         'x86_64')
-            GHC_SHA256='2fe2c3e0a07e4782530e8bf83eeda8ff6935e40d5450c1809abcdc6182c9c848'
+            GHC_SHA256='{{ ghc.sha256sum.x86_64 }}'
             ;;
         *) echo >&2 "error: unsupported architecture '$ARCH'" ; exit 1 ;;
     esac

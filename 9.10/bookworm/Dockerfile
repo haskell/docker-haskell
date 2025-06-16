@@ -1,4 +1,4 @@
-FROM debian:bullseye
+FROM debian:bookworm
 
 ENV LANG=C.UTF-8
 
@@ -69,16 +69,16 @@ RUN <<EOT
     set -eux
     cd /tmp
     ARCH="$(dpkg-architecture --query DEB_BUILD_GNU_CPU)"
-    CABAL_INSTALL_TAR="cabal-install-$CABAL_INSTALL-$ARCH-linux-deb11.tar.xz"
+    CABAL_INSTALL_TAR="cabal-install-$CABAL_INSTALL-$ARCH-linux-deb12.tar.xz"
     CABAL_INSTALL_URL="https://downloads.haskell.org/~cabal/cabal-install-$CABAL_INSTALL/$CABAL_INSTALL_TAR"
     CABAL_INSTALL_SHA256SUMS_URL="https://downloads.haskell.org/~cabal/cabal-install-$CABAL_INSTALL/SHA256SUMS"
     # sha256 from https://downloads.haskell.org/~cabal/cabal-install-$CABAL_INSTALL/SHA256SUMS
     case "$ARCH" in
         'aarch64')
-            CABAL_INSTALL_SHA256='5e8c47a055d5b744741039a7061ee43ec7d080d1251784e7a4cd836403e42523'
+            CABAL_INSTALL_SHA256='f763fb2af2bc1ff174b7361a7d51109a585954f87a0e14f86d144f3bce28f7a9'
             ;;
         'x86_64')
-            CABAL_INSTALL_SHA256='41b85bb25fa654e4b79169014b9142fe696ff35e002e043caa0e52d65204ba8a'
+            CABAL_INSTALL_SHA256='73a463306c771e18ca22c0a9469176ffab0138ec5925adb5364ef47174e1adc5'
             ;;
         *) echo >&2 "error: unsupported architecture '$ARCH'"; exit 1 ;;
     esac
@@ -108,14 +108,15 @@ RUN <<EOT
     set -eux
     cd /tmp
     ARCH="$(dpkg-architecture --query DEB_BUILD_GNU_CPU)"
-    GHC_URL="https://downloads.haskell.org/~ghc/$GHC/ghc-$GHC-$ARCH-deb11-linux.tar.xz"
+    GHC_URL="https://downloads.haskell.org/~ghc/$GHC/ghc-$GHC-$ARCH-deb12-linux.tar.xz"
     # sha256 from https://downloads.haskell.org/~ghc/$GHC/SHA256SUMS
     case "$ARCH" in
         'aarch64')
             GHC_SHA256='0188ca098abdaf71eb0804d0f35311f405da489137d8d438bfaa43b8d1e3f1b0'
+            GHC_URL='https://downloads.haskell.org/~ghc/9.10.2/ghc-9.10.2-aarch64-deb11-linux.tar.xz'
             ;;
         'x86_64')
-            GHC_SHA256='2fe2c3e0a07e4782530e8bf83eeda8ff6935e40d5450c1809abcdc6182c9c848'
+            GHC_SHA256='71d025743f2eb4d3af95d4dd94a22c093c2814d78ab95dd0e12bb6751b1c7d4e'
             ;;
         *) echo >&2 "error: unsupported architecture '$ARCH'" ; exit 1 ;;
     esac
