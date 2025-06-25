@@ -29,7 +29,7 @@ This is the Git repo of the [Docker "Official Image"](https://github.com/docker-
 ### Processor Architecture Support
 
 * amd64
-* aarch64 ([does not include Stack](https://github.com/haskell/docker-haskell/issues/59))
+* aarch64
 
 ### Installation Method
 
