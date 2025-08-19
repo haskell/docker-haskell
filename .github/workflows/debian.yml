@@ -93,6 +93,9 @@ jobs:
           - ghc: '9.6.7'
             ghc_minor: '9.6'
             docker_platform: arm64
+        exclude:
+          - ghc: '9.12.2'
+            deb: 'bullseye'
 
     steps:
       - uses: actions/checkout@v4
