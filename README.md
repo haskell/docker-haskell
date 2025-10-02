@@ -63,9 +63,39 @@ Additionally, only the latest patch version of each major version of GHC will re
 
 #### Cabal + Stack
 
-For actively supported GHC versions, Cabal and Stack should be updated when new versions are relesaed.
+For actively supported GHC versions, Cabal and Stack should be updated when new versions are released.
 
 ## Maintenance
+
+### Generating Dockerfiles
+
+The tool at ./generator is created to generate the `Dockerfile`s from templates.
+This is done to reduce duplication and make it easier to add new GHC & tools.
+
+Having Haskell toolchain & stack installed, you want to build the generator first:
+
+```bash
+$ cd generator
+$ stack build
+```
+
+Then you can (re)generate the desired Dockerfile by running:
+
+```bash
+$ stack run -- -t ../template/Dockerfile.jinja --data-file ../9.12/bookworm.yaml > ../9.12/bookworm/Dockerfile
+```
+
+The general file layout looks the following way: 
+
+* `<GHC version>/<Debian distro codename>.yaml` - the data file with versions and sha256s.
+* `<GHC version>/<Debian distro codename>/_globals.yaml` - the global-ish data file with versions and sha256s (Stack binary distribution is not distro specific, like GHC or cabal-install, so we're avoiding copy&pasting it that way). It's explicitly included by the distro-specific YAML files.
+* `<GHC version>/<Debian distro codename>/Dockerfile` - the generated Dockerfile.
+
+There might be a handful of `RuntimeError`s printed to stderr by the generator; 
+those that mention `IndexError` are probably safe to ignore: it's about data not found in `override` section, when there's nothing to override.
+Raise an issue if you have ideas on how reporting them could be improved.
+
+Now, check the created/updated `Dockerfile` and commit it to the VCS.
 
 ### Building + Running Locally
 
@@ -131,8 +161,8 @@ Images are built and released by the central docker official images system. Spec
 1. Determine which docker haskell image GHC versions have been impacted by the unreleased changes (stack + cabal bumps impacts all versions, GHC just impacts specific versions).
 2. Update the `GitCommit` in the [`haskell`](https://github.com/docker-library/official-images/blob/master/library/haskell) file.
 3. Update the `Tags` if these have changed.
-3. Create a PR, including info on what has changed. The official images people will review the actual Dockerfile changes as they want official images to maintain a high level of quality.
-4. Once merged, their build system will run and the image updates will eventually be released.
+4. Create a PR, including info on what has changed. The official images people will review the actual Dockerfile changes as they want official images to maintain a high level of quality.
+5. Once merged, their build system will run and the image updates will eventually be released.
 
 This [doc](https://github.com/docker-library/faq#an-images-source-changed-in-git-now-what) describes the process in more detail.
 

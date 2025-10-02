@@ -1,0 +1,22 @@
+---
+distro:
+  codename: 'bullseye'
+  abbr: 'deb11'
+  image: 'debian:bullseye'
+ghc:
+  version: "9.12.2"
+  release_key: "FFEB7CE81E16A36B3E2DED6F2DE04D4E97DB64AD"
+  sha256sum:
+    "aarch64": '6048eae62ede069459398fa6f2e92ab9719e1b83e93a9014e6a410c54ed2755f' # hash from deb10 bindist
+    "x86_64": '47d5faba492545b49b8dd49a79e64b4ef8eb4b1632d4ddc64355ce4e812eec75'
+cabal_install:
+  sha256sum:
+    "aarch64": '5e8c47a055d5b744741039a7061ee43ec7d080d1251784e7a4cd836403e42523'
+    "x86_64": '41b85bb25fa654e4b79169014b9142fe696ff35e002e043caa0e52d65204ba8a'
+overrides:
+  ghc:
+    "aarch64":
+      # GHC 9.12.2 doesn't have a deb11 bindist for aarch64 for some reason, so we're using the deb10 one instead
+      url: "https://downloads.haskell.org/~ghc/9.12.2/ghc-9.12.2-aarch64-deb10-linux.tar.xz"
+_globals: !include '_globals.yaml'
+
