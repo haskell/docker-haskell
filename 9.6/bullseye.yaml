@@ -1,0 +1,13 @@
+---
+distro:
+  codename: 'bullseye'
+  abbr: 'deb11'
+  image: 'debian:bullseye'
+ghc: !include '_ghc.yaml'
+cabal_install: !include '_cabal-install.yaml'
+overrides:
+  ghc:
+    "aarch64":
+      # GHC 9.6.7 doesn't have a deb11 bindist for aarch64 for some reason, so we're using the deb10 one instead
+      url: "https://downloads.haskell.org/~ghc/9.6.7/ghc-9.6.7-aarch64-deb10-linux.tar.xz"
+_globals: !include '_globals.yaml'

@@ -1,0 +1,9 @@
+---
+distro:
+  codename: 'bullseye'
+  abbr: 'deb11'
+  image: 'debian:bullseye-slim'
+ghc: !include '_ghc.yaml'
+cabal_install: !include '_cabal-install.yaml'
+_globals: !include '_globals.yaml'
+

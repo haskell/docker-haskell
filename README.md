@@ -102,12 +102,12 @@ Now, check the created/updated `Dockerfile` and commit it to the VCS.
 You can build and run the images locally with something like:
 
 ```bash
-$ docker build -t haskell-local 9.2/buster && docker run -it haskell-local bash
+$ docker build -t haskell-local 9.12/bookworm && docker run -it haskell-local bash
 ```
 
 ### Updating The Images
 
-This invovles a 2 step process.
+This involves a 2-step process.
 
 1. Update the images in the docker-haskell repository.
 2. Update the [official images repo](https://github.com/docker-library/official-images/blob/master/library/haskell) to use the new git commit sha.
@@ -123,7 +123,7 @@ When a new version of Cabal, Stack or GHC is released the images need to be upda
 ##### GHC
 
 1. Replace the old and new GHC version globally eg. `9.4.3` becomes `9.4.4`. This will update both Dockerfiles **and the github actions**.
-2. Obtain the new sha256 for the new GHC binary distribution via https://downloads.haskell.org/~ghc/9.4.4/SHA256SUMS . Look for the sha for the `.tar.xz` supported versions (currently `x86_64-deb10` + `aarch64-deb10`).
+2. Get the new sha256 for the new GHC binary distribution via https://downloads.haskell.org/~ghc/9.4.4/SHA256SUMS . Look for the sha for the `.tar.xz` supported versions (currently `x86_64-deb10` + `aarch64-deb10`).
 3. Replace globally the old sha256 for these with the new one obtained in step 2.
 4. Update the PGP key if the person doing the release has changed. You can build the image locally at this point to see if it works or not. If it fails you need to update the PGP key. You need to find the key from the person doing the release on the ubuntu keyserver. See below for known releasers.
 

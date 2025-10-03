@@ -1,0 +1,9 @@
+stack:
+  version: "3.3.1"
+  release_key: "C5705533DA4F78D8664B5DC0575159689BEFB442"
+  sha256sum:
+    "aarch64": 'bdd618ea5a9c921417727011f2ecd78987dffa5cee5e741108baf65a9b5b58ab'
+    "x86_64": '88d7e517342c125b0a098d9d578fe53e590618ae4b2427283a27408a1ebd06d8'
+cabal_install:
+  version: "3.14.1.1"
+  release_key: "EAF2A9A722C0C96F2B431CA511AAD8CEDEE0CAEF"
