@@ -1,0 +1,5 @@
+version: "9.8.4"
+release_key: "FFEB7CE81E16A36B3E2DED6F2DE04D4E97DB64AD"
+sha256sum:
+  "aarch64": '310204daf2df6ad16087be94b3498ca414a0953b29e94e8ec8eb4a5c9bf603d3'
+  "x86_64": 'af151db8682b8c763f5a44f960f65453d794c95b60f151abc82dbdefcbe6f8ad'
