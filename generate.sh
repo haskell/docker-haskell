@@ -16,9 +16,13 @@ main() {
   abs_output_file=$(realpath "$2")
   local template_path
   template_path=$(realpath ./template/Dockerfile.jinja)
-  # run the generator
-  pushd generator || exit 1
-  stack run -- -t "$template_path" --data-file "$abs_data_file" > "$abs_output_file"
-  popd || exit 1
+  if [ "$CI" == "true" ] && [ "$GITHUB_ACTIONS" == "true" ]; then
+    ./artifacts/generator -t "$template_path" --data-file "$abs_data_file" > "$abs_output_file"
+  else
+    # run the generator
+    pushd generator || exit 1
+    stack run -- -t "$template_path" --data-file "$abs_data_file" > "$abs_output_file"
+    popd || exit 1
+  fi
 }
 main "$@"
