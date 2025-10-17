@@ -66,65 +66,50 @@ jobs:
       - name: run official-images tests
         run: ./official-images/test/run.sh haskell:${{ matrix.ghc }}-${{ matrix.deb }}
 
-  emulated-architecture-tests:
+  arm64-tests:
     timeout-minutes: 60
-    runs-on: ubuntu-24.04
-    name: ${{ matrix.arch }}-${{ matrix.ghc }}-${{ matrix.deb }}
+    runs-on: ubuntu-24.04-arm
+    name: arm64-${{ matrix.ghc }}-${{ matrix.deb }}
     strategy:
       fail-fast: false
       matrix:
         ghc: ['9.6.7', '9.8.4', '9.10.2', '9.12.2']
-        # uraimo/run-on-arch-action does not support debian slim variants
+        # native arm runner; still avoid slim variants here
         deb: ['bullseye']
-        arch: ['aarch64']
         include:
           # bookworm (debian 12)
           - ghc: '9.12.2'
             ghc_minor: '9.12'
             deb: 'bookworm'
-            arch: 'aarch64'
-            docker_platform: arm64
           # bullseye (debian 11)
           - ghc: '9.10.2'
             ghc_minor: '9.10'
-            docker_platform: arm64
           - ghc: '9.8.4'
             ghc_minor: '9.8'
-            docker_platform: arm64
           - ghc: '9.6.7'
             ghc_minor: '9.6'
-            docker_platform: arm64
         exclude:
           - ghc: '9.12.2'
             deb: 'bullseye'
 
     steps:
       - uses: actions/checkout@v4
-      - name: docker build [ ${{ matrix.arch }} ${{ matrix.ghc }}]
-        uses: uraimo/run-on-arch-action@v3.0.0
+      - name: docker build and test [arm64 ${{ matrix.ghc }}]
+        run: |
+          docker build --pull --progress=plain \
+            -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
+            ${{ matrix.ghc_minor }}/${{ matrix.deb }} \
+            --build-arg "BUILDKIT_DOCKERFILE_CHECK=skip=SecretsUsedInArgOrEnv;error=true"
+          echo 'testing..'
+          docker run \
+            -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
+            bash -c "cabal update && cabal install --lib primitive"
+          docker run \
+            -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
+            bash -c "echo | ghci"
+      - uses: actions/checkout@v4
         with:
-          arch: ${{ matrix.arch }}
-          distro: ${{ matrix.deb }}
-          githubToken: ${{ github.token }}
-          install: |
-            apt-get update
-            apt-get install -y curl
-            curl -fsSL https://get.docker.com | sh
-          run: |
-            docker build --pull --progress=plain \
-              --platform "linux/${{ matrix.docker_platform }}" \
-              -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
-              ${{ matrix.ghc_minor }}/${{ matrix.deb }} \
-              --build-arg "BUILDKIT_DOCKERFILE_CHECK=skip=SecretsUsedInArgOrEnv;error=true"
-            echo 'testing..'
-            docker run \
-              --platform "linux/${{ matrix.docker_platform }}" \
-              -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
-              bash -c "cabal update && cabal install --lib primitive"
-            docker run \
-              --platform "linux/${{ matrix.docker_platform }}" \
-              -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
-              bash -c "echo | ghci"
-
-# Running the official tests does not work as we need to hardcode the plaform due to the emulated nature.
-# This solution is fairly hacky, but gets us most of benefit of the official tests.
+          repository: docker-library/official-images
+          path: official-images
+      - name: run official-images tests
+        run: ./official-images/test/run.sh haskell:${{ matrix.ghc }}-${{ matrix.deb }}
