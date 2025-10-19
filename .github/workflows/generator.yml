@@ -3,6 +3,14 @@ on:
   push:
     paths:
       - generator
+  workflow_dispatch:
+    inputs:
+      debug_mode:
+        description: 'Enable debug mode'
+        type: boolean
+        default: false
+        required: false
+
 
 jobs:
   build:
