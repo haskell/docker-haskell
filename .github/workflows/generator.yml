@@ -1,0 +1,47 @@
+name: Dockerfile Generator
+on:
+  push:
+    paths:
+      - generator
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v5.0.0
+      - name: Cache .stack directory
+        uses: actions/cache@v4.3.0
+        with:
+          path: ~/.stack
+          key: ${{ runner.os }}-stack-${{ hashFiles('generator/stack.yaml.lock') }}
+
+      - name: Cache build artifacts
+        uses: actions/cache@v4.3.0
+        with:
+          path: generator/.stack-work
+          key: ${{ runner.os }}-stack-work-${{ hashFiles('generator/stack.yaml.lock', 'generator/generator.cabal') }}
+      - name: Install Haskell toolchain and stack
+        uses: haskell-actions/setup@v2.8.2
+        with:
+          enable-stack: true
+
+      - name: Set up Stack project
+        working-directory: generator
+        run: stack setup
+      - name: Build generator
+        working-directory: generator
+        run: stack build --no-terminal
+      - name: Run generator
+        working-directory: generator
+        run: stack exec generator -- --help
+
+      - name: Copy generator binary to artifacts
+        working-directory: generator
+        run: |
+          mkdir -p ../artifacts
+          stack --local-bin-path=../artifacts install
+      - name: Upload generator artifact
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: dockerfile-generator
+          path: artifacts/generator
