@@ -48,8 +48,12 @@ jobs:
         run: |
           mkdir -p ../artifacts
           stack --local-bin-path=../artifacts install
-      - name: Upload generator artifact
-        uses: actions/upload-artifact@v4.6.2
+      - name: Upload generated artifact to a release
+        uses: softprops/action-gh-release@v2.4.1
         with:
-          name: dockerfile-generator
-          path: artifacts/generator
+          name: Generator
+          tag_name: generator-binary
+          prerelease: true
+          overwrite_files: 'true'
+          files: |
+            artifacts/generator
