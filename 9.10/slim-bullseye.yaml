@@ -4,11 +4,11 @@ distro:
   abbr: 'deb11'
   image: 'debian:bullseye-slim'
 ghc:
-  version: "9.10.2"
+  version: "9.10.3"
   release_key: "88B57FCF7DB53B4DB3BFA4B1588764FBE22D19C4"
   sha256sum:
-    "aarch64": '0188ca098abdaf71eb0804d0f35311f405da489137d8d438bfaa43b8d1e3f1b0'
-    "x86_64": '2fe2c3e0a07e4782530e8bf83eeda8ff6935e40d5450c1809abcdc6182c9c848'
+    "aarch64": '052789dfe7f6fba6dc3822de0da272e8a5bd358c37adae17d8e82cff39bc1008'
+    "x86_64": 'b6bbd3514e0cdb9db350812a003bb7c670c58d99779086fbe41092b019548924'
 cabal_install:
   sha256sum:
     "aarch64": '5e8c47a055d5b744741039a7061ee43ec7d080d1251784e7a4cd836403e42523'

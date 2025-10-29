@@ -101,7 +101,7 @@ RUN <<EOT
     cabal --version
 EOT
 
-ARG GHC='9.10.2'
+ARG GHC='9.10.3'
 ARG GHC_RELEASE_KEY='88B57FCF7DB53B4DB3BFA4B1588764FBE22D19C4'
 
 RUN <<EOT
@@ -112,11 +112,11 @@ RUN <<EOT
     # sha256 from https://downloads.haskell.org/~ghc/$GHC/SHA256SUMS
     case "$ARCH" in
         'aarch64')
-            GHC_SHA256='0188ca098abdaf71eb0804d0f35311f405da489137d8d438bfaa43b8d1e3f1b0'
-            GHC_URL='https://downloads.haskell.org/~ghc/9.10.2/ghc-9.10.2-aarch64-deb11-linux.tar.xz'
+            GHC_SHA256='052789dfe7f6fba6dc3822de0da272e8a5bd358c37adae17d8e82cff39bc1008'
+            GHC_URL='https://downloads.haskell.org/~ghc/9.10.3/ghc-9.10.3-aarch64-deb11-linux.tar.xz'
             ;;
         'x86_64')
-            GHC_SHA256='71d025743f2eb4d3af95d4dd94a22c093c2814d78ab95dd0e12bb6751b1c7d4e'
+            GHC_SHA256='1ac63f04eac0ad551d45cbde38f27e0e3f43ceefd98833fae1fa3f2dbd042367'
             ;;
         *) echo >&2 "error: unsupported architecture '$ARCH'" ; exit 1 ;;
     esac
