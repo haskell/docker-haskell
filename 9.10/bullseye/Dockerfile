@@ -39,7 +39,7 @@ RUN set -eux; \
         'x86_64') \
             STACK_SHA256='88d7e517342c125b0a098d9d578fe53e590618ae4b2427283a27408a1ebd06d8'; \
             ;; \
-        *) echo >&2 "error: unsupported architecture '$ARCH'" exit 1 ; \
+        *) echo >&2 "error: unsupported architecture '$ARCH'"; exit 1 ;; \
     esac; \
     curl -sSL "$STACK_URL" -o stack.tar.gz; \
     echo "$STACK_SHA256 stack.tar.gz" | sha256sum --strict --check; \
