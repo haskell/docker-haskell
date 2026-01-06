@@ -1,0 +1,34 @@
+name: "Build generator"
+description: "Build the generator binary and cache build artifacts and dependencies."
+inputs:
+  debug_mode:
+    description: "Enable debug mode for the generator build process."
+    required: false
+    default: false
+runs:
+  using: "composite"
+  steps:
+    - name: Cache .stack directory
+      uses: actions/cache@v4.3.0
+      with:
+        path: ~/.stack
+        key: ${{ runner.os }}-stack-${{ hashFiles('generator/stack.yaml.lock') }}
+
+    - name: Cache build artifacts
+      uses: actions/cache@v4.3.0
+      with:
+        path: generator/.stack-work
+        key: ${{ runner.os }}-stack-work-${{ hashFiles('generator/stack.yaml.lock', 'generator/generator.cabal') }}
+    - name: Install Haskell toolchain and stack
+      uses: haskell-actions/setup@v2.8.2
+      with:
+        enable-stack: true
+
+    - name: Set up Stack project
+      working-directory: generator
+      shell: bash
+      run: stack setup
+    - name: Build generator
+      working-directory: generator
+      shell: bash
+      run: stack build --no-terminal
