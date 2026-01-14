@@ -11,7 +11,6 @@ on:
         default: false
         required: false
 
-
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -22,26 +21,33 @@ jobs:
         with:
           path: ~/.stack
           key: ${{ runner.os }}-stack-${{ hashFiles('generator/stack.yaml.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-stack-
+      - name: Install Haskell toolchain and stack
+        uses: haskell-actions/setup@v2.8.2
+        with:
+          enable-stack: true
 
       - name: Cache build artifacts
         uses: actions/cache@v4.3.0
         with:
           path: generator/.stack-work
           key: ${{ runner.os }}-stack-work-${{ hashFiles('generator/stack.yaml.lock', 'generator/generator.cabal') }}
-      - name: Install Haskell toolchain and stack
-        uses: haskell-actions/setup@v2.8.2
-        with:
-          enable-stack: true
+          restore-keys: |
+            ${{ runner.os }}-stack-work-
 
       - name: Set up Stack project
         working-directory: generator
-        run: stack setup
+        run: |
+          stack setup
       - name: Build generator
         working-directory: generator
-        run: stack build --no-terminal
+        run: |
+          stack build --no-terminal
       - name: Run generator
         working-directory: generator
-        run: stack exec generator -- --help
+        run: |
+          stack exec generator -- --help
 
       - name: Copy generator binary to artifacts
         working-directory: generator
@@ -50,6 +56,7 @@ jobs:
           stack --local-bin-path=../artifacts install
       - name: Upload generated artifact to a release
         uses: softprops/action-gh-release@v2.4.1
+        if: ${{ github.repository == 'haskell/docker-haskell' }}
         with:
           name: Generator
           tag_name: generator-binary
