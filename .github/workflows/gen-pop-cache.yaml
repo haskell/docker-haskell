@@ -1,0 +1,10 @@
+name: "Populate cache for generator"
+on:
+  schedule:
+    - cron: '0 0 * * 0,4' # Make sure to run at least once a week to avoid eviction
+jobs:
+  populate-cache:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v5.0.0
+      - uses: ./.github/actions/build-generator.yaml
