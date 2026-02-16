@@ -1,5 +1,6 @@
 name: "Populate cache for generator"
 on:
+  workflow_dispatch: {}
   schedule:
     - cron: '0 0 * * 0,4' # Make sure to run at least once a week to avoid eviction
 jobs:
