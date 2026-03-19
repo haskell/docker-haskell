@@ -26,7 +26,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ghc: ['9.14.1', '9.12.2', '9.10.3', '9.8.4', '9.6.7']
+        ghc: ['9.14.1', '9.12.4', '9.10.3', '9.8.4', '9.6.7']
         deb: ['bullseye', 'slim-bullseye']
         include:
           - ghc: '9.14.1'
@@ -41,16 +41,16 @@ jobs:
           - ghc: '9.14.1'
             ghc_minor: '9.14'
             deb: 'slim-bullseye'
-          - ghc: '9.12.2'
+          - ghc: '9.12.4'
             ghc_minor: '9.12'
             deb: 'bookworm'
-          - ghc: '9.12.2'
+          - ghc: '9.12.4'
             ghc_minor: '9.12'
             deb: 'slim-bookworm'
-          - ghc: '9.12.2'
+          - ghc: '9.12.4'
             ghc_minor: '9.12'
             deb: 'bullseye'
-          - ghc: '9.12.2'
+          - ghc: '9.12.4'
             ghc_minor: '9.12'
             deb: 'slim-bullseye'
           - ghc: '9.10.3'
@@ -85,7 +85,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ghc: ['9.6.7', '9.8.4', '9.10.3', '9.12.2', '9.14.1']
+        ghc: ['9.6.7', '9.8.4', '9.10.3', '9.12.4', '9.14.1']
         # native arm runner; still avoid slim variants here
         deb: ['bullseye']
         include:
@@ -93,7 +93,7 @@ jobs:
             ghc_minor: '9.14'
             deb: 'bookworm'
           # bookworm (debian 12)
-          - ghc: '9.12.2'
+          - ghc: '9.12.4'
             ghc_minor: '9.12'
             deb: 'bookworm'
           # bullseye (debian 11)
@@ -104,7 +104,7 @@ jobs:
           - ghc: '9.6.7'
             ghc_minor: '9.6'
         exclude:
-          - ghc: '9.12.2'
+          - ghc: '9.12.4'
             deb: 'bullseye'
           - ghc: '9.14.1'
             deb: 'bullseye'
