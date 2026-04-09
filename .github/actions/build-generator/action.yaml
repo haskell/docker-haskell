@@ -8,32 +8,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Cache .ghcup directory
-      uses: actions/cache@v4.3.0
+    - uses: freckle/stack-action@v5
       with:
-        path: ~/.ghcup
-        key: ${{ runner.os }}-ghcup
-    - name: Cache .stack directory
-      uses: actions/cache@v4.3.0
-      with:
-        path: ~/.stack
-        key: ${{ runner.os }}-stack-${{ hashFiles('generator/stack.yaml.lock') }}
-
-    - name: Cache build artifacts
-      uses: actions/cache@v4.3.0
-      with:
-        path: generator/.stack-work
-        key: ${{ runner.os }}-stack-work-${{ hashFiles('generator/stack.yaml.lock', 'generator/generator.cabal') }}
-    - name: Install Haskell toolchain and stack
-      uses: haskell-actions/setup@v2.8.2
-      with:
-        enable-stack: true
-
-    - name: Set up Stack project
-      working-directory: generator
-      shell: bash
-      run: stack setup
-    - name: Build generator
-      working-directory: generator
-      shell: bash
-      run: stack build --no-terminal
+        working-directory: "./generator/"
+        stack-build-arguments: "${{ github.ref_name != 'main' && '--fast' || '' }} --pedantic"

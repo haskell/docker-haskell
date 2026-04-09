@@ -105,10 +105,13 @@ loadFileMay fn =
       return Nothing
 
 decodeString :: (JSON.FromJSON v) => String -> IO (Maybe v)
-decodeString = return . YAML.decode . UTF8.fromString
+decodeString = return . decodeYamlMaybe . UTF8.fromString
 
 decodeStdin :: (JSON.FromJSON v) => IO (Maybe v)
-decodeStdin = YAML.decode <$> BS.getContents
+decodeStdin = decodeYamlMaybe <$> BS.getContents
+
+decodeYamlMaybe :: (JSON.FromJSON v) => BS.ByteString -> Maybe v
+decodeYamlMaybe = either (const Nothing) Just . YAML.decodeEither'
 
 gAsStr :: GVal m -> String
 gAsStr = Text.unpack . asText

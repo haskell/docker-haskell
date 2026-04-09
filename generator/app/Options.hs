@@ -1,7 +1,6 @@
 module Options
 where
 
-import Data.Semigroup ( (<>) ) -- needed for GHC 8.0 and 8.2
 import Options.Applicative
 
 
@@ -18,7 +17,7 @@ data Options
   = RunOptions TemplateSource DataSource
 
 parseOptions :: [String] -> IO Options
-parseOptions args =
+parseOptions _args =
   execParser $ info (options <**> helper)
     ( fullDesc
     <> header "ginger - A command-line interface for the Ginger template language"
