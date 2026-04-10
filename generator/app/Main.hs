@@ -1,6 +1,5 @@
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE ScopedTypeVariables #-}
 
 -- | An example Ginger CLI application.
 --
@@ -112,9 +111,3 @@ decodeStdin = decodeYamlMaybe <$> BS.getContents
 
 decodeYamlMaybe :: (JSON.FromJSON v) => BS.ByteString -> Maybe v
 decodeYamlMaybe = either (const Nothing) Just . YAML.decodeEither'
-
-gAsStr :: GVal m -> String
-gAsStr = Text.unpack . asText
-
-strToGVal :: String -> GVal m
-strToGVal = toGVal . Text.pack
