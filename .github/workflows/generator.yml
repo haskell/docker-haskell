@@ -1,39 +1,30 @@
-name: Dockerfile Generator
+name: Dockerfile Validator
 on:
   push:
     paths:
-      - generator
+      - '**/*.ncl'
+      - 'template/Dockerfile.ncl'
+      - 'generate.sh'
+      - '.github/workflows/generator.yml'
   workflow_dispatch:
-    inputs:
-      debug_mode:
-        description: 'Enable debug mode'
-        type: boolean
-        default: false
-        required: false
 
 jobs:
-  build:
+  generate:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v5.0.0
-      - uses: ./.github/actions/build-generator
-#        with:
-#          debug_mode: ${{ github.event.inputs.debug_mode }}
-      - name: Run generator
-        working-directory: generator
-        run: stack exec generator -- --help
+      - uses: actions/checkout@v6.0.2
+      - name: Install Nickel
+        uses: cachix/install-nix-action@v31.10.5
 
-      - name: Copy generator binary to artifacts
-        working-directory: generator
+      - name: Install nickel binary
+        run: nix profile install nixpkgs#nickel
+
+      - name: Generate Dockerfiles
         run: |
-          mkdir -p ../artifacts
-          stack --local-bin-path=../artifacts install
-      - name: Upload generated artifact to a release
-        uses: softprops/action-gh-release@v2.4.1
-        with:
-          name: Generator
-          tag_name: generator-binary
-          prerelease: true
-          overwrite_files: 'true'
-          files: |
-            artifacts/generator
+          for f in $(find . -name '*.ncl' -not -name '_*'); do
+            echo "Generating Dockerfile for $basename"
+            ./generate.sh $f "$(basename $f .ncl)/Dockerfile"
+          done
+
+      - name: Verify no diff after generation
+        run: git diff --exit-code

@@ -1,4 +1,17 @@
-FROM debian:bookworm
+let render =
+  fun cfg =>
+    let distro = cfg.distro in
+    let stack = cfg.stack in
+    let cabal_install = cfg.cabal_install in
+    let ghc = cfg.ghc in
+    let ghc_override_line =
+      if std.record.has_field "url" ghc.assets.aarch64 then
+        "            GHC_URL='%{ghc.assets.aarch64.url}'; " ++ "\\" ++ "\n"
+      else
+        ""
+    in
+      m%"
+FROM %{distro.image}
 
 ENV LANG=C.UTF-8
 
@@ -24,8 +37,8 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 
-ARG STACK='3.3.1'
-ARG STACK_RELEASE_KEY='C5705533DA4F78D8664B5DC0575159689BEFB442'
+ARG STACK='%{stack.version}'
+ARG STACK_RELEASE_KEY='%{stack.release_key}'
 
 RUN set -eux; \
     cd /tmp; \
@@ -34,10 +47,10 @@ RUN set -eux; \
     # sha256 from https://github.com/commercialhaskell/stack/releases/download/v${STACK}/stack-${STACK}-linux-$ARCH.tar.gz.sha256 \
     case "$ARCH" in \
         'aarch64') \
-            STACK_SHA256='bdd618ea5a9c921417727011f2ecd78987dffa5cee5e741108baf65a9b5b58ab'; \
+            STACK_SHA256='%{stack.assets.aarch64.sha256sum}'; \
             ;; \
         'x86_64') \
-            STACK_SHA256='88d7e517342c125b0a098d9d578fe53e590618ae4b2427283a27408a1ebd06d8'; \
+            STACK_SHA256='%{stack.assets.x86_64.sha256sum}'; \
             ;; \
         *) echo >&2 "error: unsupported architecture '$ARCH'"; exit 1 ;; \
     esac; \
@@ -59,22 +72,22 @@ RUN set -eux; \
     \
     stack --version;
 
-ARG CABAL_INSTALL='3.14.1.1'
-ARG CABAL_INSTALL_RELEASE_KEY='EAF2A9A722C0C96F2B431CA511AAD8CEDEE0CAEF'
+ARG CABAL_INSTALL='%{cabal_install.version}'
+ARG CABAL_INSTALL_RELEASE_KEY='%{cabal_install.release_key}'
 
 RUN set -eux; \
     cd /tmp; \
     ARCH="$(dpkg-architecture --query DEB_BUILD_GNU_CPU)"; \
-    CABAL_INSTALL_TAR="cabal-install-$CABAL_INSTALL-$ARCH-linux-deb12.tar.xz"; \
+    CABAL_INSTALL_TAR="cabal-install-$CABAL_INSTALL-$ARCH-linux-%{distro.abbr}.tar.xz"; \
     CABAL_INSTALL_URL="https://downloads.haskell.org/~cabal/cabal-install-$CABAL_INSTALL/$CABAL_INSTALL_TAR"; \
     CABAL_INSTALL_SHA256SUMS_URL="https://downloads.haskell.org/~cabal/cabal-install-$CABAL_INSTALL/SHA256SUMS"; \
     # sha256 from https://downloads.haskell.org/~cabal/cabal-install-$CABAL_INSTALL/SHA256SUMS \
     case "$ARCH" in \
         'aarch64') \
-            CABAL_INSTALL_SHA256='f763fb2af2bc1ff174b7361a7d51109a585954f87a0e14f86d144f3bce28f7a9'; \
+            CABAL_INSTALL_SHA256='%{cabal_install.assets.aarch64.sha256sum}'; \
             ;; \
         'x86_64') \
-            CABAL_INSTALL_SHA256='73a463306c771e18ca22c0a9469176ffab0138ec5925adb5364ef47174e1adc5'; \
+            CABAL_INSTALL_SHA256='%{cabal_install.assets.x86_64.sha256sum}'; \
             ;; \
         *) echo >&2 "error: unsupported architecture '$ARCH'"; exit 1 ;; \
     esac; \
@@ -96,20 +109,20 @@ RUN set -eux; \
     \
     cabal --version
 
-ARG GHC='9.12.4'
-ARG GHC_RELEASE_KEY='88B57FCF7DB53B4DB3BFA4B1588764FBE22D19C4'
+ARG GHC='%{ghc.version}'
+ARG GHC_RELEASE_KEY='%{ghc.release_key}'
 
 RUN set -eux; \
     cd /tmp; \
     ARCH="$(dpkg-architecture --query DEB_BUILD_GNU_CPU)"; \
-    GHC_URL="https://downloads.haskell.org/~ghc/$GHC/ghc-$GHC-$ARCH-deb12-linux.tar.xz"; \
+    GHC_URL="https://downloads.haskell.org/~ghc/$GHC/ghc-$GHC-$ARCH-%{distro.abbr}-linux.tar.xz"; \
     # sha256 from https://downloads.haskell.org/~ghc/$GHC/SHA256SUMS \
     case "$ARCH" in \
         'aarch64') \
-            GHC_SHA256='8d093562f4d54b69fc57f94c021138d8595554407bc2828962cf6bdd394a6c97'; \
-            ;; \
+            GHC_SHA256='%{ghc.assets.aarch64.sha256sum}'; \
+%{ghc_override_line}            ;; \
         'x86_64') \
-            GHC_SHA256='cdc60a66f1c89604975c896b3c7577b079b602d8fb093af0f4b2b0912fa47bd1'; \
+            GHC_SHA256='%{ghc.assets.x86_64.sha256sum}'; \
             ;; \
         *) echo >&2 "error: unsupported architecture '$ARCH'" ; exit 1 ;; \
     esac; \
@@ -134,3 +147,6 @@ RUN set -eux; \
 ENV PATH=/root/.cabal/bin:/root/.local/bin:/opt/ghc/${GHC}/bin:$PATH
 
 CMD ["ghci"]
+"%
+in
+  render

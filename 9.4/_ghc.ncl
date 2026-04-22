@@ -1,0 +1,11 @@
+{
+  version = "9.4.8",
+  release_key = "88B57FCF7DB53B4DB3BFA4B1588764FBE22D19C4",
+  assets = {
+    aarch64 = {
+      sha256sum = "278e287e1ee624712b9c6d7803d1cf915ca1cce56e013b0a16215eb8dfeb1531",
+      url = "https://downloads.haskell.org/~ghc/9.4.8/ghc-9.4.8-aarch64-deb10-linux.tar.xz",
+    },
+    x86_64 = { sha256sum = "2743629d040f3213499146cb5154621d6f25e85271019afc9b9009e04d66bf6c" },
+  },
+}

@@ -74,36 +74,30 @@ For actively supported GHC versions, Cabal and Stack should be updated when new 
 
 ### Generating Dockerfiles
 
-Dockerfiles are generated from `template/Dockerfile.jinja` using YAML data files.
-
-Build the generator (one-time or after generator changes):
-
-```bash
-cd generator
-stack build
-```
+Dockerfiles are generated from `template/Dockerfile.ncl` using Nickel data files.
 
 Regenerate a Dockerfile from the repository root with the helper script:
 
 ```bash
-./generate.sh 9.14/bookworm.yaml 9.14/bookworm/Dockerfile
+./generate.sh 9.14/bookworm.ncl 9.14/bookworm/Dockerfile
 ```
 
-You can also run the generator directly:
+You can also run Nickel directly:
 
 ```bash
-cd generator
-stack run -- -t ../template/Dockerfile.jinja --data-file ../9.14/bookworm.yaml > ../9.14/bookworm/Dockerfile
+nickel export --format text -o 9.14/bookworm/Dockerfile - <<'EOF'
+let render = import "template/Dockerfile.ncl" in
+let config = import "9.14/bookworm.ncl" in
+render config
+EOF
 ```
 
 General layout:
 
-- `<GHC line>/<variant>.yaml` (for example `9.14/bookworm.yaml`) contains distro-specific values
-- `<GHC line>/_globals.yaml` contains shared values (for example Stack and cabal-install versions)
-- some lines also use shared fragments like `<GHC line>/_ghc.yaml` and `<GHC line>/_cabal-install*.yaml`
+- `<GHC line>/<variant>.ncl` (for example `9.14/bookworm.ncl`) contains distro-specific values
+- `<GHC line>/_globals.ncl` contains shared values (for example Stack and cabal-install versions)
+- some lines also use shared fragments like `<GHC line>/_ghc.ncl` and `<GHC line>/_cabal-install*.ncl`
 - `<GHC line>/<variant>/Dockerfile` is the generated output
-
-The generator can print a few `RuntimeError` messages related to missing override keys; these are usually harmless.
 
 ### Building and Running Locally
 
@@ -123,14 +117,14 @@ This is a two-step process:
 
 When GHC, cabal-install, or Stack releases a new version:
 
-1. Update versions, checksums, and release keys in the relevant YAML files.
+1. Update versions, checksums, and release keys in the relevant Nickel files.
 2. Regenerate affected Dockerfiles.
 3. Build and smoke-test locally.
 4. Open a PR and make sure CI passes.
 
 ##### GHC
 
-1. Bump the GHC version in relevant YAML files (for example `9.12.4` -> `9.12.5`).
+1. Bump the GHC version in relevant `.ncl` files (for example `9.12.4` -> `9.12.5`).
 2. Download checksums from `https://downloads.haskell.org/~ghc/<version>/SHA256SUMS`.
 3. Update the `x86_64` and `aarch64` checksums for each affected distro/bindist.
 4. If a bindist is missing for a target distro, add or update an override URL (see existing `overrides.ghc.aarch64.url` usage).
@@ -144,7 +138,7 @@ Known GHC releasers:
 
 ##### cabal-install
 
-1. Bump the cabal-install version in relevant `_globals.yaml` files.
+1. Bump the cabal-install version in relevant `_globals.ncl` files.
 2. Download checksums from `https://downloads.haskell.org/~cabal/cabal-install-<version>/SHA256SUMS`.
 3. Update checksums for the expected bindists (for example `x86_64-linux-deb11`, `aarch64-linux-deb11`, 
    `x86_64-linux-deb12`, `aarch64-linux-deb12`, as needed by the affected lines).
@@ -157,7 +151,7 @@ Known cabal-install releasers:
 
 ##### Stack
 
-1. Bump the Stack version in relevant `_globals.yaml` files.
+1. Bump the Stack version in relevant `_globals.ncl` files.
 2. Download checksums from the Stack release assets (for example `stack-<version>-linux-x86_64.tar.gz.sha256` 
    and `stack-<version>-linux-aarch64.tar.gz.sha256`).
 3. Update both architecture checksums.
