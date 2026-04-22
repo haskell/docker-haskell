@@ -1,0 +1,11 @@
+{
+  version = "9.6.7",
+  release_key = "8C961469C8FDC968718D6245AC7DE836C5DF907D",
+  assets = {
+    aarch64 = {
+      sha256sum = "3cfa843687856de304a946dbe849a497c4fdad021f0275628b8ca7b55ccf8082",
+      url = "https://downloads.haskell.org/~ghc/9.6.7/ghc-9.6.7-aarch64-deb10-linux.tar.xz",
+    },
+    x86_64 = { sha256sum = "fc6a6247d1831745c67b27d6212f6911c35a933043f3b6851724e2e01484d077" },
+  },
+}

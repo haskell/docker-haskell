@@ -1,0 +1,24 @@
+let globals = import "_globals.ncl"
+in
+globals
+& {
+  distro = {
+    codename = "bookworm",
+    abbr = "deb12",
+    image = "debian:bookworm-slim",
+  },
+  ghc = {
+    version = "9.12.4",
+    release_key = "88B57FCF7DB53B4DB3BFA4B1588764FBE22D19C4",
+    assets = {
+      aarch64 = { sha256sum = "8d093562f4d54b69fc57f94c021138d8595554407bc2828962cf6bdd394a6c97" },
+      x86_64 = { sha256sum = "cdc60a66f1c89604975c896b3c7577b079b602d8fb093af0f4b2b0912fa47bd1" },
+    },
+  },
+  cabal_install = {
+    assets = {
+      aarch64 = { sha256sum = "f763fb2af2bc1ff174b7361a7d51109a585954f87a0e14f86d144f3bce28f7a9" },
+      x86_64 = { sha256sum = "73a463306c771e18ca22c0a9469176ffab0138ec5925adb5364ef47174e1adc5" },
+    },
+  },
+}
