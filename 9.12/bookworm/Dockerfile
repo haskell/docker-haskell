@@ -1,4 +1,4 @@
-FROM debian:bookworm
+FROM debian:bookworm@sha256:ed4fcc40bb1162b6d2d32e7bec15044d13963779abbe63f67f1cd62b06220519
 
 ENV LANG=C.UTF-8
 

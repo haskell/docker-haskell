@@ -60,9 +60,9 @@ jobs:
           - ghc: '9.6.7'
             ghc_minor: '9.6'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
       - name: build + smoke test [${{ matrix.ghc }}]
-        uses: nick-invision/retry@v3.0.0
+        uses: nick-invision/retry@7152eba30c6575329ac0576536151aca5a72780e # v3.0.0
         with:
           timeout_minutes: 8
           max_attempts: 3
@@ -71,7 +71,7 @@ jobs:
               -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
               ${{ matrix.ghc_minor }}/${{ matrix.deb }} \
               --build-arg "BUILDKIT_DOCKERFILE_CHECK=skip=SecretsUsedInArgOrEnv;error=true"
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           repository: docker-library/official-images
           path: official-images
@@ -110,7 +110,7 @@ jobs:
             deb: 'bullseye'
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
       - name: docker build and test [arm64 ${{ matrix.ghc }}]
         run: |
           docker build --pull --progress=plain \
@@ -124,7 +124,7 @@ jobs:
           docker run \
             -t haskell:${{ matrix.ghc }}-${{ matrix.deb }} \
             bash -c "echo | ghci"
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           repository: docker-library/official-images
           path: official-images

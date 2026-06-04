@@ -1,4 +1,4 @@
-FROM debian:buster
+FROM debian:buster@sha256:58ce6f1271ae1c8a2006ff7d3e54e9874d839f573d8009c20154ad0f2fb0a225
 
 ENV LANG=C.UTF-8
 
