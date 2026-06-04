@@ -15,7 +15,7 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v5.0.0
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - uses: ./.github/actions/build-generator
 #        with:
 #          debug_mode: ${{ github.event.inputs.debug_mode }}
@@ -29,7 +29,7 @@ jobs:
           mkdir -p ../artifacts
           stack --local-bin-path=../artifacts install
       - name: Upload generated artifact to a release
-        uses: softprops/action-gh-release@v2.4.1
+        uses: softprops/action-gh-release@6da8fa9354ddfdc4aeace5fc48d7f679b5214090 # v2.4.1
         with:
           name: Generator
           tag_name: generator-binary

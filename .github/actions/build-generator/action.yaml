@@ -8,7 +8,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: freckle/stack-action@v5
+    - uses: freckle/stack-action@45415a374b7e73c112bc02423a9af7dc2bd43089 # v5
       with:
         working-directory: "./generator/"
         stack-build-arguments: "${{ github.ref_name != 'main' && '--fast' || '' }} --pedantic"
