@@ -29,7 +29,7 @@ jobs:
           mkdir -p ../artifacts
           stack --local-bin-path=../artifacts install
       - name: Upload generated artifact to a release
-        uses: softprops/action-gh-release@6da8fa9354ddfdc4aeace5fc48d7f679b5214090 # v2.4.1
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
         with:
           name: Generator
           tag_name: generator-binary
