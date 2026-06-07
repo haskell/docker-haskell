@@ -16,13 +16,18 @@ jobs:
         uses: cachix/install-nix-action@v31.10.5
 
       - name: Install nickel binary
-        run: nix profile install nixpkgs#nickel
+        run: nix profile add nixpkgs#nickel
 
       - name: Generate Dockerfiles
         run: |
-          for f in $(find . -name '*.ncl' -not -name '_*'); do
-            echo "Generating Dockerfile for $basename"
-            ./generate.sh $f "$(basename $f .ncl)/Dockerfile"
+          for d in ./9.*; do
+            echo "Generating Dockerfiles for $d"
+            pushd $d
+            for f in $(find . -name '*.ncl' -not -name '_*'); do
+              echo "Generating Dockerfile for $basename"
+              ../generate.sh $f "${f%.ncl}/Dockerfile"
+            done
+            popd
           done
 
       - name: Verify no diff after generation
