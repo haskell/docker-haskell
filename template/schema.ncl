@@ -54,6 +54,10 @@ in
         image
           | String
           | doc "Docker image identifier",
+        digest
+          | String
+          | optional
+          | doc "Image digest, e.g. sha256:ed4fcc40bb1162b6d2d32e7bec15044d13963779abbe63f67f1cd62b06220519",
       },
     ghc
       | {

@@ -5,30 +5,23 @@ on:
       - '**/*.ncl'
       - 'template/Dockerfile.ncl'
       - 'generate.sh'
+      - 'generate_dockerfiles.nu'
       - '.github/workflows/generator.yml'
+  pull_request: {}
 
 jobs:
   generate:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v6.0.2
-      - name: Install Nickel
+      - name: Install Nix
         uses: cachix/install-nix-action@v31.10.5
 
-      - name: Install nickel binary
-        run: nix profile add nixpkgs#nickel
+      - name: Install dependencies
+        run: nix profile add nixpkgs#nickel nixpkgs#nushell
 
       - name: Generate Dockerfiles
-        run: |
-          for d in ./9.*; do
-            echo "Generating Dockerfiles for $d"
-            pushd $d
-            for f in $(find . -name '*.ncl' -not -name '_*'); do
-              echo "Generating Dockerfile for $basename"
-              ../generate.sh $f "${f%.ncl}/Dockerfile"
-            done
-            popd
-          done
+        run: nu ./generate_dockerfiles.nu
 
       - name: Verify no diff after generation
         run: git diff --exit-code

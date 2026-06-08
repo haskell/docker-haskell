@@ -1,17 +1,24 @@
-let render =
-  fun cfg =>
-    let distro = cfg.distro in
-    let stack = cfg.stack in
-    let cabal_install = cfg.cabal_install in
-    let ghc = cfg.ghc in
-    let ghc_override_line =
-      if std.record.has_field "url" ghc.assets.aarch64 then
-        "            GHC_URL='%{ghc.assets.aarch64.url}'; " ++ "\\" ++ "\n"
-      else
-        ""
-    in
-      m%"
-FROM %{distro.image}
+let render = fun cfg =>
+  let distro = cfg.distro in
+  let stack = cfg.stack in
+  let cabal_install = cfg.cabal_install in
+  let ghc = cfg.ghc in
+  let ghc_override_line =
+    if std.record.has_field "url" ghc.assets.aarch64 then
+      "            GHC_URL='%{ghc.assets.aarch64.url}'; " ++ "\\" ++ "\n"
+    else
+      ""
+  in
+  let digest_part =
+    if std.record.has_field "digest" distro then
+      "@%{distro.digest}"
+    else
+      ""
+  in
+  let from_ref = "%{distro.image}%{digest_part}"
+  in
+  m%"
+FROM %{from_ref}
 
 ENV LANG=C.UTF-8
 
@@ -149,4 +156,4 @@ ENV PATH=/root/.cabal/bin:/root/.local/bin:/opt/ghc/${GHC}/bin:$PATH
 CMD ["ghci"]
 "%
 in
-  render
+render
