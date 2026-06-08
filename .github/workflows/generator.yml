@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - name: Install Nix
-        uses: cachix/install-nix-action@ab739621df7a23f52766f9ccc97f38da6b7af14f # v31.10.5
+        uses: DeterminateSystems/nix-installer-action@v22
 
       - name: Install dependencies
         run: nix profile add nixpkgs#nickel nixpkgs#nushell
