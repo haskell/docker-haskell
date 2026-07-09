@@ -24,7 +24,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 
-ARG STACK='3.3.1'
+ARG STACK='3.11.1'
 ARG STACK_RELEASE_KEY='C5705533DA4F78D8664B5DC0575159689BEFB442'
 
 RUN set -eux; \
@@ -34,10 +34,10 @@ RUN set -eux; \
     # sha256 from https://github.com/commercialhaskell/stack/releases/download/v${STACK}/stack-${STACK}-linux-$ARCH.tar.gz.sha256 \
     case "$ARCH" in \
         'aarch64') \
-            STACK_SHA256='bdd618ea5a9c921417727011f2ecd78987dffa5cee5e741108baf65a9b5b58ab'; \
+            STACK_SHA256='1617ae9976a5cd38ad4daec583b026b589eb45d5482afb045cd4ca8c8d0de6d0'; \
             ;; \
         'x86_64') \
-            STACK_SHA256='88d7e517342c125b0a098d9d578fe53e590618ae4b2427283a27408a1ebd06d8'; \
+            STACK_SHA256='1fda71e657cd8d355625cc66b61b352699279dfee2664c014a392163bd19a952'; \
             ;; \
         *) echo >&2 "error: unsupported architecture '$ARCH'"; exit 1 ;; \
     esac; \
