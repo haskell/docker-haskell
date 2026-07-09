@@ -6,7 +6,7 @@ globals
     codename = "bullseye",
     abbr = "deb11",
     image = "debian:bullseye",
-    digest = "sha256:aeec37aebc55ca5cc6fcfb8d5f6ae2fd43d5017ad849e6e2fdb5325d61e144db",
+    digest = "sha256:e7100042ddfd3c1fb9d4a5bf15acbdb1058d7bb3340142916d3413a5c001fc89",
   },
   ghc = {
     version = "9.14.1",
