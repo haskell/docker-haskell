@@ -1,4 +1,4 @@
-FROM debian:bookworm
+FROM debian:bookworm-20260623
 
 ENV LANG=C.UTF-8
 
