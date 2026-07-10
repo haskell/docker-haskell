@@ -1,4 +1,4 @@
-FROM debian:bullseye
+FROM debian:bullseye-20260623
 
 ENV LANG=C.UTF-8
 
