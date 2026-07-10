@@ -1,4 +1,4 @@
-FROM debian:bullseye@sha256:e7100042ddfd3c1fb9d4a5bf15acbdb1058d7bb3340142916d3413a5c001fc89
+FROM debian:bullseye
 
 ENV LANG=C.UTF-8
 

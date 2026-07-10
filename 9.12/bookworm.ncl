@@ -6,7 +6,6 @@ globals
     codename = "bookworm",
     abbr = "deb12",
     image = "debian:bookworm",
-    digest = "sha256:30482e873082e906a4908c10529180aefb6f77620aea7404b909829fadc5d168",
   },
   ghc = {
     version = "9.12.4",

@@ -9,16 +9,8 @@ let render = fun cfg =>
     else
       ""
   in
-  let digest_part =
-    if std.record.has_field "digest" distro then
-      "@%{distro.digest}"
-    else
-      ""
-  in
-  let from_ref = "%{distro.image}%{digest_part}"
-  in
   m%"
-FROM %{from_ref}
+FROM %{distro.image}
 
 ENV LANG=C.UTF-8
 

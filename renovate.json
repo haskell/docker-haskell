@@ -2,5 +2,12 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:best-practices"
+  ],
+  "packageRules": [
+    {
+      "description": "official-images does not accept digest-pinned FROM lines (https://github.com/docker-library/official-images/pull/21812)",
+      "matchManagers": ["dockerfile"],
+      "pinDigests": false
+    }
   ]
 }

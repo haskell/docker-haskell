@@ -1,4 +1,4 @@
-FROM buildpack-deps:buster@sha256:c9285bcb198c0ae171bfc350a4af94ddfda547c4e4d2900a92c280232319341e
+FROM buildpack-deps:buster
 
 ENV LANG=C.UTF-8
 
