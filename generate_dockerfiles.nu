@@ -43,7 +43,7 @@ def main [
 # `nickel` errors abort the script via the surrounding shell, so a
 # non-zero exit is the error signal.
 def gen-file [template_dir: path]: path -> string  {
-  let parts: table = $in | path parse
+  let parts: record = $in | path parse
   let template: path = $template_dir | path join Dockerfile.ncl
   let schema: path = $template_dir | path join schema.ncl
   let outfile: path = [$parts.parent $parts.stem Dockerfile] | path join
