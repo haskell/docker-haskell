@@ -1,4 +1,4 @@
-FROM debian:buster
+FROM debian:trixie
 
 ENV LANG=C.UTF-8
 
