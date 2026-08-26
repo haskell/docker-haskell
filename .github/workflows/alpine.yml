@@ -1,0 +1,45 @@
+name: Validate Alpine
+
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - '**/alpine*/Dockerfile'
+      - '.github/workflows/alpine.yml'
+
+jobs:
+  build-smoke-test:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    name: ${{ matrix.ghc }}-alpine${{ matrix.os_version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        ghc: ['9.0.2', '9.2.5', '9.4.3']
+        os_version: ['3.15', '3.16']
+        include:
+          - ghc: '9.0.2'
+            ghc_minor: '9.0'
+          - ghc: '9.2.5'
+            ghc_minor: '9.2'
+          - ghc: '9.4.3'
+            ghc_minor: '9.4'
+    steps:
+      - uses: actions/checkout@v2
+      - name: build + smoke test [${{ matrix.ghc }}]
+        uses: nick-invision/retry@v2
+        with:
+          timeout_minutes: 8
+          max_attempts: 3
+          command: |
+            docker build --pull \
+              -t haskell:${{ matrix.ghc }}-alpine${{ matrix.os_version }} \
+              ${{ matrix.ghc_minor }}/alpine${{ matrix.os_version }}
+      - uses: actions/checkout@v2
+        with:
+          repository: AlistairB/official-images
+          ref: haskell-sh
+          path: official-images
+      - name: run official-images tests
+        run: ./official-images/test/run.sh haskell:${{ matrix.ghc }}-alpine${{ matrix.os_version }}
