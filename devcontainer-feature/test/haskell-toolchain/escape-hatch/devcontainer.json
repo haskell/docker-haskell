@@ -1,0 +1,9 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/base:debian-12",
+  "features": {
+    "haskell-toolchain": {
+      "installLinters": false,
+      "globalPackages": "ormolu"
+    }
+  }
+}

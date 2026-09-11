@@ -1,0 +1,31 @@
+name: Feature Publish
+
+on:
+  push:
+    tags:
+      - 'feature-v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install -g @devcontainers/cli@0.88.0
+      - name: Render install.sh from template
+        working-directory: devcontainer-feature/src/haskell-toolchain
+        run: |
+          nickel export --format text <<'Nickel' > install.sh
+          let tpl = import "install.sh.tpl.ncl" in
+          tpl.install_sh
+          Nickel
+          chmod +x install.sh
+      - name: Package and publish feature
+        working-directory: devcontainer-feature
+        run: |
+          devcontainer features package src --output-dir /tmp/feature-output
+          devcontainer features publish /tmp/feature-output/haskell-toolchain

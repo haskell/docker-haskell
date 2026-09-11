@@ -1,0 +1,15 @@
+{
+  "name": "Haskell Helloworld",
+  "image": "mcr.microsoft.com/devcontainers/base:debian-12",
+  "features": {
+    "ghcr.io/haskell/docker-haskell/devcontainer-features/haskell-toolchain:1.0.0": {
+      "version": "9.14"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["haskell.haskell", "haskell-lang-server"]
+    }
+  },
+  "postCreateCommand": "cabal update && cabal build"
+}

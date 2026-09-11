@@ -1,0 +1,9 @@
+{
+  "haskell.manageHLS": "GHCup",
+  "haskell.serverExecutablePath": "haskell-language-server-wrapper",
+  "[haskell]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "haskell.haskell"
+  },
+  "haskell.formattingProvider": "fourmolu"
+}

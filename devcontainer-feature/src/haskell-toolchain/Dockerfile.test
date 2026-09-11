@@ -1,0 +1,27 @@
+# Multistage Dockerfile for local testing of the haskell-toolchain feature.
+# Stage 1 ("toolchain"): runs install.sh — expensive, cached by buildx/podman.
+# Stage 2 ("test"): copies test scripts, runs them — cheap, re-runs on change.
+#
+# Usage (from repo root):
+#   podman build -t haskell-feature-test -f devcontainer-feature/src/haskell-toolchain/Dockerfile.test devcontainer-feature
+#   podman build --build-arg BASE_IMAGE=ubuntu:24.04 -t haskell-feature-test-ubuntu -f devcontainer-feature/src/haskell-toolchain/Dockerfile.test devcontainer-feature
+
+# --- Stage 1: install the toolchain (cached unless install.sh changes) ---
+ARG BASE_IMAGE=mcr.microsoft.com/devcontainers/base:debian-12
+FROM ${BASE_IMAGE} AS toolchain
+
+ARG _REMOTE_USER=vscode
+ARG _REMOTE_USER_HOME=/home/vscode
+ENV _REMOTE_USER=${_REMOTE_USER}
+ENV _REMOTE_USER_HOME=${_REMOTE_USER_HOME}
+
+COPY src/haskell-toolchain/install.sh /tmp/dev-container-features/haskell-toolchain/install.sh
+RUN chmod +x /tmp/dev-container-features/haskell-toolchain/install.sh && \
+    /tmp/dev-container-features/haskell-toolchain/install.sh && \
+    rm -rf /tmp/dev-container-features
+
+# --- Stage 2: run the test scripts (fast, re-runs on every test.sh change) ---
+FROM toolchain AS test
+
+COPY test/haskell-toolchain/test.sh /tmp/test.sh
+RUN chmod +x /tmp/test.sh && /tmp/test.sh

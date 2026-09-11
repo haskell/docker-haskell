@@ -1,0 +1,52 @@
+{
+  "id": "haskell-toolchain",
+  "version": "1.0.0",
+  "name": "Haskell Toolchain (ghcup)",
+  "description": "Installs GHC, cabal, Stack, HLS, and curated formatters (ormolu, fourmolu) via ghcup. Versions are pinned in lockstep with the haskell/docker-haskell image matrix.",
+  "documentationURL": "https://github.com/haskell/docker-haskell/tree/master/devcontainer-feature/haskell-toolchain",
+  "options": {
+    "version": {
+      "type": "string",
+      "proposals": ["latest", "recommended", "9.14", "9.12", "9.10", "9.8", "9.6"],
+      "default": "9.14",
+      "description": "GHC version to install (ghcup shorthand, e.g. 9.14, recommended, latest)."
+    },
+    "installStack": {
+      "type": "boolean",
+      "default": true,
+      "description": "Install Stack."
+    },
+    "installHLS": {
+      "type": "boolean",
+      "default": true,
+      "description": "Install the Haskell Language Server."
+    },
+    "installStackGHCupHook": {
+      "type": "boolean",
+      "default": true,
+      "description": "Prevent Stack from installing its own GHC; force it to use ghcup's."
+    },
+    "adjustBash": {
+      "type": "boolean",
+      "default": true,
+      "description": "Prepend ghcup to PATH in ~/.bashrc."
+    },
+    "installLinters": {
+      "type": "boolean",
+      "default": true,
+      "description": "Install curated formatters (ormolu, fourmolu)."
+    },
+    "globalPackages": {
+      "type": "string",
+      "proposals": ["", "hlint", "hlint pandoc-cli"],
+      "default": "",
+      "description": "Extra packages to `cabal install`. Space-separated. Unpinned; adds significant build time."
+    },
+    "globalLibraries": {
+      "type": "string",
+      "proposals": ["", "hspec hspec-contrib QuickCheck HUnit"],
+      "default": "",
+      "description": "Extra libraries to `cabal install --lib`. Space-separated. Unpinned; adds significant build time."
+    }
+  }
+}

@@ -74,6 +74,25 @@ Only the latest patch release in each actively maintained minor line receives ro
 
 For actively supported GHC versions, Cabal and Stack should be updated when new versions are released.
 
+## Devcontainers
+
+An official [devcontainer feature](devcontainer-feature/src/haskell-toolchain) and
+[template](devcontainer-template/src/haskell) live alongside this image.
+
+- **Feature** — `ghcr.io/haskell/docker-haskell/devcontainer-features/haskell-toolchain:1.0.0`
+  installs GHC, cabal, Stack, HLS, and formatters (`ormolu`, `fourmolu`) via `ghcup`
+  on any Debian/Ubuntu base image. Tool versions are pinned in
+  [`versions.ncl`](devcontainer-feature/src/haskell-toolchain/versions.ncl), which
+  imports from the same Nickel data files as the Docker images — bumping a version
+  in one place updates both.
+- **Template** — "Haskell (cabal)" in the devcontainer registry; a clone-and-go
+  starter with a `Hello, Haskell!` cabal project, VS Code extensions, and
+  format-on-save configured.
+
+See [`devcontainer-feature/src/haskell-toolchain/README.md`](devcontainer-feature/src/haskell-toolchain/README.md)
+and [`devcontainer-template/src/haskell/README.md`](devcontainer-template/src/haskell/README.md)
+for details.
+
 ## Maintenance
 
 ### Generating Dockerfiles

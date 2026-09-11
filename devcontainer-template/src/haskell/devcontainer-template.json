@@ -1,0 +1,8 @@
+{
+  "id": "haskell",
+  "name": "Haskell (cabal)",
+  "description": "Minimal Haskell project using cabal-install on Debian, with GHC, HLS, and formatters via ghcup.",
+  "publisher": "haskell",
+  "tags": ["haskell", "cabal", "ghc", "ghcup", "hls"],
+  "fileCount": 7
+}

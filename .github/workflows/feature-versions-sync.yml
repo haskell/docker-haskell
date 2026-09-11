@@ -1,0 +1,39 @@
+name: Feature Versions Sync
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+jobs:
+  check-drift:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check for version drift
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
+          source ~/.ghcup/env
+
+          GHC_PINNED=$(grep 'ghc_version' devcontainer-feature/src/haskell-toolchain/versions.ncl | grep -oP '"[^"]+"' | tr -d '"')
+          HLS_PINNED=$(grep 'hls_version' devcontainer-feature/src/haskell-toolchain/versions.ncl | grep -oP '"[^"]+"' | tr -d '"')
+          GHCUP_PINNED=$(grep 'ghcup_version' devcontainer-feature/src/haskell-toolchain/versions.ncl | grep -oP '"[^"]+"' | tr -d '"')
+
+          GHC_LATEST=$(ghcup list -t available 2>&1 | grep '^ ghc' | grep 'recommended' | awk '{print $2}')
+          HLS_LATEST=$(ghcup list -t available 2>&1 | grep '^ hls' | grep 'recommended' | awk '{print $2}')
+          GHCUP_LATEST=$(ghcup list -t available 2>&1 | grep '^ ghcup' | grep 'recommended' | awk '{print $2}')
+
+          echo "GHC: pinned=$GHC_PINNED latest=$GHC_LATEST"
+          echo "HLS: pinned=$HLS_PINNED latest=$HLS_LATEST"
+          echo "ghcup: pinned=$GHCUP_PINNED latest=$GHCUP_LATEST"
+
+          DRIFT=0
+          [ "$GHC_PINNED" != "$GHC_LATEST" ] && DRIFT=1 && echo "GHC drifted: $GHC_PINNED -> $GHC_LATEST"
+          [ "$HLS_PINNED" != "$HLS_LATEST" ] && DRIFT=1 && echo "HLS drifted: $HLS_PINNED -> $HLS_LATEST"
+          [ "$GHCUP_PINNED" != "$GHCUP_LATEST" ] && DRIFT=1 && echo "ghcup drifted: $GHCUP_PINNED -> $GHCUP_LATEST"
+
+          if [ "$DRIFT" = "1" ]; then
+            echo "::warning::Version drift detected — update versions.ncl"
+            exit 1
+          fi
+          echo "All versions in sync."
