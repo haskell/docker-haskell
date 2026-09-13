@@ -1,0 +1,91 @@
+name: Feature Test
+
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'devcontainer-feature/**'
+      - 'devcontainer-template/**'
+      - '9.14/_globals.ncl'
+      - '9.14/bookworm.ncl'
+      - '.github/workflows/feature-test.yml'
+  push:
+    branches:
+      - master
+    paths:
+      - 'devcontainer-feature/**'
+      - 'devcontainer-template/**'
+      - '9.14/_globals.ncl'
+      - '9.14/bookworm.ncl'
+
+jobs:
+  test:
+    name: Test feature (${{ matrix.distro }}/${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - distro: debian:bookworm
+            tag: debian-bookworm
+            arch: amd64
+            runner: ubuntu-24.04
+          - distro: debian:bookworm
+            tag: debian-bookworm
+            arch: arm64
+            runner: ubuntu-24.04-arm
+          - distro: ubuntu:24.04
+            tag: ubuntu-2404
+            arch: amd64
+            runner: ubuntu-24.04
+          - distro: ubuntu:24.04
+            tag: ubuntu-2404
+            arch: arm64
+            runner: ubuntu-24.04-arm
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install -g @devcontainers/cli@0.88.0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build toolchain layer (cached)
+        uses: docker/build-push-action@v6
+        with:
+          context: devcontainer-feature
+          file: devcontainer-feature/src/haskell-toolchain/Dockerfile.test
+          target: toolchain
+          load: true
+          tags: haskell-feature-toolchain:${{ matrix.tag }}-${{ matrix.arch }}
+          cache-from: type=gha,scope=toolchain-${{ matrix.tag }}-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=toolchain-${{ matrix.tag }}-${{ matrix.arch }}
+          build-args: |
+            BASE_IMAGE=${{ matrix.distro }}
+            _REMOTE_USER=
+            _REMOTE_USER_HOME=
+
+      - name: Run test.sh against cached toolchain
+        run: |
+          docker run --rm \
+            -e _REMOTE_USER= \
+            -e _REMOTE_USER_HOME= \
+            -v "$(pwd)/devcontainer-feature/test/haskell-toolchain/test.sh:/tmp/test.sh" \
+            haskell-feature-toolchain:${{ matrix.tag }}-${{ matrix.arch }} \
+            bash -c 'chmod +x /tmp/test.sh && /tmp/test.sh'
+
+  shellcheck:
+    name: Shellcheck
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run shellcheck on all shell scripts
+        run: |
+          shellcheck -x \
+            devcontainer-feature/src/haskell-toolchain/install.sh \
+            devcontainer-feature/test/haskell-toolchain/test.sh \
+            devcontainer-feature/test/haskell-toolchain/*/scenario.sh \
+            devcontainer-template/test/haskell/test.sh

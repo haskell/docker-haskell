@@ -1,0 +1,12 @@
+cabal-version:      3.0
+name:               helloworld
+version:            0.1.0.0
+synopsis:           Hello, Haskell!
+license:            BSD-3-Clause
+build-type:         Simple
+
+executable helloworld
+  main-is:          Main.hs
+  build-depends:    base ^>=4.22
+  default-language: GHC2021
+  hs-source-dirs:   src

@@ -1,0 +1,27 @@
+name: Template Lint
+
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'devcontainer-template/**'
+      - '.github/workflows/template-lint.yml'
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate template metadata
+        run: |
+          # Validate that devcontainer-template.json is valid JSON and has required fields.
+          for f in devcontainer-template/src/*/devcontainer-template.json; do
+            echo "Validating $f..."
+            jq -e '.id, .name, .description' "$f" > /dev/null
+          done
+          # Validate devcontainer.json files.
+          for f in devcontainer-template/src/*/.devcontainer/devcontainer.json; do
+            echo "Validating $f..."
+            jq -e '.image or .build.dockerfile, .features' "$f" > /dev/null
+          done
