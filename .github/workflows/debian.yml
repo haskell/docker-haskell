@@ -21,7 +21,7 @@ concurrency:
 jobs:
   build-smoke-test:
     timeout-minutes: 30
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     name: ${{ matrix.ghc }}-${{ matrix.deb }}
     strategy:
       fail-fast: false
@@ -80,7 +80,7 @@ jobs:
 
   arm64-tests:
     timeout-minutes: 60
-    runs-on: ubuntu-24.04-arm
+    runs-on: ubuntu-26.04-arm
     name: arm64-${{ matrix.ghc }}-${{ matrix.deb }}
     strategy:
       fail-fast: false
